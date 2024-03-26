@@ -13,28 +13,26 @@ const curry = func => {
 }
 
 const useModalStore = create(set => ({
+  meta: null,
   activeModal: null,
-  openModal: name => () => set({ activeModal: name }),
-  closeModal: () => set({ activeModal: null }),
   toggleModal: curry((name, bool) => {
     if (!name) return
-    set({ activeModal: bool ? name : null })
+    set({
+      activeModal: bool ? name : null,
+      ...(bool === false && { meta: null })
+    })
   })
 }))
 
-const closeModal = () => useModalStore.setState({ activeModal: null })
-const openModal = name => () => useModalStore.setState({ activeModal: name })
-
 export const Modal = ({ children, header, name, trigger, triggerRef, ...rest }) => {
-  const { activeModal, toggle, closeModal } = useModalStore(state => ({
+  const { activeModal, toggle } = useModalStore(state => ({
     activeModal: state.activeModal,
-    toggle: state.toggleModal,
-    closeModal: state.closeModal
+    toggle: state.toggleModal
   }))
 
   const props = { ...(name && { open: activeModal === name, onOpenChange: toggle(name) }), ...rest }
 
-  useEffect(() => () => closeModal(), [])
+  useEffect(() => () => Modal.closeModal(), [])
 
   return (
     <Dialog {...props}>
@@ -58,5 +56,6 @@ export const ModalContent = ({ children, className }) => (
 
 export const ModalFooter = DialogFooter
 
-Modal.closeModal = closeModal
-Modal.openModal = openModal
+Modal.closeModal = () => useModalStore.setState({ activeModal: null, data: null })
+Modal.openModal = (name, meta) => () => useModalStore.setState({ activeModal: name, meta })
+Modal.meta = () => useModalStore.getState().meta
