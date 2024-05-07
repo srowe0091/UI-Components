@@ -1,9 +1,9 @@
 {
   "name": "@cloudxe/ui",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
-  "main": "lib/main.js",
+  "main": "./lib/main.js",
   "exports": {
     ".": "./lib/main.js",
     "./icons": "./lib/icons.js"
@@ -26,7 +26,8 @@
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "react-icons": "^5.0.1",
-    "tailwind-merge": "^2.2.2"
+    "tailwind-merge": "^2.2.2",
+    "vaul": "^0.9.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.67",
