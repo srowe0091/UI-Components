@@ -1,8 +1,8 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../base/sheet'
+import { Sheet as _Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../base/sheet'
 
-export const Drawer = ({ trigger, header, children, ...rest }) => {
+export const Sheet = ({ trigger, header, children, ...rest }) => {
   return (
-    <Sheet {...rest}>
+    <_Sheet {...rest}>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
       <SheetContent className="flex flex-col">
         <SheetHeader>
@@ -10,6 +10,6 @@ export const Drawer = ({ trigger, header, children, ...rest }) => {
         </SheetHeader>
         {children}
       </SheetContent>
-    </Sheet>
+    </_Sheet>
   )
 }
