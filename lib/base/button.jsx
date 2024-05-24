@@ -56,7 +56,7 @@ const Fab = forwardRef(({ icon, variant, children, ...props }, ref) => {
     <button
       ref={ref}
       className={cn(
-        'fixed bottom-8 right-6 shadow-fab',
+        'fixed m-auto left-0 right-0 bottom-14 shadow-fab',
         buttonVariants({ variant, size: 'icon' }),
         'rounded-full h-12 w-12 z-20'
       )}
