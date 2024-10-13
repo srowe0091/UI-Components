@@ -5,7 +5,7 @@ import { cn } from '../utils'
 
 import { Button } from './button'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandLoading } from './command'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandLoading } from './command'
 
 const AutoComplete = ({ async, multiple, options, placeholder, isLoading, value, onChange, onInputChange }) => {
   const [open, setOpen] = React.useState(false)
@@ -49,21 +49,23 @@ const AutoComplete = ({ async, multiple, options, placeholder, isLoading, value,
       <PopoverContent className="p-0">
         <Command shouldFilter={!async}>
           <CommandInput onValueChange={onInputChange} />
-          <CommandEmpty>No results</CommandEmpty>
-          {isLoading && <CommandLoading>Searching....</CommandLoading>}
-          <CommandGroup>
-            {options.map(option => (
-              <CommandItem key={option.value} onSelect={onSelect}>
-                <CheckIcon
-                  className={cn(
-                    'mr-2 h-4 w-4',
-                    value.includes(option.value?.toLowerCase?.()) ? 'opacity-100' : 'opacity-0'
-                  )}
-                />
-                {option.label}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          <CommandList>
+            {!isLoading && <CommandEmpty>No results</CommandEmpty>}
+            {isLoading && <CommandLoading>Searching....</CommandLoading>}
+            <CommandGroup>
+              {options.map(option => (
+                <CommandItem key={option.value} onSelect={onSelect}>
+                  <CheckIcon
+                    className={cn(
+                      'mr-2 h-4 w-4',
+                      value.includes(option.value?.toLowerCase?.()) ? 'opacity-100' : 'opacity-0'
+                    )}
+                  />
+                  {option.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
