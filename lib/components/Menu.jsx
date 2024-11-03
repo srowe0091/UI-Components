@@ -7,10 +7,10 @@ import {
   DropdownMenuItem
 } from '../base/dropdown-menu'
 
-export const Menu = ({ trigger, children, align }) => {
+export const Menu = ({ trigger, children, align, disabled }) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild disabled={disabled}>{trigger}</DropdownMenuTrigger>
       <DropdownMenuContent align={align}>{children}</DropdownMenuContent>
     </DropdownMenu>
   )
