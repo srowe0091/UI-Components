@@ -50,12 +50,12 @@ const DialogContent = React.forwardRef(({ className, children, ...props }, ref) 
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
 const DialogHeader = ({ className, ...props }) => (
-  <div className={cn('flex flex-col space-y-4', className)} {...props} />
+  <div className={cn('mb-2 flex flex-col space-y-4', className)} {...props} />
 )
 DialogHeader.displayName = 'DialogHeader'
 
 const DialogFooter = ({ className, ...props }) => (
-  <div className={cn('mb-4 flex flex-col-reverse md:flex-row md:justify-end gap-4', className)} {...props} />
+  <div className={cn('flex flex-col-reverse md:flex-row md:justify-end gap-4', className)} {...props} />
 )
 DialogFooter.displayName = 'DialogFooter'
 
