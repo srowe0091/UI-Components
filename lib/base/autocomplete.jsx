@@ -7,8 +7,8 @@ import { Button } from './button'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandLoading } from './command'
 
-const AutoComplete = ({ async, multiple, options, placeholder, isLoading, value, onChange, onInputChange }) => {
-  const [open, setOpen] = React.useState(false)
+const AutoComplete = ({ async, multiple, options, placeholder, isLoading, value, onChange, onInputChange, defaultOpen }) => {
+  const [open, setOpen] = React.useState(defaultOpen ?? false)
 
   const _value = React.useMemo(() => {
     return multiple ? value?.join(', ') : value
