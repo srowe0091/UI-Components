@@ -10,7 +10,7 @@ const DropdownMenuPortal = DropdownMenuPrimitive.Portal
 const DropdownMenuSub = DropdownMenuPrimitive.Sub
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup
 
-const DropdownMenu = React.forwardRef((props, ref) => <DropdownMenuPrimitive.Root ref={ref} modal={false} {...props} />)
+const DropdownMenu = React.forwardRef((props, ref) => <DropdownMenuPrimitive.Root ref={ref} {...props} />)
 
 const DropdownMenuContent = React.forwardRef(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
