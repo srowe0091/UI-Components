@@ -15,7 +15,8 @@ export const buttonVariants = cva(
         outline: 'border border-input bg-transparent shadow-sm hover:bg-primary/30',
         secondary: 'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
         ghost: 'hover:bg-primary/30 active:bg-primary/60 hover:text-primary-foreground data-[state=open]:bg-primary/60',
-        link: 'text-primary underline-offset-4 hover:underline'
+        link: 'text-primary underline-offset-4 hover:underline',
+        toolbarFab: 'fixed m-auto left-0 right-0 bottom-14 shadow-fab'
       },
       size: {
         default: 'h-10 px-4 py-2',
@@ -51,15 +52,11 @@ const Button = forwardRef(({ children, className, variant, size, loading, label,
 })
 Button.displayName = 'Button'
 
-const Fab = forwardRef(({ icon, variant, children, ...props }, ref) => {
+const Fab = forwardRef(({ icon, variant, children, className, ...props }, ref) => {
   return (
     <button
       ref={ref}
-      className={cn(
-        'fixed m-auto left-0 right-0 bottom-14 shadow-fab',
-        buttonVariants({ variant, size: 'icon' }),
-        'rounded-full h-12 w-12 z-20'
-      )}
+      className={cn(buttonVariants({ variant, size: 'icon', className }), 'rounded-full h-12 w-12 z-20')}
       {...props}
     >
       {icon && createElement(icon)}
