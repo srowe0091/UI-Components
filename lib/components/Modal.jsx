@@ -25,10 +25,7 @@ const useModalStore = create(set => ({
 }))
 
 export const Modal = ({ children, header, name, trigger, triggerRef, ...rest }) => {
-  const { activeModal, toggle } = useModalStore(state => ({
-    activeModal: state.activeModal,
-    toggle: state.toggleModal
-  }))
+  const { activeModal, toggle } = useModalStore()
 
   const props = { ...(name && { open: activeModal === name, onOpenChange: toggle(name) }), ...rest }
 
