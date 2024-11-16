@@ -25,9 +25,9 @@ const useModalStore = create(set => ({
 }))
 
 export const Modal = ({ children, header, name, trigger, triggerRef, ...rest }) => {
-  const { activeModal, toggle } = useModalStore()
+  const { activeModal, toggleModal } = useModalStore()
 
-  const props = { ...(name && { open: activeModal === name, onOpenChange: toggle(name) }), ...rest }
+  const props = { ...(name && { open: activeModal === name, onOpenChange: toggleModal(name) }), ...rest }
 
   useEffect(() => () => Modal.closeModal(), [])
 
