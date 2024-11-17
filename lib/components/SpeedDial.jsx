@@ -9,7 +9,7 @@ const Item = ({ icon, label, className, ...rest }) => {
     <div className={cn('flex flex-row items-center gap-2', className)}>
       <p className="text-shadow-boldText font-bold">{label}</p>
 
-      <Button size="icon-lg" className={cn('bg-secondary rounded-full', className)} {...rest}>
+      <Button size="icon-lg" className={cn('bg-primary rounded-full', className)} {...rest}>
         {icon && createElement(icon)}
       </Button>
     </div>

@@ -4,7 +4,7 @@ import { cn } from '../utils'
 
 const Input = forwardRef(({ label, error, rightIcon, leftIcon, className, ...props }, ref) => {
   return (
-    <div className="my-1 w-full">
+    <div className="w-full">
       <div className="flex flex-col gap-1">
         {label && <label htmlFor={props.name}>{label}</label>}
         <div className="relative">

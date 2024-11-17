@@ -7,7 +7,17 @@ import { Button } from './button'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandLoading } from './command'
 
-const AutoComplete = ({ async, multiple, options, placeholder, isLoading, value, onChange, onInputChange, defaultOpen }) => {
+const AutoComplete = ({
+  async,
+  multiple,
+  options,
+  placeholder,
+  isLoading,
+  value,
+  onChange,
+  onInputChange,
+  defaultOpen
+}) => {
   const [open, setOpen] = React.useState(defaultOpen ?? false)
 
   const _value = React.useMemo(() => {
@@ -55,13 +65,10 @@ const AutoComplete = ({ async, multiple, options, placeholder, isLoading, value,
             <CommandGroup>
               {options.map(option => (
                 <CommandItem key={option.value} onSelect={onSelect}>
-                  <CheckIcon
-                    className={cn(
-                      'mr-2 h-4 w-4',
-                      value.includes(option.value?.toLowerCase?.()) ? 'opacity-100' : 'opacity-0'
-                    )}
-                  />
                   {option.label}
+                  <CheckIcon
+                    className={cn('ml-auto h-4 w-4', value.includes(option.value) ? 'opacity-100' : 'opacity-0')}
+                  />
                 </CommandItem>
               ))}
             </CommandGroup>
