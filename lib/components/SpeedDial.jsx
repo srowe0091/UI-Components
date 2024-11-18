@@ -6,10 +6,10 @@ import { Fade } from '../components/Fade'
 
 const Item = ({ icon, label, className, ...rest }) => {
   return (
-    <div className={cn('flex flex-row items-center gap-2', className)}>
+    <div className={cn('flex flex-row items-center gap-4', className)}>
       <p className="text-shadow-boldText font-bold">{label}</p>
 
-      <Button size="icon-lg" className={cn('bg-primary rounded-full', className)} {...rest}>
+      <Button size="icon" className={cn('bg-primary rounded-full', className)} {...rest}>
         {icon && createElement(icon)}
       </Button>
     </div>
@@ -28,7 +28,7 @@ export const SpeedDial = ({ items, trigger }) => {
         <Fade in={isOpen}>
           <div onClick={close} className={cn('bg-black/80 h-screen w-screen fixed top-0 left-0')} />
 
-          <div className={cn('bottom-[66px] right-[0] absolute w-max flex flex-col-reverse items-end gap-4')}>
+          <div className={cn('bottom-[66px] right-[4px] absolute w-max flex flex-col-reverse items-end gap-6')}>
             {items?.map(item => (
               <div key={item.label} onClick={close}>
                 <Item {...item} />
@@ -37,9 +37,7 @@ export const SpeedDial = ({ items, trigger }) => {
           </div>
         </Fade>
 
-        <div className={cn('transition-all z-50', { 'rotate-90': isOpen })} onClick={toggle}>
-          {trigger}
-        </div>
+        <div onClick={toggle}>{trigger}</div>
       </div>
     </div>
   )
