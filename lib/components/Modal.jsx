@@ -24,7 +24,7 @@ const useModalStore = create(set => ({
   })
 }))
 
-export const Modal = ({ children, header, name, trigger, triggerRef, ...rest }) => {
+export const Modal = ({ children, header, name, trigger, triggerRef, contentStyles, ...rest }) => {
   const { activeModal, toggleModal } = useModalStore()
 
   const props = { ...(name && { open: activeModal === name, onOpenChange: toggleModal(name) }), ...rest }
@@ -36,7 +36,7 @@ export const Modal = ({ children, header, name, trigger, triggerRef, ...rest }) 
       <DialogTrigger ref={triggerRef} asChild>
         {trigger}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className={contentStyles}>
         <DialogHeader>
           <DialogTitle>{header}</DialogTitle>
         </DialogHeader>
