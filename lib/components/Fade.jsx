@@ -1,6 +1,6 @@
 import { useTransition, animated } from '@react-spring/web'
 
-export const Fade = ({ children, in: isVisible, ...rest }) => {
+export const Fade = ({ children, in: isVisible, disableFade, ...rest }) => {
   const transitions = useTransition(isVisible, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -8,7 +8,7 @@ export const Fade = ({ children, in: isVisible, ...rest }) => {
     config: (_, __, state) => {
       switch (state) {
         case 'enter':
-          return { duration: 150 }
+          return { duration: disableFade ? 0 : 150 }
         case 'leave':
           return { duration: 100 }
       }
