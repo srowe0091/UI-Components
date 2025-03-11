@@ -1,8 +1,6 @@
 import { createElement, forwardRef } from 'react'
 import { cva } from 'class-variance-authority'
-
-import { cn } from '../utils'
-import { LoadingIcon } from '../icons'
+import { cn, LoadingIcon } from '@cloudxe/ui'
 
 export const buttonVariants = cva(
   'inline-flex items-center justify-center rounded-md transition-colors disabled:pointer-events-none disabled:opacity-50',
@@ -11,6 +9,8 @@ export const buttonVariants = cva(
       variant: {
         default:
           'bg-primary text-primary-foreground shadow hover:bg-primary/70 active:bg-primary/60 data-[state=open]:bg-primary/60',
+        dark: 'bg-black text-primary-foreground shadow hover:bg-black/70 active:bg-black/60',
+        darkOutline: 'border border-black bg-transparent shadow-sm hover:bg-black/30 active:bg-black/20',
         destructive: 'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
         outline: 'border border-input bg-transparent shadow-sm hover:bg-primary/30',
         secondary: 'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
