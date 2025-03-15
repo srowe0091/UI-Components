@@ -1,26 +1,16 @@
-import { useTransition, animated } from '@react-spring/web'
+import { motion } from 'motion/react'
 
 export const Fade = ({ children, in: isVisible, disableFade, ...rest }) => {
-  const transitions = useTransition(isVisible, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-    config: (_, __, state) => {
-      switch (state) {
-        case 'enter':
-          return { duration: disableFade ? 0 : 150 }
-        case 'leave':
-          return { duration: 100 }
-      }
-    }
-  })
+  if (!isVisible) return null
 
-  return transitions(
-    (style, item) =>
-      item && (
-        <animated.div style={style} {...rest}>
-          {children}
-        </animated.div>
-      )
+  return (
+    <motion.div
+      initial={disableFade ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      {...rest}
+    >
+      {children}
+    </motion.div>
   )
 }
