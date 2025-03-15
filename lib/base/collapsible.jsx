@@ -7,7 +7,7 @@ const Collapsible = CollapsiblePrimitive.Root
 
 const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger
 
-const CollapsibleContent = React.forwardRef(({ className, ...props }, ref) => {
+const CollapsibleContent = ({ className, ref, ...props }) => {
   return (
     <CollapsiblePrimitive.CollapsibleContent
       ref={ref}
@@ -18,6 +18,6 @@ const CollapsibleContent = React.forwardRef(({ className, ...props }, ref) => {
       {...props}
     />
   )
-})
+}
 
 export { Collapsible, CollapsibleTrigger, CollapsibleContent }

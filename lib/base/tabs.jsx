@@ -5,16 +5,15 @@ import { cn } from '../utils'
 
 const Tabs = TabsPrimitive.Root
 
-const TabsList = React.forwardRef(({ className, ...props }, ref) => (
+const TabsList = ({ className, ref, ...props }) => (
   <TabsPrimitive.List
     ref={ref}
     className={cn('w-full inline-flex justify-start text-muted-foreground gap-2 mb-6', className)}
     {...props}
   />
-))
-TabsList.displayName = TabsPrimitive.List.displayName
+)
 
-const TabsTrigger = React.forwardRef(({ className, ...props }, ref) => (
+const TabsTrigger = ({ className, ref, ...props }) => (
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -23,12 +22,10 @@ const TabsTrigger = React.forwardRef(({ className, ...props }, ref) => (
     )}
     {...props}
   />
-))
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
+)
 
-const TabsContent = React.forwardRef(({ className, ...props }, ref) => (
+const TabsContent = ({ className, ref, ...props }) => (
   <TabsPrimitive.Content ref={ref} className={className} {...props} />
-))
-TabsContent.displayName = TabsPrimitive.Content.displayName
+)
 
 export { Tabs, TabsList, TabsTrigger, TabsContent }

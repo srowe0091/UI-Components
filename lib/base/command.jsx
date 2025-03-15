@@ -6,7 +6,7 @@ import { SearchIcon } from '../icons'
 
 import { Dialog, DialogContent } from './dialog'
 
-const Command = React.forwardRef(({ className, ...props }, ref) => (
+const Command = ({ className, ref, ...props }) => (
   <CommandPrimitive
     ref={ref}
     className={cn(
@@ -15,8 +15,7 @@ const Command = React.forwardRef(({ className, ...props }, ref) => (
     )}
     {...props}
   />
-))
-Command.displayName = CommandPrimitive.displayName
+)
 
 const CommandDialog = ({ children, ...props }) => {
   return (
@@ -30,7 +29,7 @@ const CommandDialog = ({ children, ...props }) => {
   )
 }
 
-const CommandInput = React.forwardRef(({ className, ...props }, ref) => (
+const CommandInput = ({ className, ref, ...props }) => (
   <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
     <SearchIcon className="mr-2 h-4 w-4 shrink-0 opacity-50" />
     <CommandPrimitive.Input
@@ -42,27 +41,19 @@ const CommandInput = React.forwardRef(({ className, ...props }, ref) => (
       {...props}
     />
   </div>
-))
+)
 
-CommandInput.displayName = CommandPrimitive.Input.displayName
-
-const CommandList = React.forwardRef(({ className, ...props }, ref) => (
+const CommandList = ({ className, ref, ...props }) => (
   <CommandPrimitive.List
     ref={ref}
     className={cn('max-h-[300px] overflow-y-auto overflow-x-hidden', className)}
     {...props}
   />
-))
+)
 
-CommandList.displayName = CommandPrimitive.List.displayName
+const CommandEmpty = (props, ref) => <CommandPrimitive.Empty ref={ref} className="py-6 text-center" {...props} />
 
-const CommandEmpty = React.forwardRef((props, ref) => (
-  <CommandPrimitive.Empty ref={ref} className="py-6 text-center" {...props} />
-))
-
-CommandEmpty.displayName = CommandPrimitive.Empty.displayName
-
-const CommandGroup = React.forwardRef(({ className, ...props }, ref) => (
+const CommandGroup = ({ className, ref, ...props }) => (
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
@@ -71,16 +62,13 @@ const CommandGroup = React.forwardRef(({ className, ...props }, ref) => (
     )}
     {...props}
   />
-))
+)
 
-CommandGroup.displayName = CommandPrimitive.Group.displayName
-
-const CommandSeparator = React.forwardRef(({ className, ...props }, ref) => (
+const CommandSeparator = ({ className, ref, ...props }) => (
   <CommandPrimitive.Separator ref={ref} className={cn('-mx-1 h-px bg-border', className)} {...props} />
-))
-CommandSeparator.displayName = CommandPrimitive.Separator.displayName
+)
 
-const CommandItem = React.forwardRef(({ className, ...props }, ref) => (
+const CommandItem = ({ className, ref, ...props }) => (
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
@@ -89,20 +77,15 @@ const CommandItem = React.forwardRef(({ className, ...props }, ref) => (
     )}
     {...props}
   />
-))
-
-CommandItem.displayName = CommandPrimitive.Item.displayName
+)
 
 const CommandShortcut = ({ className, ...props }) => {
   return <span className={cn('ml-auto text-xs tracking-widest text-muted-foreground', className)} {...props} />
 }
-CommandShortcut.displayName = 'CommandShortcut'
 
-const CommandLoading = React.forwardRef(({ className, ...props }, ref) => (
+const CommandLoading = ({ className, ref, ...props }) => (
   <CommandPrimitive.Loading ref={ref} className={cn('py-6 text-center', className)} {...props} />
-))
-
-CommandLoading.displayName = CommandPrimitive.Loading.displayName
+)
 
 export {
   Command,

@@ -7,7 +7,7 @@ import { CloseIcon } from '../icons'
 
 const ToastProvider = ToastPrimitives.Provider
 
-const ToastViewport = React.forwardRef(({ className, ...props }, ref) => (
+const ToastViewport = ({ className, ref, ...props }) => (
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(
@@ -16,8 +16,7 @@ const ToastViewport = React.forwardRef(({ className, ...props }, ref) => (
     )}
     {...props}
   />
-))
-ToastViewport.displayName = ToastPrimitives.Viewport.displayName
+)
 
 const toastVariants = cva(
   'group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-4 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
@@ -35,12 +34,11 @@ const toastVariants = cva(
   }
 )
 
-const Toast = React.forwardRef(({ className, variant, ...props }, ref) => {
+const Toast = ({ className, variant, ref, ...props }) => {
   return <ToastPrimitives.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />
-})
-Toast.displayName = ToastPrimitives.Root.displayName
+}
 
-const ToastAction = React.forwardRef(({ className, ...props }, ref) => (
+const ToastAction = ({ className, ref, ...props }) => (
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
@@ -49,10 +47,9 @@ const ToastAction = React.forwardRef(({ className, ...props }, ref) => (
     )}
     {...props}
   />
-))
-ToastAction.displayName = ToastPrimitives.Action.displayName
+)
 
-const ToastClose = React.forwardRef(({ className, ...props }, ref) => (
+const ToastClose = ({ className, ref, ...props }) => (
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
@@ -64,17 +61,14 @@ const ToastClose = React.forwardRef(({ className, ...props }, ref) => (
   >
     <CloseIcon className="h-4 w-4" />
   </ToastPrimitives.Close>
-))
-ToastClose.displayName = ToastPrimitives.Close.displayName
+)
 
-const ToastTitle = React.forwardRef(({ className, ...props }, ref) => (
+const ToastTitle = ({ className, ref, ...props }) => (
   <ToastPrimitives.Title ref={ref} className={cn('font-semibold', className)} {...props} />
-))
-ToastTitle.displayName = ToastPrimitives.Title.displayName
+)
 
-const ToastDescription = React.forwardRef(({ className, ...props }, ref) => (
+const ToastDescription = ({ className, ref, ...props }) => (
   <ToastPrimitives.Description ref={ref} className={cn('opacity-90', className)} {...props} />
-))
-ToastDescription.displayName = ToastPrimitives.Description.displayName
+)
 
 export { ToastProvider, ToastViewport, Toast, ToastTitle, ToastDescription, ToastClose, ToastAction }

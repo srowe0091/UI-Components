@@ -11,9 +11,8 @@ const Dialog = DialogPrimitive.Root
 const DialogTrigger = DialogPrimitive.Trigger
 
 const DialogPortal = ({ className, ...props }) => <DialogPrimitive.Portal className={cn(className)} {...props} />
-DialogPortal.displayName = DialogPrimitive.Portal.displayName
 
-const DialogOverlay = React.forwardRef(({ className, ...props }, ref) => (
+const DialogOverlay = ({ className, ref, ...props }) => (
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
@@ -22,10 +21,9 @@ const DialogOverlay = React.forwardRef(({ className, ...props }, ref) => (
     )}
     {...props}
   />
-))
-DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
+)
 
-const DialogContent = React.forwardRef(({ className, children, ...props }, ref) => (
+const DialogContent = ({ className, children, ref, ...props }) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -45,31 +43,26 @@ const DialogContent = React.forwardRef(({ className, children, ...props }, ref) 
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
-))
-DialogContent.displayName = DialogPrimitive.Content.displayName
+)
 
 const DialogHeader = ({ className, ...props }) => (
   <div className={cn('mb-2 flex flex-col space-y-4', className)} {...props} />
 )
-DialogHeader.displayName = 'DialogHeader'
 
 const DialogFooter = ({ className, ...props }) => (
   <div className={cn('flex flex-col-reverse md:flex-row md:justify-end gap-4', className)} {...props} />
 )
-DialogFooter.displayName = 'DialogFooter'
 
-const DialogTitle = React.forwardRef(({ className, ...props }, ref) => (
+const DialogTitle = ({ className, ref, ...props }) => (
   <DialogPrimitive.Title
     ref={ref}
     className={cn('text-lg font-semibold leading-none tracking-tight', className)}
     {...props}
   />
-))
-DialogTitle.displayName = DialogPrimitive.Title.displayName
+)
 
-const DialogDescription = React.forwardRef(({ className, ...props }, ref) => (
+const DialogDescription = ({ className, ref, ...props }) => (
   <DialogPrimitive.Description ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
-))
-DialogDescription.displayName = DialogPrimitive.Description.displayName
+)
 
 export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription }

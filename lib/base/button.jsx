@@ -1,4 +1,4 @@
-import { createElement, forwardRef } from 'react'
+import { createElement } from 'react'
 import { cva } from 'class-variance-authority'
 import { cn, LoadingIcon } from '@cloudxe/ui'
 
@@ -38,7 +38,7 @@ export const buttonVariants = cva(
   }
 )
 
-const Button = forwardRef(({ children, className, variant, size, loading, label, disabled, ...props }, ref) => {
+const Button = ({ children, className, variant, size, loading, label, disabled, ref, ...props }) => {
   return (
     <button
       ref={ref}
@@ -54,10 +54,9 @@ const Button = forwardRef(({ children, className, variant, size, loading, label,
       {label ?? children}
     </button>
   )
-})
-Button.displayName = 'Button'
+}
 
-const Fab = forwardRef(({ icon, variant, position = 'bottomRight', className, ...props }, ref) => {
+const Fab = ({ icon, variant, position = 'bottomRight', className, ref, ...props }) => {
   return (
     <button
       ref={ref}
@@ -67,6 +66,6 @@ const Fab = forwardRef(({ icon, variant, position = 'bottomRight', className, ..
       {icon && createElement(icon)}
     </button>
   )
-})
+}
 
 export { Button, Fab }

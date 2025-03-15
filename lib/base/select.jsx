@@ -4,13 +4,13 @@ import * as SelectPrimitive from '@radix-ui/react-select'
 import { cn } from '../utils'
 import { ArrowDownIcon, CheckIcon } from '../icons'
 
-const Select = React.forwardRef((props, ref) => <SelectPrimitive.Root ref={ref} {...props} />)
+const Select = (props, ref) => <SelectPrimitive.Root ref={ref} {...props} />
 
 const SelectGroup = SelectPrimitive.Group
 
 const SelectValue = SelectPrimitive.Value
 
-const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) => (
+const SelectTrigger = ({ className, children, ref, ...props }) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -24,10 +24,9 @@ const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) 
       <ArrowDownIcon className="h-4 w-4 opacity-50" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
-))
-SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
+)
 
-const SelectContent = React.forwardRef(({ className, children, position = 'popper', ...props }, ref) => (
+const SelectContent = ({ className, children, position = 'popper', ref, ...props }) => (
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       ref={ref}
@@ -51,15 +50,13 @@ const SelectContent = React.forwardRef(({ className, children, position = 'poppe
       </SelectPrimitive.Viewport>
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
-))
-SelectContent.displayName = SelectPrimitive.Content.displayName
+)
 
-const SelectLabel = React.forwardRef(({ className, ...props }, ref) => (
+const SelectLabel = ({ className, ref, ...props }) => (
   <SelectPrimitive.Label ref={ref} className={cn('py-1.5 pl-8 pr-2 font-semibold', className)} {...props} />
-))
-SelectLabel.displayName = SelectPrimitive.Label.displayName
+)
 
-const SelectItem = React.forwardRef(({ className, children, ...props }, ref) => (
+const SelectItem = ({ className, children, ref, ...props }) => (
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
@@ -76,12 +73,10 @@ const SelectItem = React.forwardRef(({ className, children, ...props }, ref) => 
 
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
-))
-SelectItem.displayName = SelectPrimitive.Item.displayName
+)
 
-const SelectSeparator = React.forwardRef(({ className, ...props }, ref) => (
+const SelectSeparator = ({ className, ref, ...props }) => (
   <SelectPrimitive.Separator ref={ref} className={cn('-mx-1 my-1 h-px bg-muted', className)} {...props} />
-))
-SelectSeparator.displayName = SelectPrimitive.Separator.displayName
+)
 
 export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectLabel, SelectItem, SelectSeparator }

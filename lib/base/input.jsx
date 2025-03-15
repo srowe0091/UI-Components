@@ -1,8 +1,6 @@
-import { forwardRef } from 'react'
-
 import { cn } from '../utils'
 
-const Input = forwardRef(({ label, error, rightIcon, leftIcon, className, ...props }, ref) => {
+const Input = ({ label, error, rightIcon, leftIcon, className, ref, ...props }) => {
   return (
     <div className="w-full">
       <div className="flex flex-col gap-1">
@@ -30,8 +28,6 @@ const Input = forwardRef(({ label, error, rightIcon, leftIcon, className, ...pro
       )}
     </div>
   )
-})
-
-Input.displayName = 'Input'
+}
 
 export { Input }

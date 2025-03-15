@@ -6,12 +6,11 @@ import { Label } from './label'
 import { cn } from '../utils'
 import { DotIcon } from '../icons'
 
-const RadioGroup = React.forwardRef(({ className, ...props }, ref) => {
+const RadioGroup = ({ className, ref, ...props }) => {
   return <RadioGroupPrimitive.Root className={cn('flex flex-col gap-4', className)} {...props} ref={ref} />
-})
-RadioGroup.displayName = RadioGroupPrimitive.Root.displayName
+}
 
-const RadioGroupItem = React.forwardRef(({ className, label, ...props }, ref) => {
+const RadioGroupItem = ({ className, label, ref, ...props }) => {
   const htmlFor = React.useId()
   return (
     <Label htmlFor={htmlFor} className="flex items-center gap-2 self-start cursor-pointer">
@@ -31,7 +30,6 @@ const RadioGroupItem = React.forwardRef(({ className, label, ...props }, ref) =>
       <span>{label}</span>
     </Label>
   )
-})
-RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
+}
 
 export { RadioGroup, RadioGroupItem }

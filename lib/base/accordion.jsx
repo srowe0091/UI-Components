@@ -6,12 +6,11 @@ import { ArrowDownIcon } from '../icons'
 
 const Accordion = AccordionPrimitive.Root
 
-const AccordionItem = React.forwardRef(({ className, ...props }, ref) => (
+const AccordionItem = ({ className, ref, ...props }) => (
   <AccordionPrimitive.Item ref={ref} className={cn('border-b', className)} {...props} />
-))
-AccordionItem.displayName = 'AccordionItem'
+)
 
-const AccordionTrigger = React.forwardRef(({ className, children, ...props }, ref) => (
+const AccordionTrigger = ({ className, children, ref, ...props }) => (
   <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
       ref={ref}
@@ -25,10 +24,9 @@ const AccordionTrigger = React.forwardRef(({ className, children, ...props }, re
       <ArrowDownIcon className="h-4 w-4 shrink-0 transition-transform duration-200" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
-))
-AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
+)
 
-const AccordionContent = React.forwardRef(({ className, children, ...props }, ref) => (
+const AccordionContent = ({ className, children, ref, ...props }) => (
   <AccordionPrimitive.Content
     ref={ref}
     className={cn(
@@ -39,7 +37,6 @@ const AccordionContent = React.forwardRef(({ className, children, ...props }, re
   >
     <div className="pb-4 pt-0">{children}</div>
   </AccordionPrimitive.Content>
-))
-AccordionContent.displayName = AccordionPrimitive.Content.displayName
+)
 
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }

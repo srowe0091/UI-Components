@@ -1,4 +1,4 @@
-import { useCallback, forwardRef, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { Input } from '../base/input'
 
@@ -10,10 +10,10 @@ const currencyFormat = value => {
   return [currency(number, true), number]
 }
 
-export const CurrencyInput = forwardRef(({ onChange, value, ...rest }, ref) => {
+export const CurrencyInput = ({ onChange, value, ...rest }, ref) => {
   const _value = useMemo(() => currencyFormat(value)[0], [value])
 
   const _onChange = useCallback(e => onChange(currencyFormat(e.target.value)[1]), [onChange])
 
   return <Input inputMode="numeric" ref={ref} onChange={_onChange} value={_value} {...rest} />
-})
+}

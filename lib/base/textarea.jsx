@@ -3,7 +3,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 
 import { cn } from '../utils'
 
-const Textarea = React.forwardRef(({ className, ...props }, ref) => {
+const Textarea = ({ className, ref, ...props }) => {
   return (
     <TextareaAutosize
       className={cn(
@@ -14,7 +14,6 @@ const Textarea = React.forwardRef(({ className, ...props }, ref) => {
       {...props}
     />
   )
-})
-Textarea.displayName = 'Textarea'
+}
 
 export { Textarea }

@@ -1,7 +1,6 @@
-import { forwardRef } from 'react'
 import { Select as ShSelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../base/select'
 
-export const Select = forwardRef(({ label, placeholder, options, onChange, ...props }, ref) => {
+export const Select = ({ label, placeholder, options, onChange, ref, ...props }) => {
   return (
     <ShSelect onValueChange={onChange} {...props}>
       <div className="flex flex-col gap-1 w-full">
@@ -19,4 +18,4 @@ export const Select = forwardRef(({ label, placeholder, options, onChange, ...pr
       </SelectContent>
     </ShSelect>
   )
-})
+}

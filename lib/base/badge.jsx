@@ -1,4 +1,3 @@
-import { forwardRef } from 'react'
 import { cva } from 'class-variance-authority'
 
 import { cn } from '../utils'
@@ -20,10 +19,8 @@ const badgeVariants = cva(
   }
 )
 
-const Badge = forwardRef(({ className, variant, ...props }, ref) => {
+const Badge = ({ className, variant, ref, ...props }) => {
   return <div ref={ref} className={cn(badgeVariants({ variant }), className)} {...props} />
-})
-
-Badge.displayName = 'Badge'
+}
 
 export { Badge }

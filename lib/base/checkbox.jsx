@@ -6,7 +6,7 @@ import { Label } from './label'
 import { cn } from '../utils'
 import { CheckIcon } from '../icons'
 
-const Checkbox = React.forwardRef(({ className, children, value, onChange, ...props }, ref) => {
+const Checkbox = ({ className, children, value, onChange, ref, ...props }) => {
   const htmlFor = React.useId()
   return (
     <Label htmlFor={htmlFor} className="peer flex items-center gap-2 cursor-pointer">
@@ -28,6 +28,6 @@ const Checkbox = React.forwardRef(({ className, children, value, onChange, ...pr
       <span>{children}</span>
     </Label>
   )
-})
+}
 
 export { Checkbox }
