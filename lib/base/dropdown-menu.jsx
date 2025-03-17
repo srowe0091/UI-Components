@@ -67,7 +67,7 @@ const DropdownMenuLabel = ({ className, inset, ref, ...props }) => (
 )
 
 const DropdownMenuSeparator = ({ className, ref, ...props }) => (
-  <DropdownMenuPrimitive.Separator ref={ref} className={cn('-mx-1 my-1 h-px bg-muted', className)} {...props} />
+  <DropdownMenuPrimitive.Separator ref={ref} className={cn('my-1 h-px bg-muted', className)} {...props} />
 )
 
 export {
