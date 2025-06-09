@@ -1,5 +1,5 @@
-import { cn } from '@/utils'
-
+import { Fade } from './Fade'
+import { cn } from '../utils'
 import { LoadingIcon } from '../icons'
 
 export const ContainerLoader = ({ loading }) =>
