@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 
-export const Fade = ({ children, in: isVisible, disableMountAnimation, unmountAnimation, ...rest }) => {
+export const Fade = ({ children, isVisible, disableMountAnimation, unmountAnimation, ...rest }) => {
   return (
     <AnimatePresence>
       {isVisible && (
