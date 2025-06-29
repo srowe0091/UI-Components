@@ -25,7 +25,7 @@ export const SpeedDial = ({ items, trigger }) => {
   return (
     <div className="absolute bottom-10 right-8 z-40">
       <div className="flex justify-end relative">
-        <Fade in={isOpen}>
+        <Fade isVisible={isOpen}>
           <div onClick={close} className={cn('bg-black/80 h-screen w-screen fixed top-0 left-0')} />
 
           <div className={cn('bottom-[66px] right-[4px] absolute w-max flex flex-col-reverse items-end gap-6')}>
