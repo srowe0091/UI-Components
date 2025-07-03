@@ -1,7 +1,15 @@
 import { useEffect } from 'react'
 import { create } from 'zustand'
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '../base/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogDescription
+} from '../base/dialog'
 import { cn } from '../utils'
 
 const curry = func => {
@@ -36,6 +44,7 @@ export const Modal = ({ children, header, name, trigger, triggerRef, contentStyl
       <DialogTrigger ref={triggerRef} asChild>
         {trigger}
       </DialogTrigger>
+
       <DialogContent className={contentStyles}>
         <DialogHeader>
           <DialogTitle>{header}</DialogTitle>
@@ -43,6 +52,8 @@ export const Modal = ({ children, header, name, trigger, triggerRef, contentStyl
 
         {children}
       </DialogContent>
+
+      <DialogDescription className="sr-only">{header}</DialogDescription>
     </Dialog>
   )
 }
