@@ -8,7 +8,7 @@ const Tabs = TabsPrimitive.Root
 const TabsList = ({ className, ref, ...props }) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn('w-full inline-flex justify-start text-muted-foreground gap-2 mb-6', className)}
+    className={cn('w-full inline-flex justify-start text-muted-foreground gap-2 mb-4', className)}
     {...props}
   />
 )
