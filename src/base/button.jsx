@@ -1,6 +1,8 @@
 import { createElement } from 'react'
 import { cva } from 'class-variance-authority'
-import { cn, LoadingIcon } from '@cloudxe/ui'
+
+import { cn } from '../utils'
+import { LoadingIcon } from '../icons'
 
 export const buttonVariants = cva(
   'inline-flex items-center justify-center rounded-md transition-colors disabled:pointer-events-none disabled:opacity-50',
