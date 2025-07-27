@@ -1,4 +1,4 @@
-import { Select as ShSelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../base/select'
+import { Select as ShSelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/base/select'
 
 export const Select = ({ label, placeholder, options, onChange, ref, ...props }) => {
   return (

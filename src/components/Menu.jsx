@@ -5,7 +5,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuItem
-} from '../base/dropdown-menu'
+} from '@/base/dropdown-menu'
 
 export const Menu = ({ trigger, children, align, disabled }) => {
   return (

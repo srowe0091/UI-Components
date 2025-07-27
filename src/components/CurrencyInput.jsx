@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { Input } from '../base/input'
+import { Input } from '@/base/input'
 
 const toNumber = str => parseInt(typeof str === 'number' ? str : str.replace(/\D/g, ''), '10')
 const currency = number => (typeof number === 'number' ? `$${(number / 100).toFixed(2)}` : null)

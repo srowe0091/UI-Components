@@ -1,8 +1,9 @@
 import { createElement, useCallback, useState } from 'react'
 
-import { cn } from '../utils'
-import { Button } from '../base/button'
-import { Fade } from '../components/Fade'
+import { cn } from '@/utils'
+import { Button } from '@/base/button'
+
+import { Fade } from './Fade'
 
 const Item = ({ icon, label, className, ...rest }) => {
   return (

@@ -1,28 +1,28 @@
-import * as React from 'react'
+import { useId } from 'react'
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox'
 
-import { Label } from './label'
+import { cn } from '@/utils'
+import { CheckIcon } from '@/icons'
+import { Label } from '@/base/label'
 
-import { cn } from '../utils'
-import { CheckIcon } from '../icons'
-
-const Checkbox = ({ className, children, value, onChange, ref, ...props }) => {
-  const htmlFor = React.useId()
+const Checkbox = ({ className, children, ...props }) => {
+  const htmlFor = useId()
   return (
     <Label htmlFor={htmlFor} className="peer flex items-center gap-2 cursor-pointer">
       <CheckboxPrimitive.Root
         id={htmlFor}
-        ref={ref}
+        data-slot="checkbox"
         className={cn(
-          'peer h-5 w-5 shrink-0 rounded border border-primary disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
+          'peer size-5 border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
           className
         )}
-        checked={value}
-        onCheckedChange={onChange}
         {...props}
       >
-        <CheckboxPrimitive.Indicator className="flex items-center justify-center text-current">
-          <CheckIcon className="h-3 w-3" />
+        <CheckboxPrimitive.Indicator
+          data-slot="checkbox-indicator"
+          className="flex items-center justify-center text-current transition-none"
+        >
+          <CheckIcon className="size-3" />
         </CheckboxPrimitive.Indicator>
       </CheckboxPrimitive.Root>
       <span>{children}</span>

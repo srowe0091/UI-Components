@@ -1,6 +1,6 @@
 import { Fade } from './Fade'
 import { cn } from '../utils'
-import { LoadingIcon } from '../icons'
+import { LoadingIcon } from '@/icons'
 
 export const ContainerLoader = ({ loading }) =>
   loading && (
@@ -19,7 +19,11 @@ export const PageLoader = ({ loading }) =>
 export const FadePageLoader = ({ children, loading, className, ...rest }) => {
   return (
     <>
-      <Fade isVisible={loading} className={cn('center fixed top-0 left-0 right-0 bottom-0 z-[60]', className)} {...rest}>
+      <Fade
+        isVisible={loading}
+        className={cn('center fixed top-0 left-0 right-0 bottom-0 z-[60]', className)}
+        {...rest}
+      >
         <LoadingIcon className="animate-spin duration-500 h-10 w-10" />
       </Fade>
 

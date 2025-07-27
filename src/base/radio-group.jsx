@@ -1,30 +1,32 @@
-import * as React from 'react'
+import { useId } from 'react'
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group'
 
-import { Label } from './label'
+import { cn } from '@/utils'
+import { DotIcon } from '@/icons'
+import { Label } from '@/base/label'
 
-import { cn } from '../utils'
-import { DotIcon } from '../icons'
-
-const RadioGroup = ({ className, ref, ...props }) => {
-  return <RadioGroupPrimitive.Root className={cn('flex flex-col gap-4', className)} {...props} ref={ref} />
+const RadioGroup = ({ className, ...props }) => {
+  return <RadioGroupPrimitive.Root data-slot="radio-group" className={cn('grid gap-4', className)} {...props} />
 }
 
-const RadioGroupItem = ({ className, label, ref, ...props }) => {
-  const htmlFor = React.useId()
+const RadioGroupItem = ({ className, label, ...props }) => {
+  const htmlFor = useId()
   return (
     <Label htmlFor={htmlFor} className="flex items-center gap-2 self-start cursor-pointer">
       <RadioGroupPrimitive.Item
-        ref={ref}
+        data-slot="radio-group-item"
         id={htmlFor}
         className={cn(
-          'aspect-square h-5 w-5 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+          'border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
           className
         )}
         {...props}
       >
-        <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-          <DotIcon className="h-2.5 w-2.5 fill-current text-current" />
+        <RadioGroupPrimitive.Indicator
+          data-slot="radio-group-indicator"
+          className="relative flex items-center justify-center"
+        >
+          <DotIcon className="fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" />
         </RadioGroupPrimitive.Indicator>
       </RadioGroupPrimitive.Item>
       <span>{label}</span>

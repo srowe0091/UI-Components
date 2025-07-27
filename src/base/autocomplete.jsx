@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { ArrowDownIcon, CheckIcon } from '../icons'
 import { cn } from '../utils'
@@ -18,13 +18,13 @@ const AutoComplete = ({
   onInputChange,
   defaultOpen
 }) => {
-  const [open, setOpen] = React.useState(defaultOpen ?? false)
+  const [open, setOpen] = useState(defaultOpen ?? false)
 
-  const _value = React.useMemo(() => {
+  const _value = useMemo(() => {
     return multiple ? value?.join(', ') : value
   }, [multiple, value])
 
-  const onSelect = React.useCallback(
+  const onSelect = useCallback(
     selectedOption => {
       onInputChange?.('')
       if (multiple) {

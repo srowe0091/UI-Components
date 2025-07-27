@@ -1,4 +1,4 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../base/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/base/sheet'
 
 export const SideDrawer = ({ trigger, header, children, ...rest }) => {
   return (

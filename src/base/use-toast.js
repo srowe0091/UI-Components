@@ -1,5 +1,6 @@
 // Inspired by react-hot-toast library
-import * as React from 'react'
+
+import { useEffect, useState } from 'react'
 
 const TOAST_LIMIT = 10
 const TOAST_REMOVE_DELAY = 1000000
@@ -125,9 +126,9 @@ const toast = {
 }
 
 function useToast() {
-  const [state, setState] = React.useState(memoryState)
+  const [state, setState] = useState(memoryState)
 
-  React.useEffect(() => {
+  useEffect(() => {
     listeners.push(setState)
     return () => {
       const index = listeners.indexOf(setState)

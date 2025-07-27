@@ -9,8 +9,8 @@ import {
   DialogTrigger,
   DialogFooter,
   DialogDescription
-} from '../base/dialog'
-import { cn } from '../utils'
+} from '@/base/dialog'
+import { cn } from '@/utils'
 
 const curry = func => {
   const expectedArgs = func.length

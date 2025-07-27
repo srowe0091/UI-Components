@@ -1,4 +1,4 @@
-import { Sheet as _Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../base/sheet'
+import { Sheet as _Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/base/sheet'
 
 export const Sheet = ({ trigger, header, children, ...rest }) => {
   return (

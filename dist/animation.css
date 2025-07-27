@@ -1,0 +1,70 @@
+@import 'tw-animate-css';
+
+@theme {
+  --tw-animation-duration: 250ms;
+
+  --animate-accordion-up: accordion-up var(--tw-animation-duration) ease-out;
+  --animate-accordion-down: accordion-down var(--tw-animation-duration) ease-out;
+  --animate-collapse-open: collapse-open var(--tw-animation-duration) ease-out;
+  --animate-collapse-close: collapse-close var(--tw-animation-duration) ease-out;
+
+  @keyframes accordion-down {
+    from {
+      opacity: 0;
+      height: 0;
+    }
+    to {
+      opacity: 1;
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      opacity: 1;
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      opacity: 0;
+      height: 0;
+    }
+  }
+
+  @keyframes collapse-open {
+    from {
+      opacity: 0;
+      height: 0;
+    }
+    to {
+      opacity: 1;
+      height: var(--radix-collapsible-content-height);
+    }
+  }
+
+  @keyframes collapse-close {
+    from {
+      opacity: 1;
+      height: var(--radix-collapsible-content-height);
+    }
+    to {
+      opacity: 0;
+      height: 0;
+    }
+  }
+
+  @keyframes foilGlow {
+    0% {
+      background-position: 0 0;
+      transform: rotate(0deg);
+    }
+
+    50% {
+      background-position: 100% 0;
+    }
+
+    100% {
+      background-position: 0 0;
+      transform: rotate(360deg);
+    }
+  }
+}

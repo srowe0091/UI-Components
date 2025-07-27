@@ -1,14 +1,14 @@
-import * as React from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 
-import { Button } from './button'
-import { cn } from '../utils'
+import { cn } from '@/utils'
+import { Button } from '@/base/button'
 import { ArrowLeftIcon, ArrowRightIcon } from '../icons'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
-const CarouselContext = React.createContext(null)
+const CarouselContext = createContext(null)
 
-function useCarousel() {
-  const context = React.useContext(CarouselContext)
+const useCarousel = () => {
+  const context = useContext(CarouselContext)
 
   if (!context) {
     throw new Error('useCarousel must be used within a <Carousel />')
@@ -17,7 +17,7 @@ function useCarousel() {
   return context
 }
 
-function Carousel({ orientation = 'horizontal', opts, setApi, plugins, className, children, ...props }) {
+const Carousel = ({ orientation = 'horizontal', opts, setApi, plugins, className, children, ...props }) => {
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
@@ -25,24 +25,24 @@ function Carousel({ orientation = 'horizontal', opts, setApi, plugins, className
     },
     plugins
   )
-  const [canScrollPrev, setCanScrollPrev] = React.useState(false)
-  const [canScrollNext, setCanScrollNext] = React.useState(false)
+  const [canScrollPrev, setCanScrollPrev] = useState(false)
+  const [canScrollNext, setCanScrollNext] = useState(false)
 
-  const onSelect = React.useCallback(api => {
+  const onSelect = useCallback(api => {
     if (!api) return
     setCanScrollPrev(api.canScrollPrev())
     setCanScrollNext(api.canScrollNext())
   }, [])
 
-  const scrollPrev = React.useCallback(() => {
+  const scrollPrev = useCallback(() => {
     api?.scrollPrev()
   }, [api])
 
-  const scrollNext = React.useCallback(() => {
+  const scrollNext = useCallback(() => {
     api?.scrollNext()
   }, [api])
 
-  const handleKeyDown = React.useCallback(
+  const handleKeyDown = useCallback(
     event => {
       if (event.key === 'ArrowLeft') {
         event.preventDefault()
@@ -55,12 +55,12 @@ function Carousel({ orientation = 'horizontal', opts, setApi, plugins, className
     [scrollPrev, scrollNext]
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!api || !setApi) return
     setApi(api)
   }, [api, setApi])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!api) return
     onSelect(api)
     api.on('reInit', onSelect)
@@ -98,7 +98,7 @@ function Carousel({ orientation = 'horizontal', opts, setApi, plugins, className
   )
 }
 
-function CarouselContent({ className, ...props }) {
+const CarouselContent = ({ className, ...props }) => {
   const { carouselRef, orientation } = useCarousel()
 
   return (
@@ -108,7 +108,7 @@ function CarouselContent({ className, ...props }) {
   )
 }
 
-function CarouselItem({ className, ...props }) {
+const CarouselItem = ({ className, ...props }) => {
   const { orientation } = useCarousel()
 
   return (
@@ -122,7 +122,7 @@ function CarouselItem({ className, ...props }) {
   )
 }
 
-function CarouselPrevious({ className, variant = 'outline', size = 'icon', ...props }) {
+const CarouselPrevious = ({ className, variant = 'outline', size = 'icon', ...props }) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
 
   return (
@@ -147,7 +147,7 @@ function CarouselPrevious({ className, variant = 'outline', size = 'icon', ...pr
   )
 }
 
-function CarouselNext({ className, variant = 'outline', size = 'icon', ...props }) {
+const CarouselNext = ({ className, variant = 'outline', size = 'icon', ...props }) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
 
   return (
