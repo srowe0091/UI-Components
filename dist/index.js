@@ -19469,7 +19469,7 @@ var RadioGroup$2 = MenuRadioGroup;
 var RadioItem = MenuRadioItem;
 var ItemIndicator$1 = MenuItemIndicator;
 var Separator = MenuSeparator;
-var Arrow2$1 = MenuArrow;
+var Arrow2 = MenuArrow;
 var Sub = MenuSub;
 var SubTrigger = MenuSubTrigger;
 var SubContent = MenuSubContent;
@@ -19667,7 +19667,7 @@ var DropdownMenuArrow = React.forwardRef(
   (props, forwardedRef) => {
     const { __scopeDropdownMenu, ...arrowProps } = props;
     const menuScope = useMenuScope(__scopeDropdownMenu);
-    return /* @__PURE__ */ jsx(Arrow2$1, { ...menuScope, ...arrowProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx(Arrow2, { ...menuScope, ...arrowProps, ref: forwardedRef });
   }
 );
 DropdownMenuArrow.displayName = ARROW_NAME$3;
@@ -34257,7 +34257,6 @@ var Root3 = Tooltip$1;
 var Trigger = TooltipTrigger$1;
 var Portal = TooltipPortal;
 var Content2 = TooltipContent$1;
-var Arrow2 = TooltipArrow;
 
 const TooltipProvider = ({
   delayDuration = 0,
@@ -34294,14 +34293,12 @@ const TooltipContent = ({
   ...props
 }) => {
   return /*#__PURE__*/jsx(Portal, {
-    children: /*#__PURE__*/jsxs(Content2, {
+    children: /*#__PURE__*/jsx(Content2, {
       "data-slot": "tooltip-content",
       sideOffset: sideOffset,
-      className: cn('border-2 border-black bg-primary text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-sm text-balance', className),
+      className: cn('mb-2 border-2 border-black bg-popover backdrop-brightness-50 text-popover-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-sm text-balance', className),
       ...props,
-      children: [children, /*#__PURE__*/jsx(Arrow2, {
-        className: "bg-primary fill-primary z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]"
-      })]
+      children: children
     })
   });
 };
