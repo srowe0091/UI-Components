@@ -8,7 +8,8 @@
     "./animations": "./dist/animation.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "package.json"
   ],
   "scripts": {
     "build": "npm run lint && rollup -c",
