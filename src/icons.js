@@ -41,6 +41,7 @@ import {
   FaSignOutAlt,
   FaSlidersH,
   FaSpinner,
+  FaStickyNote,
   FaSyncAlt,
   FaTimes,
   FaTrashAlt,
@@ -86,6 +87,7 @@ export const MailIcon = FaEnvelope
 export const MenuIcon = FaBars
 export const MinusIcon = FaMinus
 export const MoneyIcon = FaMoneyBill
+export const NoteIcon = FaStickyNote
 export const NotificationIcon = FaBell
 export const OptionsIcon = FaEllipsisV
 export const PasswordIcon = FaLock
