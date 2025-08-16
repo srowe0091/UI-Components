@@ -3028,6 +3028,8 @@ function FaAddressCard (props) {
   return GenIcon({"attr":{"viewBox":"0 0 576 512"},"child":[{"tag":"path","attr":{"d":"M528 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-352 96c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zm112 236.8c0 10.6-10 19.2-22.4 19.2H86.4C74 384 64 375.4 64 364.8v-19.2c0-31.8 30.1-57.6 67.2-57.6h5c12.3 5.1 25.7 8 39.8 8s27.6-2.9 39.8-8h5c37.1 0 67.2 25.8 67.2 57.6v19.2zM512 312c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-64c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-64c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16z"},"child":[]}]})(props);
 }function FaArchive (props) {
   return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M32 448c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3 0 64v48c0 8.8 7.2 16 16 16h480c8.8 0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"},"child":[]}]})(props);
+}function FaArrowsAlt (props) {
+  return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M352.201 425.775l-79.196 79.196c-9.373 9.373-24.568 9.373-33.941 0l-79.196-79.196c-15.119-15.119-4.411-40.971 16.971-40.97h51.162L228 284H127.196v51.162c0 21.382-25.851 32.09-40.971 16.971L7.029 272.937c-9.373-9.373-9.373-24.569 0-33.941L86.225 159.8c15.119-15.119 40.971-4.411 40.971 16.971V228H228V127.196h-51.23c-21.382 0-32.09-25.851-16.971-40.971l79.196-79.196c9.373-9.373 24.568-9.373 33.941 0l79.196 79.196c15.119 15.119 4.411 40.971-16.971 40.971h-51.162V228h100.804v-51.162c0-21.382 25.851-32.09 40.97-16.971l79.196 79.196c9.373 9.373 9.373 24.569 0 33.941L425.773 352.2c-15.119 15.119-40.971 4.411-40.97-16.971V284H284v100.804h51.23c21.382 0 32.09 25.851 16.971 40.971z"},"child":[]}]})(props);
 }function FaBars (props) {
   return GenIcon({"attr":{"viewBox":"0 0 448 512"},"child":[{"tag":"path","attr":{"d":"M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"},"child":[]}]})(props);
 }function FaBell (props) {
@@ -3108,6 +3110,8 @@ function FaAddressCard (props) {
   return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M496 384H160v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h80v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h336c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm0-160h-80v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h336v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h80c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm0-160H288V48c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h208v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h208c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16z"},"child":[]}]})(props);
 }function FaSpinner (props) {
   return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M304 48c0 26.51-21.49 48-48 48s-48-21.49-48-48 21.49-48 48-48 48 21.49 48 48zm-48 368c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm208-208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zM96 256c0-26.51-21.49-48-48-48S0 229.49 0 256s21.49 48 48 48 48-21.49 48-48zm12.922 99.078c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.491-48-48-48zm294.156 0c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.49-48-48-48zM108.922 60.922c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.491-48-48-48z"},"child":[]}]})(props);
+}function FaStickyNote (props) {
+  return GenIcon({"attr":{"viewBox":"0 0 448 512"},"child":[{"tag":"path","attr":{"d":"M312 320h136V56c0-13.3-10.7-24-24-24H24C10.7 32 0 42.7 0 56v400c0 13.3 10.7 24 24 24h264V344c0-13.2 10.8-24 24-24zm129 55l-98 98c-4.5 4.5-10.6 7-17 7h-6V352h128v6.1c0 6.3-2.5 12.4-7 16.9z"},"child":[]}]})(props);
 }function FaSyncAlt (props) {
   return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15H24.103c-7.498 0-13.194-6.807-11.807-14.176C33.933 94.924 134.813 8 256 8c66.448 0 126.791 26.136 171.315 68.685L463.03 40.97C478.149 25.851 504 36.559 504 57.941V192c0 13.255-10.745 24-24 24H345.941c-21.382 0-32.09-25.851-16.971-40.971l41.75-41.749zM32 296h134.059c21.382 0 32.09 25.851 16.971 40.971l-41.75 41.75c31.262 29.273 71.835 45.319 114.876 45.28 77.418-.07 144.315-53.144 162.787-126.849 1.344-5.363 6.122-9.15 11.651-9.15h57.304c7.498 0 13.194 6.807 11.807 14.176C478.067 417.076 377.187 504 256 504c-66.448 0-126.791-26.136-171.315-68.685L48.97 471.03C33.851 486.149 8 475.441 8 454.059V320c0-13.255 10.745-24 24-24z"},"child":[]}]})(props);
 }function FaTimes (props) {
@@ -3167,6 +3171,8 @@ const MailIcon = FaEnvelope;
 const MenuIcon = FaBars;
 const MinusIcon = FaMinus;
 const MoneyIcon = FaMoneyBill;
+const MoveIcon = FaArrowsAlt;
+const NoteIcon = FaStickyNote;
 const NotificationIcon = FaBell;
 const OptionsIcon = FaEllipsisV;
 const PasswordIcon = FaLock;
@@ -8161,6 +8167,11 @@ function useVisualElement(Component, visualState, props, createVisualElement, Pr
             });
             wantsHandoff.current = false;
         }
+        /**
+         * Now we've finished triggering animations for this element we
+         * can wipe the enteringChildren set for the next render.
+         */
+        visualElement.enteringChildren = undefined;
     });
     return visualElement;
 }
@@ -8745,8 +8756,7 @@ class VisualElement {
         if (process.env.NODE_ENV !== "production") {
             warnOnce(this.shouldReduceMotion !== true, "You have Reduced Motion enabled on your device. Animations may not appear as expected.", "reduced-motion-disabled");
         }
-        if (this.parent)
-            this.parent.children.add(this);
+        this.parent?.addChild(this);
         this.update(this.props, this.presenceContext);
     }
     unmount() {
@@ -8756,7 +8766,7 @@ class VisualElement {
         this.valueSubscriptions.forEach((remove) => remove());
         this.valueSubscriptions.clear();
         this.removeFromVariantTree && this.removeFromVariantTree();
-        this.parent && this.parent.children.delete(this);
+        this.parent?.removeChild(this);
         for (const key in this.events) {
             this.events[key].clear();
         }
@@ -8768,6 +8778,15 @@ class VisualElement {
             }
         }
         this.current = null;
+    }
+    addChild(child) {
+        this.children.add(child);
+        this.enteringChildren ?? (this.enteringChildren = new Set());
+        this.enteringChildren.add(child);
+    }
+    removeChild(child) {
+        this.children.delete(child);
+        this.enteringChildren && this.enteringChildren.delete(child);
     }
     bindToMotionValue(key, value) {
         if (this.valueSubscriptions.has(key)) {
@@ -9497,6 +9516,20 @@ function animateTarget(visualElement, targetAndTransition, { delay = 0, transiti
     return animations;
 }
 
+function calcChildStagger(children, child, delayChildren, staggerChildren = 0, staggerDirection = 1) {
+    const index = Array.from(children)
+        .sort((a, b) => a.sortNodePosition(b))
+        .indexOf(child);
+    const numChildren = children.size;
+    const maxStaggerDuration = (numChildren - 1) * staggerChildren;
+    const delayIsFunction = typeof delayChildren === "function";
+    return delayIsFunction
+        ? delayChildren(index, numChildren)
+        : staggerDirection === 1
+            ? index * staggerChildren
+            : maxStaggerDuration - index * staggerChildren;
+}
+
 function animateVariant(visualElement, variant, options = {}) {
     const resolved = resolveVariant(visualElement, variant, options.type === "exit"
         ? visualElement.presenceContext?.custom
@@ -9539,30 +9572,16 @@ function animateVariant(visualElement, variant, options = {}) {
 }
 function animateChildren(visualElement, variant, delay = 0, delayChildren = 0, staggerChildren = 0, staggerDirection = 1, options) {
     const animations = [];
-    const numChildren = visualElement.variantChildren.size;
-    const maxStaggerDuration = (numChildren - 1) * staggerChildren;
-    const delayIsFunction = typeof delayChildren === "function";
-    const generateStaggerDuration = delayIsFunction
-        ? (i) => delayChildren(i, numChildren)
-        : // Support deprecated staggerChildren
-            staggerDirection === 1
-                ? (i = 0) => i * staggerChildren
-                : (i = 0) => maxStaggerDuration - i * staggerChildren;
-    Array.from(visualElement.variantChildren)
-        .sort(sortByTreeOrder)
-        .forEach((child, i) => {
+    for (const child of visualElement.variantChildren) {
         child.notify("AnimationStart", variant);
         animations.push(animateVariant(child, variant, {
             ...options,
             delay: delay +
-                (delayIsFunction ? 0 : delayChildren) +
-                generateStaggerDuration(i),
+                (typeof delayChildren === "function" ? 0 : delayChildren) +
+                calcChildStagger(visualElement.variantChildren, child, delayChildren, staggerChildren, staggerDirection),
         }).then(() => child.notify("AnimationComplete", variant)));
-    });
+    }
     return Promise.all(animations);
-}
-function sortByTreeOrder(a, b) {
-    return a.sortNodePosition(b);
 }
 
 function animateVisualElement(visualElement, definition, options = {}) {
@@ -9716,9 +9735,6 @@ function createAnimationState(visualElement) {
             let isInherited = prop === context[type] &&
                 prop !== props[type] &&
                 propIsVariant;
-            /**
-             *
-             */
             if (isInherited &&
                 isInitialRender &&
                 visualElement.manuallyAnimateOnMount) {
@@ -9839,9 +9855,6 @@ function createAnimationState(visualElement) {
              */
             typeState.prevProp = prop;
             typeState.prevResolvedValues = resolvedValues;
-            /**
-             *
-             */
             if (typeState.isActive) {
                 encounteredKeys = { ...encounteredKeys, ...resolvedValues };
             }
@@ -9855,10 +9868,30 @@ function createAnimationState(visualElement) {
             const willAnimateViaParent = isInherited && variantDidChange;
             const needsAnimating = !willAnimateViaParent || handledRemovedValues;
             if (shouldAnimateType && needsAnimating) {
-                animations.push(...definitionList.map((animation) => ({
-                    animation: animation,
-                    options: { type },
-                })));
+                animations.push(...definitionList.map((animation) => {
+                    const options = { type };
+                    /**
+                     * If we're performing the initial animation, but we're not
+                     * rendering at the same time as the variant-controlling parent,
+                     * we want to use the parent's transition to calculate the stagger.
+                     */
+                    if (typeof animation === "string" &&
+                        isInitialRender &&
+                        !willAnimateViaParent &&
+                        visualElement.manuallyAnimateOnMount &&
+                        visualElement.parent) {
+                        const { parent } = visualElement;
+                        const parentVariant = resolveVariant(parent, animation);
+                        if (parent.enteringChildren && parentVariant) {
+                            const { delayChildren } = parentVariant.transition || {};
+                            options.delay = calcChildStagger(parent.enteringChildren, visualElement, delayChildren);
+                        }
+                    }
+                    return {
+                        animation: animation,
+                        options,
+                    };
+                }));
             }
         }
         /**
@@ -11032,6 +11065,10 @@ const correctBoxShadow = {
 /**
  * Track whether we've taken any snapshots yet. If not,
  * we can safely skip notification of didUpdate.
+ *
+ * Difficult to capture in a test but to prevent flickering
+ * we must set this to true either on update or unmount.
+ * Running `next-env/layout-id` in Safari will show this behaviour if broken.
  */
 let hasTakenAnySnapshot = false;
 class MeasureLayoutWithContext extends Component {
@@ -11120,6 +11157,7 @@ class MeasureLayoutWithContext extends Component {
     componentWillUnmount() {
         const { visualElement, layoutGroup, switchLayoutGroup: promoteContext, } = this.props;
         const { projection } = visualElement;
+        hasTakenAnySnapshot = true;
         if (projection) {
             projection.scheduleCheckAfterUnmount();
             if (layoutGroup && layoutGroup.group)
@@ -13469,7 +13507,7 @@ const CurrencyInput = ({
   });
 };
 
-// packages/core/primitive/src/primitive.tsx
+// src/primitive.tsx
 function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
   return function handleEvent(event) {
     originalEventHandler?.(event);
@@ -14306,7 +14344,7 @@ function usePresence(present) {
       const ownerWindow = node.ownerDocument.defaultView ?? window;
       const handleAnimationEnd = (event) => {
         const currentAnimationName = getAnimationName(stylesRef.current);
-        const isCurrentAnimation = currentAnimationName.includes(event.animationName);
+        const isCurrentAnimation = currentAnimationName.includes(CSS.escape(event.animationName));
         if (event.target === node && isCurrentAnimation) {
           send("ANIMATION_END");
           if (!prevPresentRef.current) {
@@ -16457,7 +16495,7 @@ const flip$2 = function (options) {
           if (!ignoreCrossAxisOverflow ||
           // We leave the current main axis only if every placement on that axis
           // overflows the main axis.
-          overflowsData.every(d => d.overflows[0] > 0 && getSideAxis(d.placement) === initialSideAxis)) {
+          overflowsData.every(d => getSideAxis(d.placement) === initialSideAxis ? d.overflows[0] > 0 : true)) {
             // Try next placement and re-run the lifecycle.
             return {
               data: {
@@ -18203,8 +18241,13 @@ var PopperAnchor = React.forwardRef(
     const context = usePopperContext(ANCHOR_NAME$2, __scopePopper);
     const ref = React.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, ref);
+    const anchorRef = React.useRef(null);
     React.useEffect(() => {
-      context.onAnchorChange(virtualRef?.current || ref.current);
+      const previousAnchor = anchorRef.current;
+      anchorRef.current = virtualRef?.current || ref.current;
+      if (previousAnchor !== anchorRef.current) {
+        context.onAnchorChange(anchorRef.current);
+      }
     });
     return virtualRef ? null : /* @__PURE__ */ jsx(Primitive.div, { ...anchorProps, ref: composedRefs });
   }
@@ -33112,7 +33155,6 @@ var FocusProxy = React.forwardRef(
     return /* @__PURE__ */ jsx(
       VisuallyHidden,
       {
-        "aria-hidden": true,
         tabIndex: 0,
         ...proxyProps,
         ref: forwardedRef,
@@ -33264,7 +33306,6 @@ var ToastImpl = React.forwardRef(
           __scopeToast,
           role: "status",
           "aria-live": type === "foreground" ? "assertive" : "polite",
-          "aria-atomic": true,
           children: announceTextContent
         }
       ),
@@ -33280,9 +33321,6 @@ var ToastImpl = React.forwardRef(
             children: /* @__PURE__ */ jsx(
               Primitive.li,
               {
-                role: "status",
-                "aria-live": "off",
-                "aria-atomic": true,
                 tabIndex: 0,
                 "data-state": open ? "open" : "closed",
                 "data-swipe-direction": context.swipeDirection,
@@ -34303,5 +34341,5 @@ const TooltipContent = ({
   });
 };
 
-export { Accordion, AccordionContent, AccordionItem, AccordionTrigger, AddCircleIcon, AddIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, ArtistIcon, AutoComplete, Badge, BillIcon, Button$1 as Button, Calendar, CalendarDayButton, CalendarIcon, Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CatalogIcon, ChartIcon, CheckIcon, Checkbox, CloseIcon, Collapsible, CollapsibleContent, CollapsibleTrigger, CollectionIcon, ContainerLoader, CopyIcon, CurrencyInput, DeckIcon, DeleteIcon, Divider, DotIcon, DownloadIcon, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuTrigger, EditIcon, ExclamationCircle, ExportIcon, ExternalLinkIcon, Fab, Fade, FadePageLoader, FlaskIcon, GroupsIcon, HomeIcon, ImageIcon, InformationIcon, Input, Label, LoadingIcon, LogoutIcon, MailIcon, Menu, MenuIcon, MinusIcon, Modal, ModalContent, ModalFooter, MoneyIcon, NotificationIcon, OptionsIcon, PageLoader, PasswordIcon, PendingIcon, Popover, PopoverAnchor, PopoverContent, PopoverTrigger, ProfileIcon, QRCodeIcon, RadioGroup, RadioGroupItem, RefreshIcon, SearchIcon, Select$1 as Select, SettingsIcon, ShareIcon, Sheet, ShoppingIcon, SideDrawer, Skeleton, SliderIcon, SpeedDial, SpinnerIcon, Tabs, TabsContent, TabsList, TabsTrigger, Textarea, Toast, ToastAction, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport, Toaster, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UnassignedIcon, UploadIcon, UserIcon, WebIcon, badgeVariants, buttonVariants, cn, reducer, toast, useToast };
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger, AddCircleIcon, AddIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, ArtistIcon, AutoComplete, Badge, BillIcon, Button$1 as Button, Calendar, CalendarDayButton, CalendarIcon, Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CatalogIcon, ChartIcon, CheckIcon, Checkbox, CloseIcon, Collapsible, CollapsibleContent, CollapsibleTrigger, CollectionIcon, ContainerLoader, CopyIcon, CurrencyInput, DeckIcon, DeleteIcon, Divider, DotIcon, DownloadIcon, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuTrigger, EditIcon, ExclamationCircle, ExportIcon, ExternalLinkIcon, Fab, Fade, FadePageLoader, FlaskIcon, GroupsIcon, HomeIcon, ImageIcon, InformationIcon, Input, Label, LoadingIcon, LogoutIcon, MailIcon, Menu, MenuIcon, MinusIcon, Modal, ModalContent, ModalFooter, MoneyIcon, MoveIcon, NoteIcon, NotificationIcon, OptionsIcon, PageLoader, PasswordIcon, PendingIcon, Popover, PopoverAnchor, PopoverContent, PopoverTrigger, ProfileIcon, QRCodeIcon, RadioGroup, RadioGroupItem, RefreshIcon, SearchIcon, Select$1 as Select, SettingsIcon, ShareIcon, Sheet, ShoppingIcon, SideDrawer, Skeleton, SliderIcon, SpeedDial, SpinnerIcon, Tabs, TabsContent, TabsList, TabsTrigger, Textarea, Toast, ToastAction, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport, Toaster, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UnassignedIcon, UploadIcon, UserIcon, WebIcon, badgeVariants, buttonVariants, cn, reducer, toast, useToast };
 //# sourceMappingURL=index.js.map

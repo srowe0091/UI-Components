@@ -1,6 +1,7 @@
 import {
   FaAddressCard,
   FaArchive,
+  FaArrowsAlt,
   FaBars,
   FaBell,
   FaBookOpen,
@@ -87,6 +88,7 @@ export const MailIcon = FaEnvelope
 export const MenuIcon = FaBars
 export const MinusIcon = FaMinus
 export const MoneyIcon = FaMoneyBill
+export const MoveIcon = FaArrowsAlt
 export const NoteIcon = FaStickyNote
 export const NotificationIcon = FaBell
 export const OptionsIcon = FaEllipsisV
