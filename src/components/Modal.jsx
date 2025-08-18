@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { create } from 'zustand'
 
 import {
@@ -36,8 +35,6 @@ export const Modal = ({ children, header, name, trigger, triggerRef, contentStyl
   const { activeModal, toggleModal } = useModalStore()
 
   const props = { ...(name && { open: activeModal === name, onOpenChange: toggleModal(name) }), ...rest }
-
-  useEffect(() => () => Modal.closeModal(), [])
 
   return (
     <Dialog {...props}>

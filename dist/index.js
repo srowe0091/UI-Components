@@ -15882,7 +15882,6 @@ const Modal = ({
     }),
     ...rest
   };
-  useEffect(() => () => Modal.closeModal(), []);
   return /*#__PURE__*/jsxs(Dialog, {
     ...props,
     children: [/*#__PURE__*/jsx(DialogTrigger, {
