@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandLoading } from './command'
 
 const AutoComplete = ({
+  ref,
   async,
   multiple,
   options,
@@ -46,6 +47,7 @@ const AutoComplete = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          ref={ref}
           variant="outline"
           role="combobox"
           aria-expanded={open}

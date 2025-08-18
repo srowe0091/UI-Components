@@ -22363,6 +22363,7 @@ const CommandLoading = ({
 });
 
 const AutoComplete = ({
+  ref,
   async,
   multiple,
   options,
@@ -22397,6 +22398,7 @@ const AutoComplete = ({
     children: [/*#__PURE__*/jsx(PopoverTrigger, {
       asChild: true,
       children: /*#__PURE__*/jsxs(Button$1, {
+        ref: ref,
         variant: "outline",
         role: "combobox",
         "aria-expanded": open,
