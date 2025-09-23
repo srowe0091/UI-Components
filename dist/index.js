@@ -3211,7 +3211,7 @@ function useConstant(init) {
 
 const isBrowser$1 = typeof window !== "undefined";
 
-const useIsomorphicLayoutEffect$1 = isBrowser$1 ? useLayoutEffect : useEffect;
+const useIsomorphicLayoutEffect$2 = isBrowser$1 ? useLayoutEffect : useEffect;
 
 /**
  * @public
@@ -3285,7 +3285,7 @@ function memo(callback) {
 }
 
 /*#__NO_SIDE_EFFECTS__*/
-const noop$3 = (any) => any;
+const noop$4 = (any) => any;
 
 /**
  * Pipe
@@ -3423,7 +3423,7 @@ function binarySubdivide(x, lowerBound, upperBound, mX1, mX2) {
 function cubicBezier(mX1, mY1, mX2, mY2) {
     // If this is a linear gradient, return linear easing
     if (mX1 === mY1 && mX2 === mY2)
-        return noop$3;
+        return noop$4;
     const getTForX = (aX) => binarySubdivide(aX, 0, 1, mX1, mX2);
     // If animation is at start/end, return t without easing
     return (t) => t === 0 || t === 1 ? t : calcBezier(getTForX(t), mY1, mY2);
@@ -3458,7 +3458,7 @@ const isEasingArray = (ease) => {
 const isBezierDefinition = (easing) => Array.isArray(easing) && typeof easing[0] === "number";
 
 const easingLookup = {
-    linear: noop$3,
+    linear: noop$4,
     easeIn,
     easeInOut,
     easeOut,
@@ -3645,7 +3645,7 @@ function createRenderBatcher(scheduleNextBatch, allowKeepAlive) {
     return { schedule, cancel, state, steps };
 }
 
-const { schedule: frame, cancel: cancelFrame, state: frameData, steps: frameSteps, } = /* @__PURE__ */ createRenderBatcher(typeof requestAnimationFrame !== "undefined" ? requestAnimationFrame : noop$3, true);
+const { schedule: frame, cancel: cancelFrame, state: frameData, steps: frameSteps, } = /* @__PURE__ */ createRenderBatcher(typeof requestAnimationFrame !== "undefined" ? requestAnimationFrame : noop$4, true);
 
 let now;
 function clearTime() {
@@ -4578,7 +4578,7 @@ function createMixers(output, ease, customMixer) {
     for (let i = 0; i < numMixers; i++) {
         let mixer = mixerFactory(output[i], output[i + 1]);
         if (ease) {
-            const easingFunction = Array.isArray(ease) ? ease[i] || noop$3 : ease;
+            const easingFunction = Array.isArray(ease) ? ease[i] || noop$4 : ease;
             mixer = pipe(easingFunction, mixer);
         }
         mixers.push(mixer);
@@ -5365,7 +5365,7 @@ class KeyframeResolver {
 
 const isCSSVar = (name) => name.startsWith("--");
 
-function setStyle(element, name, value) {
+function setStyle$1(element, name, value) {
     isCSSVar(name)
         ? element.style.setProperty(name, value)
         : (element.style[name] = value);
@@ -5504,7 +5504,7 @@ class NativeAnimation extends WithPromise {
                      * If we can, we want to commit the final style as set by the user,
                      * rather than the computed keyframe value supplied by the animation.
                      */
-                    setStyle(element, name, keyframe);
+                    setStyle$1(element, name, keyframe);
                 }
                 this.animation.cancel();
             }
@@ -5611,7 +5611,7 @@ class NativeAnimation extends WithPromise {
         this.animation.onfinish = null;
         if (timeline && supportsScrollTimeline()) {
             this.animation.timeline = timeline;
-            return noop$3;
+            return noop$4;
         }
         else {
             return observe(this);
@@ -5892,7 +5892,7 @@ class AsyncMotionValueAnimation extends WithPromise {
                 element: resolvedOptions.motionValue.owner.current,
             })
             : new JSAnimation(resolvedOptions);
-        animation.finished.then(() => this.notifyFinished()).catch(noop$3);
+        animation.finished.then(() => this.notifyFinished()).catch(noop$4);
         if (this.pendingTimeline) {
             this.stopTimeline = animation.attachTimeline(this.pendingTimeline);
             this.pendingTimeline = undefined;
@@ -7203,7 +7203,7 @@ const AnimatePresence = ({ children, custom, initial = true, onExitComplete, pre
      */
     const [diffedChildren, setDiffedChildren] = useState(presentChildren);
     const [renderedChildren, setRenderedChildren] = useState(presentChildren);
-    useIsomorphicLayoutEffect$1(() => {
+    useIsomorphicLayoutEffect$2(() => {
         isInitialRender.current = false;
         pendingPresentChildren.current = presentChildren;
         /**
@@ -8133,7 +8133,7 @@ function useVisualElement(Component, visualState, props, createVisualElement, Pr
     const wantsHandoff = useRef(Boolean(optimisedAppearId) &&
         !window.MotionHandoffIsComplete?.(optimisedAppearId) &&
         window.MotionHasOptimisedAnimation?.(optimisedAppearId));
-    useIsomorphicLayoutEffect$1(() => {
+    useIsomorphicLayoutEffect$2(() => {
         if (!visualElement)
             return;
         isMounted.current = true;
@@ -10914,8 +10914,8 @@ function getCurrentDirection(offset, lockThreshold = 10) {
 class DragGesture extends Feature {
     constructor(node) {
         super(node);
-        this.removeGroupControls = noop$3;
-        this.removeListeners = noop$3;
+        this.removeGroupControls = noop$4;
+        this.removeListeners = noop$4;
         this.controls = new VisualElementDragControls(node);
     }
     mount() {
@@ -10925,7 +10925,7 @@ class DragGesture extends Feature {
         if (dragControls) {
             this.removeGroupControls = dragControls.subscribe(this.controls);
         }
-        this.removeListeners = this.controls.addListeners() || noop$3;
+        this.removeListeners = this.controls.addListeners() || noop$4;
     }
     unmount() {
         this.removeGroupControls();
@@ -10941,7 +10941,7 @@ const asyncHandler = (handler) => (event, info) => {
 class PanGesture extends Feature {
     constructor() {
         super(...arguments);
-        this.removePointerDownListener = noop$3;
+        this.removePointerDownListener = noop$4;
     }
     onPointerDown(pointerDownEvent) {
         this.session = new PanSession(pointerDownEvent, this.createPanHandlers(), {
@@ -11312,7 +11312,7 @@ function getRadius(values, radiusName) {
 //     )(p)
 // }
 const easeCrossfadeIn = /*@__PURE__*/ compress(0, 0.5, circOut);
-const easeCrossfadeOut = /*@__PURE__*/ compress(0.5, 0.95, noop$3);
+const easeCrossfadeOut = /*@__PURE__*/ compress(0.5, 0.95, noop$4);
 function compress(min, max, easing) {
     return (p) => {
         // Could replace ifs with clamp
@@ -13120,7 +13120,7 @@ const userAgentContains = (string) => typeof navigator !== "undefined" &&
  */
 const roundPoint = userAgentContains("applewebkit/") && !userAgentContains("chrome/")
     ? Math.round
-    : noop$3;
+    : noop$4;
 function roundAxis(axis) {
     // Round to the nearest .5 pixels to support subpixel layouts
     axis.min = roundPoint(axis.min);
@@ -13518,18 +13518,18 @@ function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForD
 }
 
 // packages/react/compose-refs/src/compose-refs.tsx
-function setRef(ref, value) {
+function setRef$1(ref, value) {
   if (typeof ref === "function") {
     return ref(value);
   } else if (ref !== null && ref !== void 0) {
     ref.current = value;
   }
 }
-function composeRefs(...refs) {
+function composeRefs$1(...refs) {
   return (node) => {
     let hasCleanup = false;
     const cleanups = refs.map((ref) => {
-      const cleanup = setRef(ref, node);
+      const cleanup = setRef$1(ref, node);
       if (!hasCleanup && typeof cleanup == "function") {
         hasCleanup = true;
       }
@@ -13542,15 +13542,15 @@ function composeRefs(...refs) {
           if (typeof cleanup == "function") {
             cleanup();
           } else {
-            setRef(refs[i], null);
+            setRef$1(refs[i], null);
           }
         }
       };
     }
   };
 }
-function useComposedRefs(...refs) {
-  return React.useCallback(composeRefs(...refs), refs);
+function useComposedRefs$1(...refs) {
+  return React.useCallback(composeRefs$1(...refs), refs);
 }
 
 // packages/react/context/src/create-context.tsx
@@ -13645,14 +13645,14 @@ function useId(deterministicId) {
 
 // src/use-controllable-state.tsx
 var useInsertionEffect = React[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
-function useControllableState({
+function useControllableState$1({
   prop,
   defaultProp,
   onChange = () => {
   },
   caller
 }) {
-  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
+  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState$1({
     defaultProp,
     onChange
   });
@@ -13687,7 +13687,7 @@ function useControllableState({
   );
   return [value, setValue];
 }
-function useUncontrolledState({
+function useUncontrolledState$1({
   defaultProp,
   onChange
 }) {
@@ -13742,7 +13742,7 @@ function createSlotClone(ownerName) {
       const childrenRef = getElementRef$1(children);
       const props2 = mergeProps(slotProps, children.props);
       if (children.type !== React.Fragment) {
-        props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+        props2.ref = forwardedRef ? composeRefs$1(forwardedRef, childrenRef) : childrenRef;
       }
       return React.cloneElement(children, props2);
     }
@@ -13840,7 +13840,7 @@ function dispatchDiscreteCustomEvent(target, event) {
 }
 
 // packages/react/use-callback-ref/src/use-callback-ref.tsx
-function useCallbackRef$1(callback) {
+function useCallbackRef$2(callback) {
   const callbackRef = React.useRef(callback);
   React.useEffect(() => {
     callbackRef.current = callback;
@@ -13850,7 +13850,7 @@ function useCallbackRef$1(callback) {
 
 // packages/react/use-escape-keydown/src/use-escape-keydown.tsx
 function useEscapeKeydown(onEscapeKeyDownProp, ownerDocument = globalThis?.document) {
-  const onEscapeKeyDown = useCallbackRef$1(onEscapeKeyDownProp);
+  const onEscapeKeyDown = useCallbackRef$2(onEscapeKeyDownProp);
   React.useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
@@ -13887,7 +13887,7 @@ var DismissableLayer = React.forwardRef(
     const [node, setNode] = React.useState(null);
     const ownerDocument = node?.ownerDocument ?? globalThis?.document;
     const [, force] = React.useState({});
-    const composedRefs = useComposedRefs(forwardedRef, (node2) => setNode(node2));
+    const composedRefs = useComposedRefs$1(forwardedRef, (node2) => setNode(node2));
     const layers = Array.from(context.layers);
     const [highestLayerWithOutsidePointerEventsDisabled] = [...context.layersWithOutsidePointerEventsDisabled].slice(-1);
     const highestLayerWithOutsidePointerEventsDisabledIndex = layers.indexOf(highestLayerWithOutsidePointerEventsDisabled);
@@ -13973,7 +13973,7 @@ var BRANCH_NAME = "DismissableLayerBranch";
 var DismissableLayerBranch = React.forwardRef((props, forwardedRef) => {
   const context = React.useContext(DismissableLayerContext);
   const ref = React.useRef(null);
-  const composedRefs = useComposedRefs(forwardedRef, ref);
+  const composedRefs = useComposedRefs$1(forwardedRef, ref);
   React.useEffect(() => {
     const node = ref.current;
     if (node) {
@@ -13987,7 +13987,7 @@ var DismissableLayerBranch = React.forwardRef((props, forwardedRef) => {
 });
 DismissableLayerBranch.displayName = BRANCH_NAME;
 function usePointerDownOutside(onPointerDownOutside, ownerDocument = globalThis?.document) {
-  const handlePointerDownOutside = useCallbackRef$1(onPointerDownOutside);
+  const handlePointerDownOutside = useCallbackRef$2(onPointerDownOutside);
   const isPointerInsideReactTreeRef = React.useRef(false);
   const handleClickRef = React.useRef(() => {
   });
@@ -14030,7 +14030,7 @@ function usePointerDownOutside(onPointerDownOutside, ownerDocument = globalThis?
   };
 }
 function useFocusOutside(onFocusOutside, ownerDocument = globalThis?.document) {
-  const handleFocusOutside = useCallbackRef$1(onFocusOutside);
+  const handleFocusOutside = useCallbackRef$2(onFocusOutside);
   const isFocusInsideReactTreeRef = React.useRef(false);
   React.useEffect(() => {
     const handleFocus = (event) => {
@@ -14063,7 +14063,7 @@ function handleAndDispatchCustomEvent$1(name, handler, detail, { discrete }) {
     target.dispatchEvent(event);
   }
 }
-var Root$7 = DismissableLayer;
+var Root$8 = DismissableLayer;
 var Branch = DismissableLayerBranch;
 
 var AUTOFOCUS_ON_MOUNT = "focusScope.autoFocusOnMount";
@@ -14079,10 +14079,10 @@ var FocusScope = React.forwardRef((props, forwardedRef) => {
     ...scopeProps
   } = props;
   const [container, setContainer] = React.useState(null);
-  const onMountAutoFocus = useCallbackRef$1(onMountAutoFocusProp);
-  const onUnmountAutoFocus = useCallbackRef$1(onUnmountAutoFocusProp);
+  const onMountAutoFocus = useCallbackRef$2(onMountAutoFocusProp);
+  const onUnmountAutoFocus = useCallbackRef$2(onUnmountAutoFocusProp);
   const lastFocusedElementRef = React.useRef(null);
-  const composedRefs = useComposedRefs(forwardedRef, (node) => setContainer(node));
+  const composedRefs = useComposedRefs$1(forwardedRef, (node) => setContainer(node));
   const focusScope = React.useRef({
     paused: false,
     pause() {
@@ -14267,14 +14267,14 @@ function removeLinks(items) {
 }
 
 var PORTAL_NAME$6 = "Portal";
-var Portal$5 = React.forwardRef((props, forwardedRef) => {
+var Portal$6 = React.forwardRef((props, forwardedRef) => {
   const { container: containerProp, ...portalProps } = props;
   const [mounted, setMounted] = React.useState(false);
   useLayoutEffect2(() => setMounted(true), []);
   const container = containerProp || mounted && globalThis?.document?.body;
   return container ? ReactDOM__default.createPortal(/* @__PURE__ */ jsx(Primitive.div, { ...portalProps, ref: forwardedRef }), container) : null;
 });
-Portal$5.displayName = PORTAL_NAME$6;
+Portal$6.displayName = PORTAL_NAME$6;
 
 function useStateMachine(initialState, machine) {
   return React.useReducer((state, event) => {
@@ -14288,7 +14288,7 @@ var Presence = (props) => {
   const { present, children } = props;
   const presence = usePresence(present);
   const child = typeof children === "function" ? children({ present: presence.isPresent }) : React.Children.only(children);
-  const ref = useComposedRefs(presence.ref, getElementRef(child));
+  const ref = useComposedRefs$1(presence.ref, getElementRef(child));
   const forceMount = typeof children === "function";
   return forceMount || presence.isPresent ? React.cloneElement(child, { ref }) : null;
 };
@@ -14528,7 +14528,7 @@ function assignRef(ref, value) {
  * @see https://github.com/theKashey/use-callback-ref#usecallbackref---to-replace-reactuseref
  * @returns {MutableRefObject}
  */
-function useCallbackRef(initialValue, callback) {
+function useCallbackRef$1(initialValue, callback) {
     var ref = useState(function () { return ({
         // value
         value: initialValue,
@@ -14553,7 +14553,7 @@ function useCallbackRef(initialValue, callback) {
     return ref.facade;
 }
 
-var useIsomorphicLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
+var useIsomorphicLayoutEffect$1 = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 var currentValues = new WeakMap();
 /**
  * Merges two or more refs together providing a single interface to set their value
@@ -14570,11 +14570,11 @@ var currentValues = new WeakMap();
  * }
  */
 function useMergeRefs(refs, defaultValue) {
-    var callbackRef = useCallbackRef(null, function (newValue) {
+    var callbackRef = useCallbackRef$1(null, function (newValue) {
         return refs.forEach(function (ref) { return assignRef(ref, newValue); });
     });
     // handle refs changes - added or removed
-    useIsomorphicLayoutEffect(function () {
+    useIsomorphicLayoutEffect$1(function () {
         var oldValue = currentValues.get(callbackRef);
         if (oldValue) {
             var prevRefs_1 = new Set(oldValue);
@@ -15328,7 +15328,7 @@ var Dialog$1 = (props) => {
   } = props;
   const triggerRef = React.useRef(null);
   const contentRef = React.useRef(null);
-  const [open, setOpen] = useControllableState({
+  const [open, setOpen] = useControllableState$1({
     prop: openProp,
     defaultProp: defaultOpen ?? false,
     onChange: onOpenChange,
@@ -15357,7 +15357,7 @@ var DialogTrigger$1 = React.forwardRef(
   (props, forwardedRef) => {
     const { __scopeDialog, ...triggerProps } = props;
     const context = useDialogContext(TRIGGER_NAME$8, __scopeDialog);
-    const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
+    const composedTriggerRef = useComposedRefs$1(forwardedRef, context.triggerRef);
     return /* @__PURE__ */ jsx(
       Primitive.button,
       {
@@ -15381,7 +15381,7 @@ var [PortalProvider$3, usePortalContext$3] = createDialogContext(PORTAL_NAME$5, 
 var DialogPortal$1 = (props) => {
   const { __scopeDialog, forceMount, children, container } = props;
   const context = useDialogContext(PORTAL_NAME$5, __scopeDialog);
-  return /* @__PURE__ */ jsx(PortalProvider$3, { scope: __scopeDialog, forceMount, children: React.Children.map(children, (child) => /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(Portal$5, { asChild: true, container, children: child }) })) });
+  return /* @__PURE__ */ jsx(PortalProvider$3, { scope: __scopeDialog, forceMount, children: React.Children.map(children, (child) => /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(Portal$6, { asChild: true, container, children: child }) })) });
 };
 DialogPortal$1.displayName = PORTAL_NAME$5;
 var OVERLAY_NAME = "DialogOverlay";
@@ -15428,7 +15428,7 @@ var DialogContentModal = React.forwardRef(
   (props, forwardedRef) => {
     const context = useDialogContext(CONTENT_NAME$9, props.__scopeDialog);
     const contentRef = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, context.contentRef, contentRef);
+    const composedRefs = useComposedRefs$1(forwardedRef, context.contentRef, contentRef);
     React.useEffect(() => {
       const content = contentRef.current;
       if (content) return hideOthers(content);
@@ -15503,7 +15503,7 @@ var DialogContentImpl = React.forwardRef(
     const { __scopeDialog, trapFocus, onOpenAutoFocus, onCloseAutoFocus, ...contentProps } = props;
     const context = useDialogContext(CONTENT_NAME$9, __scopeDialog);
     const contentRef = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, contentRef);
+    const composedRefs = useComposedRefs$1(forwardedRef, contentRef);
     useFocusGuards();
     return /* @__PURE__ */ jsxs(Fragment, { children: [
       /* @__PURE__ */ jsx(
@@ -15608,11 +15608,11 @@ var DescriptionWarning = ({ contentRef, descriptionId }) => {
   }, [MESSAGE, contentRef, descriptionId]);
   return null;
 };
-var Root$6 = Dialog$1;
+var Root$7 = Dialog$1;
 var Trigger$6 = DialogTrigger$1;
-var Portal$4 = DialogPortal$1;
-var Overlay = DialogOverlay$1;
-var Content$3 = DialogContent$1;
+var Portal$5 = DialogPortal$1;
+var Overlay$1 = DialogOverlay$1;
+var Content$4 = DialogContent$1;
 var Title$1 = DialogTitle$1;
 var Description$1 = DialogDescription$1;
 var Close$1 = DialogClose;
@@ -15742,7 +15742,7 @@ const Fab = ({
 const Dialog = ({
   ...props
 }) => {
-  return /*#__PURE__*/jsx(Root$6, {
+  return /*#__PURE__*/jsx(Root$7, {
     "data-slot": "dialog",
     ...props
   });
@@ -15758,7 +15758,7 @@ const DialogTrigger = ({
 const DialogPortal = ({
   ...props
 }) => {
-  return /*#__PURE__*/jsx(Portal$4, {
+  return /*#__PURE__*/jsx(Portal$5, {
     "data-slot": "dialog-portal",
     ...props
   });
@@ -15767,7 +15767,7 @@ const DialogOverlay = ({
   className,
   ...props
 }) => {
-  return /*#__PURE__*/jsx(Overlay, {
+  return /*#__PURE__*/jsx(Overlay$1, {
     "data-slot": "dialog-overlay",
     className: cn('data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50', className),
     ...props
@@ -15781,7 +15781,7 @@ const DialogContent = ({
 }) => {
   return /*#__PURE__*/jsxs(DialogPortal, {
     "data-slot": "dialog-portal",
-    children: [/*#__PURE__*/jsx(DialogOverlay, {}), /*#__PURE__*/jsxs(Content$3, {
+    children: [/*#__PURE__*/jsx(DialogOverlay, {}), /*#__PURE__*/jsxs(Content$4, {
       "data-slot": "dialog-content",
       className: cn('bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 h-full fixed top-0 sm:top-[10%] left-[50%] z-50 flex flex-col w-full f-full sm:max-h-[80vh] sm:h-auto translate-x-[-50%] gap-6 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg', className),
       ...props,
@@ -15939,7 +15939,7 @@ function createCollection(name) {
     (props, forwardedRef) => {
       const { scope, children } = props;
       const context = useCollectionContext(COLLECTION_SLOT_NAME, scope);
-      const composedRefs = useComposedRefs(forwardedRef, context.collectionRef);
+      const composedRefs = useComposedRefs$1(forwardedRef, context.collectionRef);
       return /* @__PURE__ */ jsx(CollectionSlotImpl, { ref: composedRefs, children });
     }
   );
@@ -15951,7 +15951,7 @@ function createCollection(name) {
     (props, forwardedRef) => {
       const { scope, children, ...itemData } = props;
       const ref = React__default.useRef(null);
-      const composedRefs = useComposedRefs(forwardedRef, ref);
+      const composedRefs = useComposedRefs$1(forwardedRef, ref);
       const context = useCollectionContext(ITEM_SLOT_NAME, scope);
       React__default.useEffect(() => {
         context.itemMap.set(ref, { ref, ...itemData });
@@ -17827,8 +17827,8 @@ const computePosition = (reference, floating, options) => {
 
 var isClient$1 = typeof document !== 'undefined';
 
-var noop$2 = function noop() {};
-var index$2 = isClient$1 ? useLayoutEffect : noop$2;
+var noop$3 = function noop() {};
+var index$2 = isClient$1 ? useLayoutEffect : noop$3;
 
 // Fork of `fast-deep-equal` that only does the comparisons we need and compares
 // functions
@@ -18186,7 +18186,7 @@ var Arrow$1 = React.forwardRef((props, forwardedRef) => {
   );
 });
 Arrow$1.displayName = NAME$2;
-var Root$5 = Arrow$1;
+var Root$6 = Arrow$1;
 
 // packages/react/use-size/src/use-size.tsx
 function useSize(element) {
@@ -18239,7 +18239,7 @@ var PopperAnchor = React.forwardRef(
     const { __scopePopper, virtualRef, ...anchorProps } = props;
     const context = usePopperContext(ANCHOR_NAME$2, __scopePopper);
     const ref = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, ref);
+    const composedRefs = useComposedRefs$1(forwardedRef, ref);
     const anchorRef = React.useRef(null);
     React.useEffect(() => {
       const previousAnchor = anchorRef.current;
@@ -18274,7 +18274,7 @@ var PopperContent = React.forwardRef(
     } = props;
     const context = usePopperContext(CONTENT_NAME$8, __scopePopper);
     const [content, setContent] = React.useState(null);
-    const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
+    const composedRefs = useComposedRefs$1(forwardedRef, (node) => setContent(node));
     const [arrow$1, setArrow] = React.useState(null);
     const arrowSize = useSize(arrow$1);
     const arrowWidth = arrowSize?.width ?? 0;
@@ -18328,7 +18328,7 @@ var PopperContent = React.forwardRef(
       ]
     });
     const [placedSide, placedAlign] = getSideAndAlignFromPlacement(placement);
-    const handlePlaced = useCallbackRef$1(onPlaced);
+    const handlePlaced = useCallbackRef$2(onPlaced);
     useLayoutEffect2(() => {
       if (isPositioned) {
         handlePlaced?.();
@@ -18435,7 +18435,7 @@ var PopperArrow = React.forwardRef(function PopperArrow2(props, forwardedRef) {
           visibility: contentContext.shouldHideArrow ? "hidden" : void 0
         },
         children: /* @__PURE__ */ jsx(
-          Root$5,
+          Root$6,
           {
             ...arrowProps,
             ref: forwardedRef,
@@ -18491,7 +18491,7 @@ function getSideAndAlignFromPlacement(placement) {
 }
 var Root2$7 = Popper;
 var Anchor = PopperAnchor;
-var Content$2 = PopperContent;
+var Content$3 = PopperContent;
 var Arrow = PopperArrow;
 
 var ENTRY_FOCUS = "rovingFocusGroup.onEntryFocus";
@@ -18523,16 +18523,16 @@ var RovingFocusGroupImpl = React.forwardRef((props, forwardedRef) => {
     ...groupProps
   } = props;
   const ref = React.useRef(null);
-  const composedRefs = useComposedRefs(forwardedRef, ref);
+  const composedRefs = useComposedRefs$1(forwardedRef, ref);
   const direction = useDirection(dir);
-  const [currentTabStopId, setCurrentTabStopId] = useControllableState({
+  const [currentTabStopId, setCurrentTabStopId] = useControllableState$1({
     prop: currentTabStopIdProp,
     defaultProp: defaultCurrentTabStopId ?? null,
     onChange: onCurrentTabStopIdChange,
     caller: GROUP_NAME$3
   });
   const [isTabbingBackOut, setIsTabbingBackOut] = React.useState(false);
-  const handleEntryFocus = useCallbackRef$1(onEntryFocus);
+  const handleEntryFocus = useCallbackRef$2(onEntryFocus);
   const getItems = useCollection$4(__scopeRovingFocusGroup);
   const isClickFocusRef = React.useRef(false);
   const [focusableItemsCount, setFocusableItemsCount] = React.useState(0);
@@ -18701,7 +18701,7 @@ function focusFirst$2(candidates, preventScroll = false) {
 function wrapArray$2(array, startIndex) {
   return array.map((_, index) => array[(startIndex + index) % array.length]);
 }
-var Root$4 = RovingFocusGroup;
+var Root$5 = RovingFocusGroup;
 var Item$3 = RovingFocusGroupItem;
 
 var SELECTION_KEYS$1 = ["Enter", " "];
@@ -18732,7 +18732,7 @@ var Menu$1 = (props) => {
   const popperScope = usePopperScope$3(__scopeMenu);
   const [content, setContent] = React.useState(null);
   const isUsingKeyboardRef = React.useRef(false);
-  const handleOpenChange = useCallbackRef$1(onOpenChange);
+  const handleOpenChange = useCallbackRef$2(onOpenChange);
   const direction = useDirection(dir);
   React.useEffect(() => {
     const handleKeyDown = () => {
@@ -18787,7 +18787,7 @@ var [PortalProvider$2, usePortalContext$2] = createMenuContext(PORTAL_NAME$4, {
 var MenuPortal = (props) => {
   const { __scopeMenu, forceMount, children, container } = props;
   const context = useMenuContext(PORTAL_NAME$4, __scopeMenu);
-  return /* @__PURE__ */ jsx(PortalProvider$2, { scope: __scopeMenu, forceMount, children: /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(Portal$5, { asChild: true, container, children }) }) });
+  return /* @__PURE__ */ jsx(PortalProvider$2, { scope: __scopeMenu, forceMount, children: /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(Portal$6, { asChild: true, container, children }) }) });
 };
 MenuPortal.displayName = PORTAL_NAME$4;
 var CONTENT_NAME$7 = "MenuContent";
@@ -18805,7 +18805,7 @@ var MenuRootContentModal = React.forwardRef(
   (props, forwardedRef) => {
     const context = useMenuContext(CONTENT_NAME$7, props.__scopeMenu);
     const ref = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, ref);
+    const composedRefs = useComposedRefs$1(forwardedRef, ref);
     React.useEffect(() => {
       const content = ref.current;
       if (content) return hideOthers(content);
@@ -18868,7 +18868,7 @@ var MenuContentImpl = React.forwardRef(
     const getItems = useCollection$3(__scopeMenu);
     const [currentItemId, setCurrentItemId] = React.useState(null);
     const contentRef = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, contentRef, context.onContentChange);
+    const composedRefs = useComposedRefs$1(forwardedRef, contentRef, context.onContentChange);
     const timerRef = React.useRef(0);
     const searchRef = React.useRef("");
     const pointerGraceTimerRef = React.useRef(0);
@@ -18952,7 +18952,7 @@ var MenuContentImpl = React.forwardRef(
                 onInteractOutside,
                 onDismiss,
                 children: /* @__PURE__ */ jsx(
-                  Root$4,
+                  Root$5,
                   {
                     asChild: true,
                     ...rovingFocusGroupScope,
@@ -18966,7 +18966,7 @@ var MenuContentImpl = React.forwardRef(
                     }),
                     preventScrollOnEntryFocus: true,
                     children: /* @__PURE__ */ jsx(
-                      Content$2,
+                      Content$3,
                       {
                         role: "menu",
                         "aria-orientation": "vertical",
@@ -19050,7 +19050,7 @@ var MenuItem = React.forwardRef(
     const ref = React.useRef(null);
     const rootContext = useMenuRootContext(ITEM_NAME$4, props.__scopeMenu);
     const contentContext = useMenuContentContext(ITEM_NAME$4, props.__scopeMenu);
-    const composedRefs = useComposedRefs(forwardedRef, ref);
+    const composedRefs = useComposedRefs$1(forwardedRef, ref);
     const isPointerDownRef = React.useRef(false);
     const handleSelect = () => {
       const menuItem = ref.current;
@@ -19098,7 +19098,7 @@ var MenuItemImpl = React.forwardRef(
     const contentContext = useMenuContentContext(ITEM_NAME$4, __scopeMenu);
     const rovingFocusGroupScope = useRovingFocusGroupScope$2(__scopeMenu);
     const ref = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, ref);
+    const composedRefs = useComposedRefs$1(forwardedRef, ref);
     const [isFocused, setIsFocused] = React.useState(false);
     const [textContent, setTextContent] = React.useState("");
     React.useEffect(() => {
@@ -19179,7 +19179,7 @@ var [RadioGroupProvider$1, useRadioGroupContext$1] = createMenuContext(
 var MenuRadioGroup = React.forwardRef(
   (props, forwardedRef) => {
     const { value, onValueChange, ...groupProps } = props;
-    const handleValueChange = useCallbackRef$1(onValueChange);
+    const handleValueChange = useCallbackRef$2(onValueChange);
     return /* @__PURE__ */ jsx(RadioGroupProvider$1, { scope: props.__scopeMenu, value, onValueChange: handleValueChange, children: /* @__PURE__ */ jsx(MenuGroup, { ...groupProps, ref: forwardedRef }) });
   }
 );
@@ -19267,7 +19267,7 @@ var MenuSub = (props) => {
   const popperScope = usePopperScope$3(__scopeMenu);
   const [trigger, setTrigger] = React.useState(null);
   const [content, setContent] = React.useState(null);
-  const handleOpenChange = useCallbackRef$1(onOpenChange);
+  const handleOpenChange = useCallbackRef$2(onOpenChange);
   React.useEffect(() => {
     if (parentMenuContext.open === false) handleOpenChange(false);
     return () => handleOpenChange(false);
@@ -19326,7 +19326,7 @@ var MenuSubTrigger = React.forwardRef(
         "aria-controls": subContext.contentId,
         "data-state": getOpenState(context.open),
         ...props,
-        ref: composeRefs(forwardedRef, subContext.onTriggerChange),
+        ref: composeRefs$1(forwardedRef, subContext.onTriggerChange),
         onClick: (event) => {
           props.onClick?.(event);
           if (props.disabled || event.defaultPrevented) return;
@@ -19405,7 +19405,7 @@ var MenuSubContent = React.forwardRef(
     const rootContext = useMenuRootContext(CONTENT_NAME$7, props.__scopeMenu);
     const subContext = useMenuSubContext(SUB_CONTENT_NAME$1, props.__scopeMenu);
     const ref = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, ref);
+    const composedRefs = useComposedRefs$1(forwardedRef, ref);
     return /* @__PURE__ */ jsx(Collection$3.Provider, { scope: props.__scopeMenu, children: /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(Collection$3.Slot, { scope: props.__scopeMenu, children: /* @__PURE__ */ jsx(
       MenuContentImpl,
       {
@@ -19501,7 +19501,7 @@ function whenMouse(handler) {
 }
 var Root3$1 = Menu$1;
 var Anchor2$1 = MenuAnchor;
-var Portal$3 = MenuPortal;
+var Portal$4 = MenuPortal;
 var Content2$5 = MenuContent;
 var Group = MenuGroup;
 var Label$2 = MenuLabel;
@@ -19535,7 +19535,7 @@ var DropdownMenu$1 = (props) => {
   } = props;
   const menuScope = useMenuScope(__scopeDropdownMenu);
   const triggerRef = React.useRef(null);
-  const [open, setOpen] = useControllableState({
+  const [open, setOpen] = useControllableState$1({
     prop: openProp,
     defaultProp: defaultOpen ?? false,
     onChange: onOpenChange,
@@ -19575,7 +19575,7 @@ var DropdownMenuTrigger$1 = React.forwardRef(
         "data-disabled": disabled ? "" : void 0,
         disabled,
         ...triggerProps,
-        ref: composeRefs(forwardedRef, context.triggerRef),
+        ref: composeRefs$1(forwardedRef, context.triggerRef),
         onPointerDown: composeEventHandlers(props.onPointerDown, (event) => {
           if (!disabled && event.button === 0 && event.ctrlKey === false) {
             context.onOpenToggle();
@@ -19597,7 +19597,7 @@ var PORTAL_NAME$3 = "DropdownMenuPortal";
 var DropdownMenuPortal$1 = (props) => {
   const { __scopeDropdownMenu, ...portalProps } = props;
   const menuScope = useMenuScope(__scopeDropdownMenu);
-  return /* @__PURE__ */ jsx(Portal$3, { ...menuScope, ...portalProps });
+  return /* @__PURE__ */ jsx(Portal$4, { ...menuScope, ...portalProps });
 };
 DropdownMenuPortal$1.displayName = PORTAL_NAME$3;
 var CONTENT_NAME$6 = "DropdownMenuContent";
@@ -19716,7 +19716,7 @@ DropdownMenuArrow.displayName = ARROW_NAME$3;
 var DropdownMenuSub$1 = (props) => {
   const { __scopeDropdownMenu, children, open: openProp, onOpenChange, defaultOpen } = props;
   const menuScope = useMenuScope(__scopeDropdownMenu);
-  const [open, setOpen] = useControllableState({
+  const [open, setOpen] = useControllableState$1({
     prop: openProp,
     defaultProp: defaultOpen ?? false,
     onChange: onOpenChange,
@@ -20049,7 +20049,7 @@ var VisuallyHidden = React.forwardRef(
   }
 );
 VisuallyHidden.displayName = NAME$1;
-var Root$3 = VisuallyHidden;
+var Root$4 = VisuallyHidden;
 
 var OPEN_KEYS = [" ", "Enter", "ArrowUp", "ArrowDown"];
 var SELECTION_KEYS = [" ", "Enter"];
@@ -20084,13 +20084,13 @@ var Select$3 = (props) => {
   const [valueNode, setValueNode] = React.useState(null);
   const [valueNodeHasChildren, setValueNodeHasChildren] = React.useState(false);
   const direction = useDirection(dir);
-  const [open, setOpen] = useControllableState({
+  const [open, setOpen] = useControllableState$1({
     prop: openProp,
     defaultProp: defaultOpen ?? false,
     onChange: onOpenChange,
     caller: SELECT_NAME
   });
-  const [value, setValue] = useControllableState({
+  const [value, setValue] = useControllableState$1({
     prop: valueProp,
     defaultProp: defaultValue,
     onChange: onValueChange,
@@ -20168,7 +20168,7 @@ var SelectTrigger$1 = React.forwardRef(
     const popperScope = usePopperScope$2(__scopeSelect);
     const context = useSelectContext(TRIGGER_NAME$6, __scopeSelect);
     const isDisabled = context.disabled || disabled;
-    const composedRefs = useComposedRefs(forwardedRef, context.onTriggerChange);
+    const composedRefs = useComposedRefs$1(forwardedRef, context.onTriggerChange);
     const getItems = useCollection$2(__scopeSelect);
     const pointerTypeRef = React.useRef("touch");
     const [searchRef, handleTypeaheadSearch, resetTypeahead] = useTypeaheadSearch((search) => {
@@ -20246,7 +20246,7 @@ var SelectValue$1 = React.forwardRef(
     const context = useSelectContext(VALUE_NAME, __scopeSelect);
     const { onValueNodeHasChildrenChange } = context;
     const hasChildren = children !== void 0;
-    const composedRefs = useComposedRefs(forwardedRef, context.onValueNodeChange);
+    const composedRefs = useComposedRefs$1(forwardedRef, context.onValueNodeChange);
     useLayoutEffect2(() => {
       onValueNodeHasChildrenChange(hasChildren);
     }, [onValueNodeHasChildrenChange, hasChildren]);
@@ -20272,7 +20272,7 @@ var SelectIcon = React.forwardRef(
 SelectIcon.displayName = ICON_NAME;
 var PORTAL_NAME$2 = "SelectPortal";
 var SelectPortal = (props) => {
-  return /* @__PURE__ */ jsx(Portal$5, { asChild: true, ...props });
+  return /* @__PURE__ */ jsx(Portal$6, { asChild: true, ...props });
 };
 SelectPortal.displayName = PORTAL_NAME$2;
 var CONTENT_NAME$5 = "SelectContent";
@@ -20324,7 +20324,7 @@ var SelectContentImpl = React.forwardRef(
     const context = useSelectContext(CONTENT_NAME$5, __scopeSelect);
     const [content, setContent] = React.useState(null);
     const [viewport, setViewport] = React.useState(null);
-    const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
+    const composedRefs = useComposedRefs$1(forwardedRef, (node) => setContent(node));
     const [selectedItem, setSelectedItem] = React.useState(null);
     const [selectedItemText, setSelectedItemText] = React.useState(
       null
@@ -20538,7 +20538,7 @@ var SelectItemAlignedPosition = React.forwardRef((props, forwardedRef) => {
   const contentContext = useSelectContentContext(CONTENT_NAME$5, __scopeSelect);
   const [contentWrapper, setContentWrapper] = React.useState(null);
   const [content, setContent] = React.useState(null);
-  const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
+  const composedRefs = useComposedRefs$1(forwardedRef, (node) => setContent(node));
   const getItems = useCollection$2(__scopeSelect);
   const shouldExpandOnScrollRef = React.useRef(false);
   const shouldRepositionRef = React.useRef(true);
@@ -20705,7 +20705,7 @@ var SelectPopperPosition = React.forwardRef((props, forwardedRef) => {
   } = props;
   const popperScope = usePopperScope$2(__scopeSelect);
   return /* @__PURE__ */ jsx(
-    Content$2,
+    Content$3,
     {
       ...popperScope,
       ...popperProps,
@@ -20736,7 +20736,7 @@ var SelectViewport = React.forwardRef(
     const { __scopeSelect, nonce, ...viewportProps } = props;
     const contentContext = useSelectContentContext(VIEWPORT_NAME$1, __scopeSelect);
     const viewportContext = useSelectViewportContext(VIEWPORT_NAME$1, __scopeSelect);
-    const composedRefs = useComposedRefs(forwardedRef, contentContext.onViewportChange);
+    const composedRefs = useComposedRefs$1(forwardedRef, contentContext.onViewportChange);
     const prevScrollTopRef = React.useRef(0);
     return /* @__PURE__ */ jsxs(Fragment, { children: [
       /* @__PURE__ */ jsx(
@@ -20833,7 +20833,7 @@ var SelectItem$1 = React.forwardRef(
     const isSelected = context.value === value;
     const [textValue, setTextValue] = React.useState(textValueProp ?? "");
     const [isFocused, setIsFocused] = React.useState(false);
-    const composedRefs = useComposedRefs(
+    const composedRefs = useComposedRefs$1(
       forwardedRef,
       (node) => contentContext.itemRefCallback?.(node, value, disabled)
     );
@@ -20929,7 +20929,7 @@ var SelectItemText = React.forwardRef(
     const itemContext = useSelectItemContext(ITEM_TEXT_NAME, __scopeSelect);
     const nativeOptionsContext = useSelectNativeOptionsContext(ITEM_TEXT_NAME, __scopeSelect);
     const [itemTextNode, setItemTextNode] = React.useState(null);
-    const composedRefs = useComposedRefs(
+    const composedRefs = useComposedRefs$1(
       forwardedRef,
       (node) => setItemTextNode(node),
       itemContext.onItemTextChange,
@@ -20966,7 +20966,7 @@ var SelectScrollUpButton$1 = React.forwardRef((props, forwardedRef) => {
   const contentContext = useSelectContentContext(SCROLL_UP_BUTTON_NAME, props.__scopeSelect);
   const viewportContext = useSelectViewportContext(SCROLL_UP_BUTTON_NAME, props.__scopeSelect);
   const [canScrollUp, setCanScrollUp] = React.useState(false);
-  const composedRefs = useComposedRefs(forwardedRef, viewportContext.onScrollButtonChange);
+  const composedRefs = useComposedRefs$1(forwardedRef, viewportContext.onScrollButtonChange);
   useLayoutEffect2(() => {
     if (contentContext.viewport && contentContext.isPositioned) {
       let handleScroll2 = function() {
@@ -20999,7 +20999,7 @@ var SelectScrollDownButton$1 = React.forwardRef((props, forwardedRef) => {
   const contentContext = useSelectContentContext(SCROLL_DOWN_BUTTON_NAME, props.__scopeSelect);
   const viewportContext = useSelectViewportContext(SCROLL_DOWN_BUTTON_NAME, props.__scopeSelect);
   const [canScrollDown, setCanScrollDown] = React.useState(false);
-  const composedRefs = useComposedRefs(forwardedRef, viewportContext.onScrollButtonChange);
+  const composedRefs = useComposedRefs$1(forwardedRef, viewportContext.onScrollButtonChange);
   useLayoutEffect2(() => {
     if (contentContext.viewport && contentContext.isPositioned) {
       let handleScroll2 = function() {
@@ -21093,7 +21093,7 @@ var BUBBLE_INPUT_NAME$2 = "SelectBubbleInput";
 var SelectBubbleInput = React.forwardRef(
   ({ __scopeSelect, value, ...props }, forwardedRef) => {
     const ref = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, ref);
+    const composedRefs = useComposedRefs$1(forwardedRef, ref);
     const prevValue = usePrevious(value);
     React.useEffect(() => {
       const select = ref.current;
@@ -21126,7 +21126,7 @@ function shouldShowPlaceholder(value) {
   return value === "" || value === void 0;
 }
 function useTypeaheadSearch(onSearchChange) {
-  const handleSearchChange = useCallbackRef$1(onSearchChange);
+  const handleSearchChange = useCallbackRef$2(onSearchChange);
   const searchRef = React.useRef("");
   const timerRef = React.useRef(0);
   const handleTypeaheadSearch = React.useCallback(
@@ -21169,7 +21169,7 @@ var Root2$5 = Select$3;
 var Trigger$4 = SelectTrigger$1;
 var Value = SelectValue$1;
 var Icon = SelectIcon;
-var Portal$2 = SelectPortal;
+var Portal$3 = SelectPortal;
 var Content2$3 = SelectContent$1;
 var Viewport$1 = SelectViewport;
 var Item$2 = SelectItem$1;
@@ -21219,7 +21219,7 @@ const SelectContent = ({
   position = 'popper',
   ...props
 }) => {
-  return /*#__PURE__*/jsx(Portal$2, {
+  return /*#__PURE__*/jsx(Portal$3, {
     children: /*#__PURE__*/jsxs(Content2$3, {
       "data-slot": "select-content",
       className: cn('bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border shadow-md', position === 'popper' && 'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1', className),
@@ -21313,7 +21313,7 @@ const Select$1 = ({
 const Sheet$1 = ({
   ...props
 }) => {
-  return /*#__PURE__*/jsx(Root$6, {
+  return /*#__PURE__*/jsx(Root$7, {
     "data-slot": "sheet",
     ...props
   });
@@ -21329,7 +21329,7 @@ const SheetTrigger = ({
 const SheetPortal = ({
   ...props
 }) => {
-  return /*#__PURE__*/jsx(Portal$4, {
+  return /*#__PURE__*/jsx(Portal$5, {
     "data-slot": "sheet-portal",
     ...props
   });
@@ -21338,7 +21338,7 @@ const SheetOverlay = ({
   className,
   ...props
 }) => {
-  return /*#__PURE__*/jsx(Overlay, {
+  return /*#__PURE__*/jsx(Overlay$1, {
     "data-slot": "sheet-overlay",
     className: cn('data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50', className),
     ...props
@@ -21351,7 +21351,7 @@ const SheetContent = ({
   ...props
 }) => {
   return /*#__PURE__*/jsxs(SheetPortal, {
-    children: [/*#__PURE__*/jsx(SheetOverlay, {}), /*#__PURE__*/jsxs(Content$3, {
+    children: [/*#__PURE__*/jsx(SheetOverlay, {}), /*#__PURE__*/jsxs(Content$4, {
       "data-slot": "sheet-content",
       className: cn('bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500', side === 'right' && 'data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-full border-l md:max-w-sm', side === 'left' && 'data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-full border-r md:max-w-sm', side === 'top' && 'data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 h-auto border-b', side === 'bottom' && 'data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t', className),
       ...props,
@@ -21500,7 +21500,7 @@ var Collapsible$1 = React.forwardRef(
       onOpenChange,
       ...collapsibleProps
     } = props;
-    const [open, setOpen] = useControllableState({
+    const [open, setOpen] = useControllableState$1({
       prop: openProp,
       defaultProp: defaultOpen ?? false,
       onChange: onOpenChange,
@@ -21564,7 +21564,7 @@ var CollapsibleContentImpl = React.forwardRef((props, forwardedRef) => {
   const context = useCollapsibleContext(CONTENT_NAME$4, __scopeCollapsible);
   const [isPresent, setIsPresent] = React.useState(present);
   const ref = React.useRef(null);
-  const composedRefs = useComposedRefs(forwardedRef, ref);
+  const composedRefs = useComposedRefs$1(forwardedRef, ref);
   const heightRef = React.useRef(0);
   const height = heightRef.current;
   const widthRef = React.useRef(0);
@@ -21616,9 +21616,9 @@ var CollapsibleContentImpl = React.forwardRef((props, forwardedRef) => {
 function getState$4(open) {
   return open ? "open" : "closed";
 }
-var Root$2 = Collapsible$1;
+var Root$3 = Collapsible$1;
 var Trigger$3 = CollapsibleTrigger$1;
-var Content$1 = CollapsibleContent$1;
+var Content$2 = CollapsibleContent$1;
 
 var ACCORDION_NAME = "Accordion";
 var ACCORDION_KEYS = ["Home", "End", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
@@ -21652,7 +21652,7 @@ var AccordionImplSingle = React__default.forwardRef(
       collapsible = false,
       ...accordionSingleProps
     } = props;
-    const [value, setValue] = useControllableState({
+    const [value, setValue] = useControllableState$1({
       prop: valueProp,
       defaultProp: defaultValue ?? "",
       onChange: onValueChange,
@@ -21678,7 +21678,7 @@ var AccordionImplMultiple = React__default.forwardRef((props, forwardedRef) => {
     },
     ...accordionMultipleProps
   } = props;
-  const [value, setValue] = useControllableState({
+  const [value, setValue] = useControllableState$1({
     prop: valueProp,
     defaultProp: defaultValue ?? [],
     onChange: onValueChange,
@@ -21708,7 +21708,7 @@ var AccordionImpl = React__default.forwardRef(
   (props, forwardedRef) => {
     const { __scopeAccordion, disabled, dir, orientation = "vertical", ...accordionProps } = props;
     const accordionRef = React__default.useRef(null);
-    const composedRefs = useComposedRefs(accordionRef, forwardedRef);
+    const composedRefs = useComposedRefs$1(accordionRef, forwardedRef);
     const getItems = useCollection$1(__scopeAccordion);
     const direction = useDirection(dir);
     const isDirectionLTR = direction === "ltr";
@@ -21813,7 +21813,7 @@ var AccordionItem$1 = React__default.forwardRef(
         disabled,
         triggerId,
         children: /* @__PURE__ */ jsx(
-          Root$2,
+          Root$3,
           {
             "data-orientation": accordionContext.orientation,
             "data-state": getState$3(open),
@@ -21885,7 +21885,7 @@ var AccordionContent$1 = React__default.forwardRef(
     const itemContext = useAccordionItemContext(CONTENT_NAME$3, __scopeAccordion);
     const collapsibleScope = useCollapsibleScope(__scopeAccordion);
     return /* @__PURE__ */ jsx(
-      Content$1,
+      Content$2,
       {
         role: "region",
         "aria-labelledby": itemContext.triggerId,
@@ -21981,7 +21981,7 @@ var Popover$1 = (props) => {
   const popperScope = usePopperScope$1(__scopePopover);
   const triggerRef = React.useRef(null);
   const [hasCustomAnchor, setHasCustomAnchor] = React.useState(false);
-  const [open, setOpen] = useControllableState({
+  const [open, setOpen] = useControllableState$1({
     prop: openProp,
     defaultProp: defaultOpen ?? false,
     onChange: onOpenChange,
@@ -22026,7 +22026,7 @@ var PopoverTrigger$1 = React.forwardRef(
     const { __scopePopover, ...triggerProps } = props;
     const context = usePopoverContext(TRIGGER_NAME$3, __scopePopover);
     const popperScope = usePopperScope$1(__scopePopover);
-    const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
+    const composedTriggerRef = useComposedRefs$1(forwardedRef, context.triggerRef);
     const trigger = /* @__PURE__ */ jsx(
       Primitive.button,
       {
@@ -22051,7 +22051,7 @@ var [PortalProvider$1, usePortalContext$1] = createPopoverContext(PORTAL_NAME$1,
 var PopoverPortal = (props) => {
   const { __scopePopover, forceMount, children, container } = props;
   const context = usePopoverContext(PORTAL_NAME$1, __scopePopover);
-  return /* @__PURE__ */ jsx(PortalProvider$1, { scope: __scopePopover, forceMount, children: /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(Portal$5, { asChild: true, container, children }) }) });
+  return /* @__PURE__ */ jsx(PortalProvider$1, { scope: __scopePopover, forceMount, children: /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(Portal$6, { asChild: true, container, children }) }) });
 };
 PopoverPortal.displayName = PORTAL_NAME$1;
 var CONTENT_NAME$2 = "PopoverContent";
@@ -22069,7 +22069,7 @@ var PopoverContentModal = React.forwardRef(
   (props, forwardedRef) => {
     const context = usePopoverContext(CONTENT_NAME$2, props.__scopePopover);
     const contentRef = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, contentRef);
+    const composedRefs = useComposedRefs$1(forwardedRef, contentRef);
     const isRightClickOutsideRef = React.useRef(false);
     React.useEffect(() => {
       const content = contentRef.current;
@@ -22181,7 +22181,7 @@ var PopoverContentImpl = React.forwardRef(
             onFocusOutside,
             onDismiss: () => context.onOpenChange(false),
             children: /* @__PURE__ */ jsx(
-              Content$2,
+              Content$3,
               {
                 "data-state": getState$2(context.open),
                 role: "dialog",
@@ -22240,7 +22240,7 @@ function getState$2(open) {
 var Root2$3 = Popover$1;
 var Anchor2 = PopoverAnchor$1;
 var Trigger$2 = PopoverTrigger$1;
-var Portal$1 = PopoverPortal;
+var Portal$2 = PopoverPortal;
 var Content2$1 = PopoverContent$1;
 
 const Popover = ({
@@ -22265,7 +22265,7 @@ const PopoverContent = ({
   sideOffset = 4,
   ...props
 }) => {
-  return /*#__PURE__*/jsx(Portal$1, {
+  return /*#__PURE__*/jsx(Portal$2, {
     className: "WHAT",
     children: /*#__PURE__*/jsx(Content2$1, {
       "data-slot": "popover-content",
@@ -22287,7 +22287,7 @@ const PopoverAnchor = ({
 
 var U=1,Y$1=.9,H=.8,J=.17,p=.1,u=.999,$=.9999;var k$1=.99,m=/[\\\/_+.#"@\[\(\{&]/,B$1=/[\\\/_+.#"@\[\(\{&]/g,K$1=/[\s-]/,X=/[\s-]/g;function G(_,C,h,P,A,f,O){if(f===C.length)return A===_.length?U:k$1;var T=`${A},${f}`;if(O[T]!==void 0)return O[T];for(var L=P.charAt(f),c=h.indexOf(L,A),S=0,E,N,R,M;c>=0;)E=G(_,C,h,P,c+1,f+1,O),E>S&&(c===A?E*=U:m.test(_.charAt(c-1))?(E*=H,R=_.slice(A,c-1).match(B$1),R&&A>0&&(E*=Math.pow(u,R.length))):K$1.test(_.charAt(c-1))?(E*=Y$1,M=_.slice(A,c-1).match(X),M&&A>0&&(E*=Math.pow(u,M.length))):(E*=J,A>0&&(E*=Math.pow(u,c-A))),_.charAt(c)!==C.charAt(f)&&(E*=$)),(E<p&&h.charAt(c-1)===P.charAt(f+1)||P.charAt(f+1)===P.charAt(f)&&h.charAt(c-1)!==P.charAt(f))&&(N=G(_,C,h,P,c+1,f+2,O),N*p>E&&(E=N*p)),E>S&&(S=E),c=h.indexOf(L,c+1);return O[T]=S,S}function D(_){return _.toLowerCase().replace(X," ")}function W(_,C,h){return _=h&&h.length>0?`${_+" "+h.join(" ")}`:_,G(_,C,D(_),D(C),0,0,{})}
 
-var N='[cmdk-group=""]',Y='[cmdk-group-items=""]',be='[cmdk-group-heading=""]',le='[cmdk-item=""]',ce=`${le}:not([aria-disabled="true"])`,Z="cmdk-item-select",T="data-value",Re=(r,o,n)=>W(r,o,n),ue=React.createContext(void 0),K=()=>React.useContext(ue),de=React.createContext(void 0),ee=()=>React.useContext(de),fe=React.createContext(void 0),me=React.forwardRef((r,o)=>{let n=L(()=>{var e,a;return {search:"",value:(a=(e=r.value)!=null?e:r.defaultValue)!=null?a:"",selectedItemId:void 0,filtered:{count:0,items:new Map,groups:new Set}}}),u=L(()=>new Set),c=L(()=>new Map),d=L(()=>new Map),f=L(()=>new Set),p=pe(r),{label:b,children:m,value:R,onValueChange:x,filter:C,shouldFilter:S,loop:A,disablePointerSelection:ge=false,vimBindings:j=true,...O}=r,$=useId(),q=useId(),_=useId(),I=React.useRef(null),v=ke();k(()=>{if(R!==void 0){let e=R.trim();n.current.value=e,E.emit();}},[R]),k(()=>{v(6,ne);},[]);let E=React.useMemo(()=>({subscribe:e=>(f.current.add(e),()=>f.current.delete(e)),snapshot:()=>n.current,setState:(e,a,s)=>{var i,l,g,y;if(!Object.is(n.current[e],a)){if(n.current[e]=a,e==="search")J(),z(),v(1,W);else if(e==="value"){if(document.activeElement.hasAttribute("cmdk-input")||document.activeElement.hasAttribute("cmdk-root")){let h=document.getElementById(_);h?h.focus():(i=document.getElementById($))==null||i.focus();}if(v(7,()=>{var h;n.current.selectedItemId=(h=M())==null?void 0:h.id,E.emit();}),s||v(5,ne),((l=p.current)==null?void 0:l.value)!==void 0){let h=a!=null?a:"";(y=(g=p.current).onValueChange)==null||y.call(g,h);return}}E.emit();}},emit:()=>{f.current.forEach(e=>e());}}),[]),U=React.useMemo(()=>({value:(e,a,s)=>{var i;a!==((i=d.current.get(e))==null?void 0:i.value)&&(d.current.set(e,{value:a,keywords:s}),n.current.filtered.items.set(e,te(a,s)),v(2,()=>{z(),E.emit();}));},item:(e,a)=>(u.current.add(e),a&&(c.current.has(a)?c.current.get(a).add(e):c.current.set(a,new Set([e]))),v(3,()=>{J(),z(),n.current.value||W(),E.emit();}),()=>{d.current.delete(e),u.current.delete(e),n.current.filtered.items.delete(e);let s=M();v(4,()=>{J(),(s==null?void 0:s.getAttribute("id"))===e&&W(),E.emit();});}),group:e=>(c.current.has(e)||c.current.set(e,new Set),()=>{d.current.delete(e),c.current.delete(e);}),filter:()=>p.current.shouldFilter,label:b||r["aria-label"],getDisablePointerSelection:()=>p.current.disablePointerSelection,listId:$,inputId:_,labelId:q,listInnerRef:I}),[]);function te(e,a){var i,l;let s=(l=(i=p.current)==null?void 0:i.filter)!=null?l:Re;return e?s(e,n.current.search,a):0}function z(){if(!n.current.search||p.current.shouldFilter===false)return;let e=n.current.filtered.items,a=[];n.current.filtered.groups.forEach(i=>{let l=c.current.get(i),g=0;l.forEach(y=>{let h=e.get(y);g=Math.max(h,g);}),a.push([i,g]);});let s=I.current;V().sort((i,l)=>{var h,F;let g=i.getAttribute("id"),y=l.getAttribute("id");return ((h=e.get(y))!=null?h:0)-((F=e.get(g))!=null?F:0)}).forEach(i=>{let l=i.closest(Y);l?l.appendChild(i.parentElement===l?i:i.closest(`${Y} > *`)):s.appendChild(i.parentElement===s?i:i.closest(`${Y} > *`));}),a.sort((i,l)=>l[1]-i[1]).forEach(i=>{var g;let l=(g=I.current)==null?void 0:g.querySelector(`${N}[${T}="${encodeURIComponent(i[0])}"]`);l==null||l.parentElement.appendChild(l);});}function W(){let e=V().find(s=>s.getAttribute("aria-disabled")!=="true"),a=e==null?void 0:e.getAttribute(T);E.setState("value",a||void 0);}function J(){var a,s,i,l;if(!n.current.search||p.current.shouldFilter===false){n.current.filtered.count=u.current.size;return}n.current.filtered.groups=new Set;let e=0;for(let g of u.current){let y=(s=(a=d.current.get(g))==null?void 0:a.value)!=null?s:"",h=(l=(i=d.current.get(g))==null?void 0:i.keywords)!=null?l:[],F=te(y,h);n.current.filtered.items.set(g,F),F>0&&e++;}for(let[g,y]of c.current)for(let h of y)if(n.current.filtered.items.get(h)>0){n.current.filtered.groups.add(g);break}n.current.filtered.count=e;}function ne(){var a,s,i;let e=M();e&&(((a=e.parentElement)==null?void 0:a.firstChild)===e&&((i=(s=e.closest(N))==null?void 0:s.querySelector(be))==null||i.scrollIntoView({block:"nearest"})),e.scrollIntoView({block:"nearest"}));}function M(){var e;return (e=I.current)==null?void 0:e.querySelector(`${le}[aria-selected="true"]`)}function V(){var e;return Array.from(((e=I.current)==null?void 0:e.querySelectorAll(ce))||[])}function X(e){let s=V()[e];s&&E.setState("value",s.getAttribute(T));}function Q(e){var g;let a=M(),s=V(),i=s.findIndex(y=>y===a),l=s[i+e];(g=p.current)!=null&&g.loop&&(l=i+e<0?s[s.length-1]:i+e===s.length?s[0]:s[i+e]),l&&E.setState("value",l.getAttribute(T));}function re(e){let a=M(),s=a==null?void 0:a.closest(N),i;for(;s&&!i;)s=e>0?we(s,N):De(s,N),i=s==null?void 0:s.querySelector(ce);i?E.setState("value",i.getAttribute(T)):Q(e);}let oe=()=>X(V().length-1),ie=e=>{e.preventDefault(),e.metaKey?oe():e.altKey?re(1):Q(1);},se=e=>{e.preventDefault(),e.metaKey?X(0):e.altKey?re(-1):Q(-1);};return React.createElement(Primitive.div,{ref:o,tabIndex:-1,...O,"cmdk-root":"",onKeyDown:e=>{var s;(s=O.onKeyDown)==null||s.call(O,e);let a=e.nativeEvent.isComposing||e.keyCode===229;if(!(e.defaultPrevented||a))switch(e.key){case "n":case "j":{j&&e.ctrlKey&&ie(e);break}case "ArrowDown":{ie(e);break}case "p":case "k":{j&&e.ctrlKey&&se(e);break}case "ArrowUp":{se(e);break}case "Home":{e.preventDefault(),X(0);break}case "End":{e.preventDefault(),oe();break}case "Enter":{e.preventDefault();let i=M();if(i){let l=new Event(Z);i.dispatchEvent(l);}}}}},React.createElement("label",{"cmdk-label":"",htmlFor:U.inputId,id:U.labelId,style:Te},b),B(r,e=>React.createElement(de.Provider,{value:E},React.createElement(ue.Provider,{value:U},e))))}),he=React.forwardRef((r,o)=>{var _,I;let n=useId(),u=React.useRef(null),c=React.useContext(fe),d=K(),f=pe(r),p=(I=(_=f.current)==null?void 0:_.forceMount)!=null?I:c==null?void 0:c.forceMount;k(()=>{if(!p)return d.item(n,c==null?void 0:c.id)},[p]);let b=ve(n,u,[r.value,r.children,u],r.keywords),m=ee(),R=P(v=>v.value&&v.value===b.current),x=P(v=>p||d.filter()===false?true:v.search?v.filtered.items.get(n)>0:true);React.useEffect(()=>{let v=u.current;if(!(!v||r.disabled))return v.addEventListener(Z,C),()=>v.removeEventListener(Z,C)},[x,r.onSelect,r.disabled]);function C(){var v,E;S(),(E=(v=f.current).onSelect)==null||E.call(v,b.current);}function S(){m.setState("value",b.current,true);}if(!x)return null;let{disabled:A,value:ge,onSelect:j,forceMount:O,keywords:$,...q}=r;return React.createElement(Primitive.div,{ref:composeRefs(u,o),...q,id:n,"cmdk-item":"",role:"option","aria-disabled":!!A,"aria-selected":!!R,"data-disabled":!!A,"data-selected":!!R,onPointerMove:A||d.getDisablePointerSelection()?void 0:S,onClick:A?void 0:C},r.children)}),Ee=React.forwardRef((r,o)=>{let{heading:n,children:u,forceMount:c,...d}=r,f=useId(),p=React.useRef(null),b=React.useRef(null),m=useId(),R=K(),x=P(S=>c||R.filter()===false?true:S.search?S.filtered.groups.has(f):true);k(()=>R.group(f),[]),ve(f,p,[r.value,r.heading,b]);let C=React.useMemo(()=>({id:f,forceMount:c}),[c]);return React.createElement(Primitive.div,{ref:composeRefs(p,o),...d,"cmdk-group":"",role:"presentation",hidden:x?void 0:true},n&&React.createElement("div",{ref:b,"cmdk-group-heading":"","aria-hidden":true,id:m},n),B(r,S=>React.createElement("div",{"cmdk-group-items":"",role:"group","aria-labelledby":n?m:void 0},React.createElement(fe.Provider,{value:C},S))))}),ye=React.forwardRef((r,o)=>{let{alwaysRender:n,...u}=r,c=React.useRef(null),d=P(f=>!f.search);return !n&&!d?null:React.createElement(Primitive.div,{ref:composeRefs(c,o),...u,"cmdk-separator":"",role:"separator"})}),Se=React.forwardRef((r,o)=>{let{onValueChange:n,...u}=r,c=r.value!=null,d=ee(),f=P(m=>m.search),p=P(m=>m.selectedItemId),b=K();return React.useEffect(()=>{r.value!=null&&d.setState("search",r.value);},[r.value]),React.createElement(Primitive.input,{ref:o,...u,"cmdk-input":"",autoComplete:"off",autoCorrect:"off",spellCheck:false,"aria-autocomplete":"list",role:"combobox","aria-expanded":true,"aria-controls":b.listId,"aria-labelledby":b.labelId,"aria-activedescendant":p,id:b.inputId,type:"text",value:c?r.value:f,onChange:m=>{c||d.setState("search",m.target.value),n==null||n(m.target.value);}})}),Ce=React.forwardRef((r,o)=>{let{children:n,label:u="Suggestions",...c}=r,d=React.useRef(null),f=React.useRef(null),p=P(m=>m.selectedItemId),b=K();return React.useEffect(()=>{if(f.current&&d.current){let m=f.current,R=d.current,x,C=new ResizeObserver(()=>{x=requestAnimationFrame(()=>{let S=m.offsetHeight;R.style.setProperty("--cmdk-list-height",S.toFixed(1)+"px");});});return C.observe(m),()=>{cancelAnimationFrame(x),C.unobserve(m);}}},[]),React.createElement(Primitive.div,{ref:composeRefs(d,o),...c,"cmdk-list":"",role:"listbox",tabIndex:-1,"aria-activedescendant":p,"aria-label":u,id:b.listId},B(r,m=>React.createElement("div",{ref:composeRefs(f,b.listInnerRef),"cmdk-list-sizer":""},m)))}),xe=React.forwardRef((r,o)=>{let{open:n,onOpenChange:u,overlayClassName:c,contentClassName:d,container:f,...p}=r;return React.createElement(Root$6,{open:n,onOpenChange:u},React.createElement(Portal$4,{container:f},React.createElement(Overlay,{"cmdk-overlay":"",className:c}),React.createElement(Content$3,{"aria-label":r.label,"cmdk-dialog":"",className:d},React.createElement(me,{ref:o,...p}))))}),Ie=React.forwardRef((r,o)=>P(u=>u.filtered.count===0)?React.createElement(Primitive.div,{ref:o,...r,"cmdk-empty":"",role:"presentation"}):null),Pe=React.forwardRef((r,o)=>{let{progress:n,children:u,label:c="Loading...",...d}=r;return React.createElement(Primitive.div,{ref:o,...d,"cmdk-loading":"",role:"progressbar","aria-valuenow":n,"aria-valuemin":0,"aria-valuemax":100,"aria-label":c},B(r,f=>React.createElement("div",{"aria-hidden":true},f)))}),_e=Object.assign(me,{List:Ce,Item:he,Input:Se,Group:Ee,Separator:ye,Dialog:xe,Empty:Ie,Loading:Pe});function we(r,o){let n=r.nextElementSibling;for(;n;){if(n.matches(o))return n;n=n.nextElementSibling;}}function De(r,o){let n=r.previousElementSibling;for(;n;){if(n.matches(o))return n;n=n.previousElementSibling;}}function pe(r){let o=React.useRef(r);return k(()=>{o.current=r;}),o}var k=typeof window=="undefined"?React.useEffect:React.useLayoutEffect;function L(r){let o=React.useRef();return o.current===void 0&&(o.current=r()),o}function P(r){let o=ee(),n=()=>r(o.snapshot());return React.useSyncExternalStore(o.subscribe,n,n)}function ve(r,o,n,u=[]){let c=React.useRef(),d=K();return k(()=>{var b;let f=(()=>{var m;for(let R of n){if(typeof R=="string")return R.trim();if(typeof R=="object"&&"current"in R)return R.current?(m=R.current.textContent)==null?void 0:m.trim():c.current}})(),p=u.map(m=>m.trim());d.value(r,f,p),(b=o.current)==null||b.setAttribute(T,f),c.current=f;}),c}var ke=()=>{let[r,o]=React.useState(),n=L(()=>new Map);return k(()=>{n.current.forEach(u=>u()),n.current=new Map;},[r]),(u,c)=>{n.current.set(u,c),o({});}};function Me(r){let o=r.type;return typeof o=="function"?o(r.props):"render"in o?o.render(r.props):r}function B({asChild:r,children:o},n){return r&&React.isValidElement(o)?React.cloneElement(Me(o),{ref:o.ref},n(o.props.children)):n(o)}var Te={position:"absolute",width:"1px",height:"1px",padding:"0",margin:"-1px",overflow:"hidden",clip:"rect(0, 0, 0, 0)",whiteSpace:"nowrap",borderWidth:"0"};
+var N='[cmdk-group=""]',Y='[cmdk-group-items=""]',be='[cmdk-group-heading=""]',le='[cmdk-item=""]',ce=`${le}:not([aria-disabled="true"])`,Z="cmdk-item-select",T="data-value",Re=(r,o,n)=>W(r,o,n),ue=React.createContext(void 0),K=()=>React.useContext(ue),de=React.createContext(void 0),ee=()=>React.useContext(de),fe=React.createContext(void 0),me=React.forwardRef((r,o)=>{let n=L(()=>{var e,a;return {search:"",value:(a=(e=r.value)!=null?e:r.defaultValue)!=null?a:"",selectedItemId:void 0,filtered:{count:0,items:new Map,groups:new Set}}}),u=L(()=>new Set),c=L(()=>new Map),d=L(()=>new Map),f=L(()=>new Set),p=pe(r),{label:b,children:m,value:R,onValueChange:x,filter:C,shouldFilter:S,loop:A,disablePointerSelection:ge=false,vimBindings:j=true,...O}=r,$=useId(),q=useId(),_=useId(),I=React.useRef(null),v=ke();k(()=>{if(R!==void 0){let e=R.trim();n.current.value=e,E.emit();}},[R]),k(()=>{v(6,ne);},[]);let E=React.useMemo(()=>({subscribe:e=>(f.current.add(e),()=>f.current.delete(e)),snapshot:()=>n.current,setState:(e,a,s)=>{var i,l,g,y;if(!Object.is(n.current[e],a)){if(n.current[e]=a,e==="search")J(),z(),v(1,W);else if(e==="value"){if(document.activeElement.hasAttribute("cmdk-input")||document.activeElement.hasAttribute("cmdk-root")){let h=document.getElementById(_);h?h.focus():(i=document.getElementById($))==null||i.focus();}if(v(7,()=>{var h;n.current.selectedItemId=(h=M())==null?void 0:h.id,E.emit();}),s||v(5,ne),((l=p.current)==null?void 0:l.value)!==void 0){let h=a!=null?a:"";(y=(g=p.current).onValueChange)==null||y.call(g,h);return}}E.emit();}},emit:()=>{f.current.forEach(e=>e());}}),[]),U=React.useMemo(()=>({value:(e,a,s)=>{var i;a!==((i=d.current.get(e))==null?void 0:i.value)&&(d.current.set(e,{value:a,keywords:s}),n.current.filtered.items.set(e,te(a,s)),v(2,()=>{z(),E.emit();}));},item:(e,a)=>(u.current.add(e),a&&(c.current.has(a)?c.current.get(a).add(e):c.current.set(a,new Set([e]))),v(3,()=>{J(),z(),n.current.value||W(),E.emit();}),()=>{d.current.delete(e),u.current.delete(e),n.current.filtered.items.delete(e);let s=M();v(4,()=>{J(),(s==null?void 0:s.getAttribute("id"))===e&&W(),E.emit();});}),group:e=>(c.current.has(e)||c.current.set(e,new Set),()=>{d.current.delete(e),c.current.delete(e);}),filter:()=>p.current.shouldFilter,label:b||r["aria-label"],getDisablePointerSelection:()=>p.current.disablePointerSelection,listId:$,inputId:_,labelId:q,listInnerRef:I}),[]);function te(e,a){var i,l;let s=(l=(i=p.current)==null?void 0:i.filter)!=null?l:Re;return e?s(e,n.current.search,a):0}function z(){if(!n.current.search||p.current.shouldFilter===false)return;let e=n.current.filtered.items,a=[];n.current.filtered.groups.forEach(i=>{let l=c.current.get(i),g=0;l.forEach(y=>{let h=e.get(y);g=Math.max(h,g);}),a.push([i,g]);});let s=I.current;V().sort((i,l)=>{var h,F;let g=i.getAttribute("id"),y=l.getAttribute("id");return ((h=e.get(y))!=null?h:0)-((F=e.get(g))!=null?F:0)}).forEach(i=>{let l=i.closest(Y);l?l.appendChild(i.parentElement===l?i:i.closest(`${Y} > *`)):s.appendChild(i.parentElement===s?i:i.closest(`${Y} > *`));}),a.sort((i,l)=>l[1]-i[1]).forEach(i=>{var g;let l=(g=I.current)==null?void 0:g.querySelector(`${N}[${T}="${encodeURIComponent(i[0])}"]`);l==null||l.parentElement.appendChild(l);});}function W(){let e=V().find(s=>s.getAttribute("aria-disabled")!=="true"),a=e==null?void 0:e.getAttribute(T);E.setState("value",a||void 0);}function J(){var a,s,i,l;if(!n.current.search||p.current.shouldFilter===false){n.current.filtered.count=u.current.size;return}n.current.filtered.groups=new Set;let e=0;for(let g of u.current){let y=(s=(a=d.current.get(g))==null?void 0:a.value)!=null?s:"",h=(l=(i=d.current.get(g))==null?void 0:i.keywords)!=null?l:[],F=te(y,h);n.current.filtered.items.set(g,F),F>0&&e++;}for(let[g,y]of c.current)for(let h of y)if(n.current.filtered.items.get(h)>0){n.current.filtered.groups.add(g);break}n.current.filtered.count=e;}function ne(){var a,s,i;let e=M();e&&(((a=e.parentElement)==null?void 0:a.firstChild)===e&&((i=(s=e.closest(N))==null?void 0:s.querySelector(be))==null||i.scrollIntoView({block:"nearest"})),e.scrollIntoView({block:"nearest"}));}function M(){var e;return (e=I.current)==null?void 0:e.querySelector(`${le}[aria-selected="true"]`)}function V(){var e;return Array.from(((e=I.current)==null?void 0:e.querySelectorAll(ce))||[])}function X(e){let s=V()[e];s&&E.setState("value",s.getAttribute(T));}function Q(e){var g;let a=M(),s=V(),i=s.findIndex(y=>y===a),l=s[i+e];(g=p.current)!=null&&g.loop&&(l=i+e<0?s[s.length-1]:i+e===s.length?s[0]:s[i+e]),l&&E.setState("value",l.getAttribute(T));}function re(e){let a=M(),s=a==null?void 0:a.closest(N),i;for(;s&&!i;)s=e>0?we(s,N):De(s,N),i=s==null?void 0:s.querySelector(ce);i?E.setState("value",i.getAttribute(T)):Q(e);}let oe=()=>X(V().length-1),ie=e=>{e.preventDefault(),e.metaKey?oe():e.altKey?re(1):Q(1);},se=e=>{e.preventDefault(),e.metaKey?X(0):e.altKey?re(-1):Q(-1);};return React.createElement(Primitive.div,{ref:o,tabIndex:-1,...O,"cmdk-root":"",onKeyDown:e=>{var s;(s=O.onKeyDown)==null||s.call(O,e);let a=e.nativeEvent.isComposing||e.keyCode===229;if(!(e.defaultPrevented||a))switch(e.key){case "n":case "j":{j&&e.ctrlKey&&ie(e);break}case "ArrowDown":{ie(e);break}case "p":case "k":{j&&e.ctrlKey&&se(e);break}case "ArrowUp":{se(e);break}case "Home":{e.preventDefault(),X(0);break}case "End":{e.preventDefault(),oe();break}case "Enter":{e.preventDefault();let i=M();if(i){let l=new Event(Z);i.dispatchEvent(l);}}}}},React.createElement("label",{"cmdk-label":"",htmlFor:U.inputId,id:U.labelId,style:Te},b),B(r,e=>React.createElement(de.Provider,{value:E},React.createElement(ue.Provider,{value:U},e))))}),he=React.forwardRef((r,o)=>{var _,I;let n=useId(),u=React.useRef(null),c=React.useContext(fe),d=K(),f=pe(r),p=(I=(_=f.current)==null?void 0:_.forceMount)!=null?I:c==null?void 0:c.forceMount;k(()=>{if(!p)return d.item(n,c==null?void 0:c.id)},[p]);let b=ve(n,u,[r.value,r.children,u],r.keywords),m=ee(),R=P(v=>v.value&&v.value===b.current),x=P(v=>p||d.filter()===false?true:v.search?v.filtered.items.get(n)>0:true);React.useEffect(()=>{let v=u.current;if(!(!v||r.disabled))return v.addEventListener(Z,C),()=>v.removeEventListener(Z,C)},[x,r.onSelect,r.disabled]);function C(){var v,E;S(),(E=(v=f.current).onSelect)==null||E.call(v,b.current);}function S(){m.setState("value",b.current,true);}if(!x)return null;let{disabled:A,value:ge,onSelect:j,forceMount:O,keywords:$,...q}=r;return React.createElement(Primitive.div,{ref:composeRefs$1(u,o),...q,id:n,"cmdk-item":"",role:"option","aria-disabled":!!A,"aria-selected":!!R,"data-disabled":!!A,"data-selected":!!R,onPointerMove:A||d.getDisablePointerSelection()?void 0:S,onClick:A?void 0:C},r.children)}),Ee=React.forwardRef((r,o)=>{let{heading:n,children:u,forceMount:c,...d}=r,f=useId(),p=React.useRef(null),b=React.useRef(null),m=useId(),R=K(),x=P(S=>c||R.filter()===false?true:S.search?S.filtered.groups.has(f):true);k(()=>R.group(f),[]),ve(f,p,[r.value,r.heading,b]);let C=React.useMemo(()=>({id:f,forceMount:c}),[c]);return React.createElement(Primitive.div,{ref:composeRefs$1(p,o),...d,"cmdk-group":"",role:"presentation",hidden:x?void 0:true},n&&React.createElement("div",{ref:b,"cmdk-group-heading":"","aria-hidden":true,id:m},n),B(r,S=>React.createElement("div",{"cmdk-group-items":"",role:"group","aria-labelledby":n?m:void 0},React.createElement(fe.Provider,{value:C},S))))}),ye=React.forwardRef((r,o)=>{let{alwaysRender:n,...u}=r,c=React.useRef(null),d=P(f=>!f.search);return !n&&!d?null:React.createElement(Primitive.div,{ref:composeRefs$1(c,o),...u,"cmdk-separator":"",role:"separator"})}),Se=React.forwardRef((r,o)=>{let{onValueChange:n,...u}=r,c=r.value!=null,d=ee(),f=P(m=>m.search),p=P(m=>m.selectedItemId),b=K();return React.useEffect(()=>{r.value!=null&&d.setState("search",r.value);},[r.value]),React.createElement(Primitive.input,{ref:o,...u,"cmdk-input":"",autoComplete:"off",autoCorrect:"off",spellCheck:false,"aria-autocomplete":"list",role:"combobox","aria-expanded":true,"aria-controls":b.listId,"aria-labelledby":b.labelId,"aria-activedescendant":p,id:b.inputId,type:"text",value:c?r.value:f,onChange:m=>{c||d.setState("search",m.target.value),n==null||n(m.target.value);}})}),Ce=React.forwardRef((r,o)=>{let{children:n,label:u="Suggestions",...c}=r,d=React.useRef(null),f=React.useRef(null),p=P(m=>m.selectedItemId),b=K();return React.useEffect(()=>{if(f.current&&d.current){let m=f.current,R=d.current,x,C=new ResizeObserver(()=>{x=requestAnimationFrame(()=>{let S=m.offsetHeight;R.style.setProperty("--cmdk-list-height",S.toFixed(1)+"px");});});return C.observe(m),()=>{cancelAnimationFrame(x),C.unobserve(m);}}},[]),React.createElement(Primitive.div,{ref:composeRefs$1(d,o),...c,"cmdk-list":"",role:"listbox",tabIndex:-1,"aria-activedescendant":p,"aria-label":u,id:b.listId},B(r,m=>React.createElement("div",{ref:composeRefs$1(f,b.listInnerRef),"cmdk-list-sizer":""},m)))}),xe=React.forwardRef((r,o)=>{let{open:n,onOpenChange:u,overlayClassName:c,contentClassName:d,container:f,...p}=r;return React.createElement(Root$7,{open:n,onOpenChange:u},React.createElement(Portal$5,{container:f},React.createElement(Overlay$1,{"cmdk-overlay":"",className:c}),React.createElement(Content$4,{"aria-label":r.label,"cmdk-dialog":"",className:d},React.createElement(me,{ref:o,...p}))))}),Ie=React.forwardRef((r,o)=>P(u=>u.filtered.count===0)?React.createElement(Primitive.div,{ref:o,...r,"cmdk-empty":"",role:"presentation"}):null),Pe=React.forwardRef((r,o)=>{let{progress:n,children:u,label:c="Loading...",...d}=r;return React.createElement(Primitive.div,{ref:o,...d,"cmdk-loading":"",role:"progressbar","aria-valuenow":n,"aria-valuemin":0,"aria-valuemax":100,"aria-label":c},B(r,f=>React.createElement("div",{"aria-hidden":true},f)))}),_e=Object.assign(me,{List:Ce,Item:he,Input:Se,Group:Ee,Separator:ye,Dialog:xe,Empty:Ie,Loading:Pe});function we(r,o){let n=r.nextElementSibling;for(;n;){if(n.matches(o))return n;n=n.nextElementSibling;}}function De(r,o){let n=r.previousElementSibling;for(;n;){if(n.matches(o))return n;n=n.previousElementSibling;}}function pe(r){let o=React.useRef(r);return k(()=>{o.current=r;}),o}var k=typeof window=="undefined"?React.useEffect:React.useLayoutEffect;function L(r){let o=React.useRef();return o.current===void 0&&(o.current=r()),o}function P(r){let o=ee(),n=()=>r(o.snapshot());return React.useSyncExternalStore(o.subscribe,n,n)}function ve(r,o,n,u=[]){let c=React.useRef(),d=K();return k(()=>{var b;let f=(()=>{var m;for(let R of n){if(typeof R=="string")return R.trim();if(typeof R=="object"&&"current"in R)return R.current?(m=R.current.textContent)==null?void 0:m.trim():c.current}})(),p=u.map(m=>m.trim());d.value(r,f,p),(b=o.current)==null||b.setAttribute(T,f),c.current=f;}),c}var ke=()=>{let[r,o]=React.useState(),n=L(()=>new Map);return k(()=>{n.current.forEach(u=>u()),n.current=new Map;},[r]),(u,c)=>{n.current.set(u,c),o({});}};function Me(r){let o=r.type;return typeof o=="function"?o(r.props):"render"in o?o.render(r.props):r}function B({asChild:r,children:o},n){return r&&React.isValidElement(o)?React.cloneElement(Me(o),{ref:o.ref},n(o.props.children)):n(o)}var Te={position:"absolute",width:"1px",height:"1px",padding:"0",margin:"-1px",overflow:"hidden",clip:"rect(0, 0, 0, 0)",whiteSpace:"nowrap",borderWidth:"0"};
 
 const Command = ({
   className,
@@ -27696,7 +27696,7 @@ function PreviousMonthButton(props) {
  * @group Components
  * @see https://daypicker.dev/guides/custom-components
  */
-function Root$1(props) {
+function Root$2(props) {
     const { rootRef, ...rest } = props;
     return React__default.createElement("div", { ...rest, ref: rootRef });
 }
@@ -27804,7 +27804,7 @@ var components = /*#__PURE__*/Object.freeze({
   NextMonthButton: NextMonthButton,
   Option: Option,
   PreviousMonthButton: PreviousMonthButton,
-  Root: Root$1,
+  Root: Root$2,
   Select: Select,
   Week: Week,
   WeekNumber: WeekNumber,
@@ -31788,7 +31788,7 @@ const CarouselNext = ({
 const Collapsible = ({
   ...props
 }) => {
-  return /*#__PURE__*/jsx(Root$2, {
+  return /*#__PURE__*/jsx(Root$3, {
     "data-slot": "collapsible",
     ...props
   });
@@ -31830,7 +31830,7 @@ function CheckboxProvider(props) {
     // @ts-expect-error
     internal_do_not_use_render
   } = props;
-  const [checked, setChecked] = useControllableState({
+  const [checked, setChecked] = useControllableState$1({
     prop: checkedProp,
     defaultProp: defaultChecked ?? false,
     onChange: onCheckedChange,
@@ -31883,7 +31883,7 @@ var CheckboxTrigger = React.forwardRef(
       isFormControl,
       bubbleInput
     } = useCheckboxContext(TRIGGER_NAME$2, __scopeCheckbox);
-    const composedRefs = useComposedRefs(forwardedRef, setControl);
+    const composedRefs = useComposedRefs$1(forwardedRef, setControl);
     const initialCheckedStateRef = React.useRef(checked);
     React.useEffect(() => {
       const form = control?.form;
@@ -32008,7 +32008,7 @@ var CheckboxBubbleInput = React.forwardRef(
       bubbleInput,
       setBubbleInput
     } = useCheckboxContext(BUBBLE_INPUT_NAME$1, __scopeCheckbox);
-    const composedRefs = useComposedRefs(forwardedRef, setBubbleInput);
+    const composedRefs = useComposedRefs$1(forwardedRef, setBubbleInput);
     const prevChecked = usePrevious(checked);
     const controlSize = useSize(control);
     React.useEffect(() => {
@@ -32087,13 +32087,13 @@ var Label$1 = React.forwardRef((props, forwardedRef) => {
   );
 });
 Label$1.displayName = NAME;
-var Root = Label$1;
+var Root$1 = Label$1;
 
 const Label = ({
   className,
   ...props
 }) => {
-  return /*#__PURE__*/jsx(Root, {
+  return /*#__PURE__*/jsx(Root$1, {
     "data-slot": "label",
     className: cn('flex items-center gap-2 leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50', className),
     ...props
@@ -32138,6 +32138,1728 @@ const Divider = ({
   });
 };
 
+function __insertCSS(code) {
+  if (typeof document == 'undefined') return
+  let head = document.head || document.getElementsByTagName('head')[0];
+  let style = document.createElement('style');
+  style.type = 'text/css';
+  head.appendChild(style)
+  ;style.styleSheet ? (style.styleSheet.cssText = code) : style.appendChild(document.createTextNode(code));
+}
+
+const DrawerContext = React__default.createContext({
+    drawerRef: {
+        current: null
+    },
+    overlayRef: {
+        current: null
+    },
+    onPress: ()=>{},
+    onRelease: ()=>{},
+    onDrag: ()=>{},
+    onNestedDrag: ()=>{},
+    onNestedOpenChange: ()=>{},
+    onNestedRelease: ()=>{},
+    openProp: undefined,
+    dismissible: false,
+    isOpen: false,
+    isDragging: false,
+    keyboardIsOpen: {
+        current: false
+    },
+    snapPointsOffset: null,
+    snapPoints: null,
+    handleOnly: false,
+    modal: false,
+    shouldFade: false,
+    activeSnapPoint: null,
+    onOpenChange: ()=>{},
+    setActiveSnapPoint: ()=>{},
+    closeDrawer: ()=>{},
+    direction: 'bottom',
+    shouldAnimate: {
+        current: true
+    },
+    shouldScaleBackground: false,
+    setBackgroundColorOnScale: true,
+    noBodyStyles: false,
+    container: null,
+    autoFocus: false
+});
+const useDrawerContext = ()=>{
+    const context = React__default.useContext(DrawerContext);
+    if (!context) {
+        throw new Error('useDrawerContext must be used within a Drawer.Root');
+    }
+    return context;
+};
+
+__insertCSS("[data-vaul-drawer]{touch-action:none;will-change:transform;transition:transform .5s cubic-bezier(.32, .72, 0, 1);animation-duration:.5s;animation-timing-function:cubic-bezier(0.32,0.72,0,1)}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=bottom][data-state=open]{animation-name:slideFromBottom}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=bottom][data-state=closed]{animation-name:slideToBottom}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=top][data-state=open]{animation-name:slideFromTop}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=top][data-state=closed]{animation-name:slideToTop}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=left][data-state=open]{animation-name:slideFromLeft}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=left][data-state=closed]{animation-name:slideToLeft}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=right][data-state=open]{animation-name:slideFromRight}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=right][data-state=closed]{animation-name:slideToRight}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=bottom]{transform:translate3d(0,var(--initial-transform,100%),0)}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=top]{transform:translate3d(0,calc(var(--initial-transform,100%) * -1),0)}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=left]{transform:translate3d(calc(var(--initial-transform,100%) * -1),0,0)}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=right]{transform:translate3d(var(--initial-transform,100%),0,0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=top]{transform:translate3d(0,var(--snap-point-height,0),0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=bottom]{transform:translate3d(0,var(--snap-point-height,0),0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=left]{transform:translate3d(var(--snap-point-height,0),0,0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=right]{transform:translate3d(var(--snap-point-height,0),0,0)}[data-vaul-overlay][data-vaul-snap-points=false]{animation-duration:.5s;animation-timing-function:cubic-bezier(0.32,0.72,0,1)}[data-vaul-overlay][data-vaul-snap-points=false][data-state=open]{animation-name:fadeIn}[data-vaul-overlay][data-state=closed]{animation-name:fadeOut}[data-vaul-animate=false]{animation:none!important}[data-vaul-overlay][data-vaul-snap-points=true]{opacity:0;transition:opacity .5s cubic-bezier(.32, .72, 0, 1)}[data-vaul-overlay][data-vaul-snap-points=true]{opacity:1}[data-vaul-drawer]:not([data-vaul-custom-container=true])::after{content:'';position:absolute;background:inherit;background-color:inherit}[data-vaul-drawer][data-vaul-drawer-direction=top]::after{top:initial;bottom:100%;left:0;right:0;height:200%}[data-vaul-drawer][data-vaul-drawer-direction=bottom]::after{top:100%;bottom:initial;left:0;right:0;height:200%}[data-vaul-drawer][data-vaul-drawer-direction=left]::after{left:initial;right:100%;top:0;bottom:0;width:200%}[data-vaul-drawer][data-vaul-drawer-direction=right]::after{left:100%;right:initial;top:0;bottom:0;width:200%}[data-vaul-overlay][data-vaul-snap-points=true]:not([data-vaul-snap-points-overlay=true]):not(\n[data-state=closed]\n){opacity:0}[data-vaul-overlay][data-vaul-snap-points-overlay=true]{opacity:1}[data-vaul-handle]{display:block;position:relative;opacity:.7;background:#e2e2e4;margin-left:auto;margin-right:auto;height:5px;width:32px;border-radius:1rem;touch-action:pan-y}[data-vaul-handle]:active,[data-vaul-handle]:hover{opacity:1}[data-vaul-handle-hitarea]{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:max(100%,2.75rem);height:max(100%,2.75rem);touch-action:inherit}@media (hover:hover) and (pointer:fine){[data-vaul-drawer]{user-select:none}}@media (pointer:fine){[data-vaul-handle-hitarea]:{width:100%;height:100%}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeOut{to{opacity:0}}@keyframes slideFromBottom{from{transform:translate3d(0,var(--initial-transform,100%),0)}to{transform:translate3d(0,0,0)}}@keyframes slideToBottom{to{transform:translate3d(0,var(--initial-transform,100%),0)}}@keyframes slideFromTop{from{transform:translate3d(0,calc(var(--initial-transform,100%) * -1),0)}to{transform:translate3d(0,0,0)}}@keyframes slideToTop{to{transform:translate3d(0,calc(var(--initial-transform,100%) * -1),0)}}@keyframes slideFromLeft{from{transform:translate3d(calc(var(--initial-transform,100%) * -1),0,0)}to{transform:translate3d(0,0,0)}}@keyframes slideToLeft{to{transform:translate3d(calc(var(--initial-transform,100%) * -1),0,0)}}@keyframes slideFromRight{from{transform:translate3d(var(--initial-transform,100%),0,0)}to{transform:translate3d(0,0,0)}}@keyframes slideToRight{to{transform:translate3d(var(--initial-transform,100%),0,0)}}");
+
+function isMobileFirefox() {
+    const userAgent = navigator.userAgent;
+    return typeof window !== 'undefined' && (/Firefox/.test(userAgent) && /Mobile/.test(userAgent) || // Android Firefox
+    /FxiOS/.test(userAgent) // iOS Firefox
+    );
+}
+function isMac() {
+    return testPlatform(/^Mac/);
+}
+function isIPhone() {
+    return testPlatform(/^iPhone/);
+}
+function isSafari() {
+    return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}
+function isIPad() {
+    return testPlatform(/^iPad/) || // iPadOS 13 lies and says it's a Mac, but we can distinguish by detecting touch support.
+    isMac() && navigator.maxTouchPoints > 1;
+}
+function isIOS() {
+    return isIPhone() || isIPad();
+}
+function testPlatform(re) {
+    return typeof window !== 'undefined' && window.navigator != null ? re.test(window.navigator.platform) : undefined;
+}
+
+// This code comes from https://github.com/adobe/react-spectrum/blob/main/packages/%40react-aria/overlays/src/usePreventScroll.ts
+const KEYBOARD_BUFFER = 24;
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+function chain$1(...callbacks) {
+    return (...args)=>{
+        for (let callback of callbacks){
+            if (typeof callback === 'function') {
+                callback(...args);
+            }
+        }
+    };
+}
+// @ts-ignore
+const visualViewport = typeof document !== 'undefined' && window.visualViewport;
+function isScrollable(node) {
+    let style = window.getComputedStyle(node);
+    return /(auto|scroll)/.test(style.overflow + style.overflowX + style.overflowY);
+}
+function getScrollParent(node) {
+    if (isScrollable(node)) {
+        node = node.parentElement;
+    }
+    while(node && !isScrollable(node)){
+        node = node.parentElement;
+    }
+    return node || document.scrollingElement || document.documentElement;
+}
+// HTML input types that do not cause the software keyboard to appear.
+const nonTextInputTypes = new Set([
+    'checkbox',
+    'radio',
+    'range',
+    'color',
+    'file',
+    'image',
+    'button',
+    'submit',
+    'reset'
+]);
+// The number of active usePreventScroll calls. Used to determine whether to revert back to the original page style/scroll position
+let preventScrollCount = 0;
+let restore;
+/**
+ * Prevents scrolling on the document body on mount, and
+ * restores it on unmount. Also ensures that content does not
+ * shift due to the scrollbars disappearing.
+ */ function usePreventScroll(options = {}) {
+    let { isDisabled } = options;
+    useIsomorphicLayoutEffect(()=>{
+        if (isDisabled) {
+            return;
+        }
+        preventScrollCount++;
+        if (preventScrollCount === 1) {
+            if (isIOS()) {
+                restore = preventScrollMobileSafari();
+            }
+        }
+        return ()=>{
+            preventScrollCount--;
+            if (preventScrollCount === 0) {
+                restore == null ? void 0 : restore();
+            }
+        };
+    }, [
+        isDisabled
+    ]);
+}
+// Mobile Safari is a whole different beast. Even with overflow: hidden,
+// it still scrolls the page in many situations:
+//
+// 1. When the bottom toolbar and address bar are collapsed, page scrolling is always allowed.
+// 2. When the keyboard is visible, the viewport does not resize. Instead, the keyboard covers part of
+//    it, so it becomes scrollable.
+// 3. When tapping on an input, the page always scrolls so that the input is centered in the visual viewport.
+//    This may cause even fixed position elements to scroll off the screen.
+// 4. When using the next/previous buttons in the keyboard to navigate between inputs, the whole page always
+//    scrolls, even if the input is inside a nested scrollable element that could be scrolled instead.
+//
+// In order to work around these cases, and prevent scrolling without jankiness, we do a few things:
+//
+// 1. Prevent default on `touchmove` events that are not in a scrollable element. This prevents touch scrolling
+//    on the window.
+// 2. Prevent default on `touchmove` events inside a scrollable element when the scroll position is at the
+//    top or bottom. This avoids the whole page scrolling instead, but does prevent overscrolling.
+// 3. Prevent default on `touchend` events on input elements and handle focusing the element ourselves.
+// 4. When focusing an input, apply a transform to trick Safari into thinking the input is at the top
+//    of the page, which prevents it from scrolling the page. After the input is focused, scroll the element
+//    into view ourselves, without scrolling the whole page.
+// 5. Offset the body by the scroll position using a negative margin and scroll to the top. This should appear the
+//    same visually, but makes the actual scroll position always zero. This is required to make all of the
+//    above work or Safari will still try to scroll the page when focusing an input.
+// 6. As a last resort, handle window scroll events, and scroll back to the top. This can happen when attempting
+//    to navigate to an input with the next/previous buttons that's outside a modal.
+function preventScrollMobileSafari() {
+    let scrollable;
+    let lastY = 0;
+    let onTouchStart = (e)=>{
+        // Store the nearest scrollable parent element from the element that the user touched.
+        scrollable = getScrollParent(e.target);
+        if (scrollable === document.documentElement && scrollable === document.body) {
+            return;
+        }
+        lastY = e.changedTouches[0].pageY;
+    };
+    let onTouchMove = (e)=>{
+        // Prevent scrolling the window.
+        if (!scrollable || scrollable === document.documentElement || scrollable === document.body) {
+            e.preventDefault();
+            return;
+        }
+        // Prevent scrolling up when at the top and scrolling down when at the bottom
+        // of a nested scrollable area, otherwise mobile Safari will start scrolling
+        // the window instead. Unfortunately, this disables bounce scrolling when at
+        // the top but it's the best we can do.
+        let y = e.changedTouches[0].pageY;
+        let scrollTop = scrollable.scrollTop;
+        let bottom = scrollable.scrollHeight - scrollable.clientHeight;
+        if (bottom === 0) {
+            return;
+        }
+        if (scrollTop <= 0 && y > lastY || scrollTop >= bottom && y < lastY) {
+            e.preventDefault();
+        }
+        lastY = y;
+    };
+    let onTouchEnd = (e)=>{
+        let target = e.target;
+        // Apply this change if we're not already focused on the target element
+        if (isInput(target) && target !== document.activeElement) {
+            e.preventDefault();
+            // Apply a transform to trick Safari into thinking the input is at the top of the page
+            // so it doesn't try to scroll it into view. When tapping on an input, this needs to
+            // be done before the "focus" event, so we have to focus the element ourselves.
+            target.style.transform = 'translateY(-2000px)';
+            target.focus();
+            requestAnimationFrame(()=>{
+                target.style.transform = '';
+            });
+        }
+    };
+    let onFocus = (e)=>{
+        let target = e.target;
+        if (isInput(target)) {
+            // Transform also needs to be applied in the focus event in cases where focus moves
+            // other than tapping on an input directly, e.g. the next/previous buttons in the
+            // software keyboard. In these cases, it seems applying the transform in the focus event
+            // is good enough, whereas when tapping an input, it must be done before the focus event. 🤷‍♂️
+            target.style.transform = 'translateY(-2000px)';
+            requestAnimationFrame(()=>{
+                target.style.transform = '';
+                // This will have prevented the browser from scrolling the focused element into view,
+                // so we need to do this ourselves in a way that doesn't cause the whole page to scroll.
+                if (visualViewport) {
+                    if (visualViewport.height < window.innerHeight) {
+                        // If the keyboard is already visible, do this after one additional frame
+                        // to wait for the transform to be removed.
+                        requestAnimationFrame(()=>{
+                            scrollIntoView(target);
+                        });
+                    } else {
+                        // Otherwise, wait for the visual viewport to resize before scrolling so we can
+                        // measure the correct position to scroll to.
+                        visualViewport.addEventListener('resize', ()=>scrollIntoView(target), {
+                            once: true
+                        });
+                    }
+                }
+            });
+        }
+    };
+    let onWindowScroll = ()=>{
+        // Last resort. If the window scrolled, scroll it back to the top.
+        // It should always be at the top because the body will have a negative margin (see below).
+        window.scrollTo(0, 0);
+    };
+    // Record the original scroll position so we can restore it.
+    // Then apply a negative margin to the body to offset it by the scroll position. This will
+    // enable us to scroll the window to the top, which is required for the rest of this to work.
+    let scrollX = window.pageXOffset;
+    let scrollY = window.pageYOffset;
+    let restoreStyles = chain$1(setStyle(document.documentElement, 'paddingRight', `${window.innerWidth - document.documentElement.clientWidth}px`));
+    // Scroll to the top. The negative margin on the body will make this appear the same.
+    window.scrollTo(0, 0);
+    let removeEvents = chain$1(addEvent(document, 'touchstart', onTouchStart, {
+        passive: false,
+        capture: true
+    }), addEvent(document, 'touchmove', onTouchMove, {
+        passive: false,
+        capture: true
+    }), addEvent(document, 'touchend', onTouchEnd, {
+        passive: false,
+        capture: true
+    }), addEvent(document, 'focus', onFocus, true), addEvent(window, 'scroll', onWindowScroll));
+    return ()=>{
+        // Restore styles and scroll the page back to where it was.
+        restoreStyles();
+        removeEvents();
+        window.scrollTo(scrollX, scrollY);
+    };
+}
+// Sets a CSS property on an element, and returns a function to revert it to the previous value.
+function setStyle(element, style, value) {
+    // https://github.com/microsoft/TypeScript/issues/17827#issuecomment-391663310
+    // @ts-ignore
+    let cur = element.style[style];
+    // @ts-ignore
+    element.style[style] = value;
+    return ()=>{
+        // @ts-ignore
+        element.style[style] = cur;
+    };
+}
+// Adds an event listener to an element, and returns a function to remove it.
+function addEvent(target, event, handler, options) {
+    // @ts-ignore
+    target.addEventListener(event, handler, options);
+    return ()=>{
+        // @ts-ignore
+        target.removeEventListener(event, handler, options);
+    };
+}
+function scrollIntoView(target) {
+    let root = document.scrollingElement || document.documentElement;
+    while(target && target !== root){
+        // Find the parent scrollable element and adjust the scroll position if the target is not already in view.
+        let scrollable = getScrollParent(target);
+        if (scrollable !== document.documentElement && scrollable !== document.body && scrollable !== target) {
+            let scrollableTop = scrollable.getBoundingClientRect().top;
+            let targetTop = target.getBoundingClientRect().top;
+            let targetBottom = target.getBoundingClientRect().bottom;
+            // Buffer is needed for some edge cases
+            const keyboardHeight = scrollable.getBoundingClientRect().bottom + KEYBOARD_BUFFER;
+            if (targetBottom > keyboardHeight) {
+                scrollable.scrollTop += targetTop - scrollableTop;
+            }
+        }
+        // @ts-ignore
+        target = scrollable.parentElement;
+    }
+}
+function isInput(target) {
+    return target instanceof HTMLInputElement && !nonTextInputTypes.has(target.type) || target instanceof HTMLTextAreaElement || target instanceof HTMLElement && target.isContentEditable;
+}
+
+// This code comes from https://github.com/radix-ui/primitives/tree/main/packages/react/compose-refs
+/**
+ * Set a given ref to a given value
+ * This utility takes care of different types of refs: callback refs and RefObject(s)
+ */ function setRef(ref, value) {
+    if (typeof ref === 'function') {
+        ref(value);
+    } else if (ref !== null && ref !== undefined) {
+        ref.current = value;
+    }
+}
+/**
+ * A utility to compose multiple refs together
+ * Accepts callback refs and RefObject(s)
+ */ function composeRefs(...refs) {
+    return (node)=>refs.forEach((ref)=>setRef(ref, node));
+}
+/**
+ * A custom hook that composes multiple refs
+ * Accepts callback refs and RefObject(s)
+ */ function useComposedRefs(...refs) {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return React.useCallback(composeRefs(...refs), refs);
+}
+
+const cache = new WeakMap();
+function set(el, styles, ignoreCache = false) {
+    if (!el || !(el instanceof HTMLElement)) return;
+    let originalStyles = {};
+    Object.entries(styles).forEach(([key, value])=>{
+        if (key.startsWith('--')) {
+            el.style.setProperty(key, value);
+            return;
+        }
+        originalStyles[key] = el.style[key];
+        el.style[key] = value;
+    });
+    if (ignoreCache) return;
+    cache.set(el, originalStyles);
+}
+function reset(el, prop) {
+    if (!el || !(el instanceof HTMLElement)) return;
+    let originalStyles = cache.get(el);
+    if (!originalStyles) {
+        return;
+    }
+    {
+        el.style[prop] = originalStyles[prop];
+    }
+}
+const isVertical = (direction)=>{
+    switch(direction){
+        case 'top':
+        case 'bottom':
+            return true;
+        case 'left':
+        case 'right':
+            return false;
+        default:
+            return direction;
+    }
+};
+function getTranslate(element, direction) {
+    if (!element) {
+        return null;
+    }
+    const style = window.getComputedStyle(element);
+    const transform = // @ts-ignore
+    style.transform || style.webkitTransform || style.mozTransform;
+    let mat = transform.match(/^matrix3d\((.+)\)$/);
+    if (mat) {
+        // https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/matrix3d
+        return parseFloat(mat[1].split(', ')[isVertical(direction) ? 13 : 12]);
+    }
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/matrix
+    mat = transform.match(/^matrix\((.+)\)$/);
+    return mat ? parseFloat(mat[1].split(', ')[isVertical(direction) ? 5 : 4]) : null;
+}
+function dampenValue(v) {
+    return 8 * (Math.log(v + 1) - 2);
+}
+function assignStyle(element, style) {
+    if (!element) return ()=>{};
+    const prevStyle = element.style.cssText;
+    Object.assign(element.style, style);
+    return ()=>{
+        element.style.cssText = prevStyle;
+    };
+}
+/**
+ * Receives functions as arguments and returns a new function that calls all.
+ */ function chain(...fns) {
+    return (...args)=>{
+        for (const fn of fns){
+            if (typeof fn === 'function') {
+                // @ts-ignore
+                fn(...args);
+            }
+        }
+    };
+}
+
+const TRANSITIONS = {
+    DURATION: 0.5,
+    EASE: [
+        0.32,
+        0.72,
+        0,
+        1
+    ]
+};
+const VELOCITY_THRESHOLD = 0.4;
+const CLOSE_THRESHOLD = 0.25;
+const SCROLL_LOCK_TIMEOUT = 100;
+const BORDER_RADIUS = 8;
+const NESTED_DISPLACEMENT = 16;
+const WINDOW_TOP_OFFSET = 26;
+const DRAG_CLASS = 'vaul-dragging';
+
+// This code comes from https://github.com/radix-ui/primitives/blob/main/packages/react/use-controllable-state/src/useControllableState.tsx
+function useCallbackRef(callback) {
+    const callbackRef = React__default.useRef(callback);
+    React__default.useEffect(()=>{
+        callbackRef.current = callback;
+    });
+    // https://github.com/facebook/react/issues/19240
+    return React__default.useMemo(()=>(...args)=>callbackRef.current == null ? void 0 : callbackRef.current.call(callbackRef, ...args), []);
+}
+function useUncontrolledState({ defaultProp, onChange }) {
+    const uncontrolledState = React__default.useState(defaultProp);
+    const [value] = uncontrolledState;
+    const prevValueRef = React__default.useRef(value);
+    const handleChange = useCallbackRef(onChange);
+    React__default.useEffect(()=>{
+        if (prevValueRef.current !== value) {
+            handleChange(value);
+            prevValueRef.current = value;
+        }
+    }, [
+        value,
+        prevValueRef,
+        handleChange
+    ]);
+    return uncontrolledState;
+}
+function useControllableState({ prop, defaultProp, onChange = ()=>{} }) {
+    const [uncontrolledProp, setUncontrolledProp] = useUncontrolledState({
+        defaultProp,
+        onChange
+    });
+    const isControlled = prop !== undefined;
+    const value = isControlled ? prop : uncontrolledProp;
+    const handleChange = useCallbackRef(onChange);
+    const setValue = React__default.useCallback((nextValue)=>{
+        if (isControlled) {
+            const setter = nextValue;
+            const value = typeof nextValue === 'function' ? setter(prop) : nextValue;
+            if (value !== prop) handleChange(value);
+        } else {
+            setUncontrolledProp(nextValue);
+        }
+    }, [
+        isControlled,
+        prop,
+        setUncontrolledProp,
+        handleChange
+    ]);
+    return [
+        value,
+        setValue
+    ];
+}
+
+function useSnapPoints({ activeSnapPointProp, setActiveSnapPointProp, snapPoints, drawerRef, overlayRef, fadeFromIndex, onSnapPointChange, direction = 'bottom', container, snapToSequentialPoint }) {
+    const [activeSnapPoint, setActiveSnapPoint] = useControllableState({
+        prop: activeSnapPointProp,
+        defaultProp: snapPoints == null ? void 0 : snapPoints[0],
+        onChange: setActiveSnapPointProp
+    });
+    const [windowDimensions, setWindowDimensions] = React__default.useState(typeof window !== 'undefined' ? {
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight
+    } : undefined);
+    React__default.useEffect(()=>{
+        function onResize() {
+            setWindowDimensions({
+                innerWidth: window.innerWidth,
+                innerHeight: window.innerHeight
+            });
+        }
+        window.addEventListener('resize', onResize);
+        return ()=>window.removeEventListener('resize', onResize);
+    }, []);
+    const isLastSnapPoint = React__default.useMemo(()=>activeSnapPoint === (snapPoints == null ? void 0 : snapPoints[snapPoints.length - 1]) || null, [
+        snapPoints,
+        activeSnapPoint
+    ]);
+    const activeSnapPointIndex = React__default.useMemo(()=>{
+        var _snapPoints_findIndex;
+        return (_snapPoints_findIndex = snapPoints == null ? void 0 : snapPoints.findIndex((snapPoint)=>snapPoint === activeSnapPoint)) != null ? _snapPoints_findIndex : null;
+    }, [
+        snapPoints,
+        activeSnapPoint
+    ]);
+    const shouldFade = snapPoints && snapPoints.length > 0 && (fadeFromIndex || fadeFromIndex === 0) && !Number.isNaN(fadeFromIndex) && snapPoints[fadeFromIndex] === activeSnapPoint || !snapPoints;
+    const snapPointsOffset = React__default.useMemo(()=>{
+        const containerSize = container ? {
+            width: container.getBoundingClientRect().width,
+            height: container.getBoundingClientRect().height
+        } : typeof window !== 'undefined' ? {
+            width: window.innerWidth,
+            height: window.innerHeight
+        } : {
+            width: 0,
+            height: 0
+        };
+        var _snapPoints_map;
+        return (_snapPoints_map = snapPoints == null ? void 0 : snapPoints.map((snapPoint)=>{
+            const isPx = typeof snapPoint === 'string';
+            let snapPointAsNumber = 0;
+            if (isPx) {
+                snapPointAsNumber = parseInt(snapPoint, 10);
+            }
+            if (isVertical(direction)) {
+                const height = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * containerSize.height : 0;
+                if (windowDimensions) {
+                    return direction === 'bottom' ? containerSize.height - height : -containerSize.height + height;
+                }
+                return height;
+            }
+            const width = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * containerSize.width : 0;
+            if (windowDimensions) {
+                return direction === 'right' ? containerSize.width - width : -containerSize.width + width;
+            }
+            return width;
+        })) != null ? _snapPoints_map : [];
+    }, [
+        snapPoints,
+        windowDimensions,
+        container
+    ]);
+    const activeSnapPointOffset = React__default.useMemo(()=>activeSnapPointIndex !== null ? snapPointsOffset == null ? void 0 : snapPointsOffset[activeSnapPointIndex] : null, [
+        snapPointsOffset,
+        activeSnapPointIndex
+    ]);
+    const snapToPoint = React__default.useCallback((dimension)=>{
+        var _snapPointsOffset_findIndex;
+        const newSnapPointIndex = (_snapPointsOffset_findIndex = snapPointsOffset == null ? void 0 : snapPointsOffset.findIndex((snapPointDim)=>snapPointDim === dimension)) != null ? _snapPointsOffset_findIndex : null;
+        onSnapPointChange(newSnapPointIndex);
+        set(drawerRef.current, {
+            transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+            transform: isVertical(direction) ? `translate3d(0, ${dimension}px, 0)` : `translate3d(${dimension}px, 0, 0)`
+        });
+        if (snapPointsOffset && newSnapPointIndex !== snapPointsOffset.length - 1 && fadeFromIndex !== undefined && newSnapPointIndex !== fadeFromIndex && newSnapPointIndex < fadeFromIndex) {
+            set(overlayRef.current, {
+                transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+                opacity: '0'
+            });
+        } else {
+            set(overlayRef.current, {
+                transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+                opacity: '1'
+            });
+        }
+        setActiveSnapPoint(snapPoints == null ? void 0 : snapPoints[Math.max(newSnapPointIndex, 0)]);
+    }, [
+        drawerRef.current,
+        snapPoints,
+        snapPointsOffset,
+        fadeFromIndex,
+        overlayRef,
+        setActiveSnapPoint
+    ]);
+    React__default.useEffect(()=>{
+        if (activeSnapPoint || activeSnapPointProp) {
+            var _snapPoints_findIndex;
+            const newIndex = (_snapPoints_findIndex = snapPoints == null ? void 0 : snapPoints.findIndex((snapPoint)=>snapPoint === activeSnapPointProp || snapPoint === activeSnapPoint)) != null ? _snapPoints_findIndex : -1;
+            if (snapPointsOffset && newIndex !== -1 && typeof snapPointsOffset[newIndex] === 'number') {
+                snapToPoint(snapPointsOffset[newIndex]);
+            }
+        }
+    }, [
+        activeSnapPoint,
+        activeSnapPointProp,
+        snapPoints,
+        snapPointsOffset,
+        snapToPoint
+    ]);
+    function onRelease({ draggedDistance, closeDrawer, velocity, dismissible }) {
+        if (fadeFromIndex === undefined) return;
+        const currentPosition = direction === 'bottom' || direction === 'right' ? (activeSnapPointOffset != null ? activeSnapPointOffset : 0) - draggedDistance : (activeSnapPointOffset != null ? activeSnapPointOffset : 0) + draggedDistance;
+        const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
+        const isFirst = activeSnapPointIndex === 0;
+        const hasDraggedUp = draggedDistance > 0;
+        if (isOverlaySnapPoint) {
+            set(overlayRef.current, {
+                transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`
+            });
+        }
+        if (!snapToSequentialPoint && velocity > 2 && !hasDraggedUp) {
+            if (dismissible) closeDrawer();
+            else snapToPoint(snapPointsOffset[0]); // snap to initial point
+            return;
+        }
+        if (!snapToSequentialPoint && velocity > 2 && hasDraggedUp && snapPointsOffset && snapPoints) {
+            snapToPoint(snapPointsOffset[snapPoints.length - 1]);
+            return;
+        }
+        // Find the closest snap point to the current position
+        const closestSnapPoint = snapPointsOffset == null ? void 0 : snapPointsOffset.reduce((prev, curr)=>{
+            if (typeof prev !== 'number' || typeof curr !== 'number') return prev;
+            return Math.abs(curr - currentPosition) < Math.abs(prev - currentPosition) ? curr : prev;
+        });
+        const dim = isVertical(direction) ? window.innerHeight : window.innerWidth;
+        if (velocity > VELOCITY_THRESHOLD && Math.abs(draggedDistance) < dim * 0.4) {
+            const dragDirection = hasDraggedUp ? 1 : -1; // 1 = up, -1 = down
+            // Don't do anything if we swipe upwards while being on the last snap point
+            if (dragDirection > 0 && isLastSnapPoint && snapPoints) {
+                snapToPoint(snapPointsOffset[snapPoints.length - 1]);
+                return;
+            }
+            if (isFirst && dragDirection < 0 && dismissible) {
+                closeDrawer();
+            }
+            if (activeSnapPointIndex === null) return;
+            snapToPoint(snapPointsOffset[activeSnapPointIndex + dragDirection]);
+            return;
+        }
+        snapToPoint(closestSnapPoint);
+    }
+    function onDrag({ draggedDistance }) {
+        if (activeSnapPointOffset === null) return;
+        const newValue = direction === 'bottom' || direction === 'right' ? activeSnapPointOffset - draggedDistance : activeSnapPointOffset + draggedDistance;
+        // Don't do anything if we exceed the last(biggest) snap point
+        if ((direction === 'bottom' || direction === 'right') && newValue < snapPointsOffset[snapPointsOffset.length - 1]) {
+            return;
+        }
+        if ((direction === 'top' || direction === 'left') && newValue > snapPointsOffset[snapPointsOffset.length - 1]) {
+            return;
+        }
+        set(drawerRef.current, {
+            transform: isVertical(direction) ? `translate3d(0, ${newValue}px, 0)` : `translate3d(${newValue}px, 0, 0)`
+        });
+    }
+    function getPercentageDragged(absDraggedDistance, isDraggingDown) {
+        if (!snapPoints || typeof activeSnapPointIndex !== 'number' || !snapPointsOffset || fadeFromIndex === undefined) return null;
+        // If this is true we are dragging to a snap point that is supposed to have an overlay
+        const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
+        const isOverlaySnapPointOrHigher = activeSnapPointIndex >= fadeFromIndex;
+        if (isOverlaySnapPointOrHigher && isDraggingDown) {
+            return 0;
+        }
+        // Don't animate, but still use this one if we are dragging away from the overlaySnapPoint
+        if (isOverlaySnapPoint && !isDraggingDown) return 1;
+        if (!shouldFade && !isOverlaySnapPoint) return null;
+        // Either fadeFrom index or the one before
+        const targetSnapPointIndex = isOverlaySnapPoint ? activeSnapPointIndex + 1 : activeSnapPointIndex - 1;
+        // Get the distance from overlaySnapPoint to the one before or vice-versa to calculate the opacity percentage accordingly
+        const snapPointDistance = isOverlaySnapPoint ? snapPointsOffset[targetSnapPointIndex] - snapPointsOffset[targetSnapPointIndex - 1] : snapPointsOffset[targetSnapPointIndex + 1] - snapPointsOffset[targetSnapPointIndex];
+        const percentageDragged = absDraggedDistance / Math.abs(snapPointDistance);
+        if (isOverlaySnapPoint) {
+            return 1 - percentageDragged;
+        } else {
+            return percentageDragged;
+        }
+    }
+    return {
+        isLastSnapPoint,
+        activeSnapPoint,
+        shouldFade,
+        getPercentageDragged,
+        setActiveSnapPoint,
+        activeSnapPointIndex,
+        onRelease,
+        onDrag,
+        snapPointsOffset
+    };
+}
+
+const noop$2 = ()=>()=>{};
+function useScaleBackground() {
+    const { direction, isOpen, shouldScaleBackground, setBackgroundColorOnScale, noBodyStyles } = useDrawerContext();
+    const timeoutIdRef = React__default.useRef(null);
+    const initialBackgroundColor = useMemo(()=>document.body.style.backgroundColor, []);
+    function getScale() {
+        return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
+    }
+    React__default.useEffect(()=>{
+        if (isOpen && shouldScaleBackground) {
+            if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
+            const wrapper = document.querySelector('[data-vaul-drawer-wrapper]') || document.querySelector('[vaul-drawer-wrapper]');
+            if (!wrapper) return;
+            chain(setBackgroundColorOnScale && !noBodyStyles ? assignStyle(document.body, {
+                background: 'black'
+            }) : noop$2, assignStyle(wrapper, {
+                transformOrigin: isVertical(direction) ? 'top' : 'left',
+                transitionProperty: 'transform, border-radius',
+                transitionDuration: `${TRANSITIONS.DURATION}s`,
+                transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`
+            }));
+            const wrapperStylesCleanup = assignStyle(wrapper, {
+                borderRadius: `${BORDER_RADIUS}px`,
+                overflow: 'hidden',
+                ...isVertical(direction) ? {
+                    transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`
+                } : {
+                    transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`
+                }
+            });
+            return ()=>{
+                wrapperStylesCleanup();
+                timeoutIdRef.current = window.setTimeout(()=>{
+                    if (initialBackgroundColor) {
+                        document.body.style.background = initialBackgroundColor;
+                    } else {
+                        document.body.style.removeProperty('background');
+                    }
+                }, TRANSITIONS.DURATION * 1000);
+            };
+        }
+    }, [
+        isOpen,
+        shouldScaleBackground,
+        initialBackgroundColor
+    ]);
+}
+
+let previousBodyPosition = null;
+/**
+ * This hook is necessary to prevent buggy behavior on iOS devices (need to test on Android).
+ * I won't get into too much detail about what bugs it solves, but so far I've found that setting the body to `position: fixed` is the most reliable way to prevent those bugs.
+ * Issues that this hook solves:
+ * https://github.com/emilkowalski/vaul/issues/435
+ * https://github.com/emilkowalski/vaul/issues/433
+ * And more that I discovered, but were just not reported.
+ */ function usePositionFixed({ isOpen, modal, nested, hasBeenOpened, preventScrollRestoration, noBodyStyles }) {
+    const [activeUrl, setActiveUrl] = React__default.useState(()=>typeof window !== 'undefined' ? window.location.href : '');
+    const scrollPos = React__default.useRef(0);
+    const setPositionFixed = React__default.useCallback(()=>{
+        // All browsers on iOS will return true here.
+        if (!isSafari()) return;
+        // If previousBodyPosition is already set, don't set it again.
+        if (previousBodyPosition === null && isOpen && !noBodyStyles) {
+            previousBodyPosition = {
+                position: document.body.style.position,
+                top: document.body.style.top,
+                left: document.body.style.left,
+                height: document.body.style.height,
+                right: 'unset'
+            };
+            // Update the dom inside an animation frame
+            const { scrollX, innerHeight } = window;
+            document.body.style.setProperty('position', 'fixed', 'important');
+            Object.assign(document.body.style, {
+                top: `${-scrollPos.current}px`,
+                left: `${-scrollX}px`,
+                right: '0px',
+                height: 'auto'
+            });
+            window.setTimeout(()=>window.requestAnimationFrame(()=>{
+                    // Attempt to check if the bottom bar appeared due to the position change
+                    const bottomBarHeight = innerHeight - window.innerHeight;
+                    if (bottomBarHeight && scrollPos.current >= innerHeight) {
+                        // Move the content further up so that the bottom bar doesn't hide it
+                        document.body.style.top = `${-(scrollPos.current + bottomBarHeight)}px`;
+                    }
+                }), 300);
+        }
+    }, [
+        isOpen
+    ]);
+    const restorePositionSetting = React__default.useCallback(()=>{
+        // All browsers on iOS will return true here.
+        if (!isSafari()) return;
+        if (previousBodyPosition !== null && !noBodyStyles) {
+            // Convert the position from "px" to Int
+            const y = -parseInt(document.body.style.top, 10);
+            const x = -parseInt(document.body.style.left, 10);
+            // Restore styles
+            Object.assign(document.body.style, previousBodyPosition);
+            window.requestAnimationFrame(()=>{
+                if (preventScrollRestoration && activeUrl !== window.location.href) {
+                    setActiveUrl(window.location.href);
+                    return;
+                }
+                window.scrollTo(x, y);
+            });
+            previousBodyPosition = null;
+        }
+    }, [
+        activeUrl
+    ]);
+    React__default.useEffect(()=>{
+        function onScroll() {
+            scrollPos.current = window.scrollY;
+        }
+        onScroll();
+        window.addEventListener('scroll', onScroll);
+        return ()=>{
+            window.removeEventListener('scroll', onScroll);
+        };
+    }, []);
+    React__default.useEffect(()=>{
+        if (!modal) return;
+        return ()=>{
+            if (typeof document === 'undefined') return;
+            // Another drawer is opened, safe to ignore the execution
+            const hasDrawerOpened = !!document.querySelector('[data-vaul-drawer]');
+            if (hasDrawerOpened) return;
+            restorePositionSetting();
+        };
+    }, [
+        modal,
+        restorePositionSetting
+    ]);
+    React__default.useEffect(()=>{
+        if (nested || !hasBeenOpened) return;
+        // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happening
+        if (isOpen) {
+            // avoid for standalone mode (PWA)
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            !isStandalone && setPositionFixed();
+            if (!modal) {
+                window.setTimeout(()=>{
+                    restorePositionSetting();
+                }, 500);
+            }
+        } else {
+            restorePositionSetting();
+        }
+    }, [
+        isOpen,
+        hasBeenOpened,
+        activeUrl,
+        modal,
+        nested,
+        setPositionFixed,
+        restorePositionSetting
+    ]);
+    return {
+        restorePositionSetting
+    };
+}
+
+function Root({ open: openProp, onOpenChange, children, onDrag: onDragProp, onRelease: onReleaseProp, snapPoints, shouldScaleBackground = false, setBackgroundColorOnScale = true, closeThreshold = CLOSE_THRESHOLD, scrollLockTimeout = SCROLL_LOCK_TIMEOUT, dismissible = true, handleOnly = false, fadeFromIndex = snapPoints && snapPoints.length - 1, activeSnapPoint: activeSnapPointProp, setActiveSnapPoint: setActiveSnapPointProp, fixed, modal = true, onClose, nested, noBodyStyles = false, direction = 'bottom', defaultOpen = false, disablePreventScroll = true, snapToSequentialPoint = false, preventScrollRestoration = false, repositionInputs = true, onAnimationEnd, container, autoFocus = false }) {
+    var _drawerRef_current, _drawerRef_current1;
+    const [isOpen = false, setIsOpen] = useControllableState({
+        defaultProp: defaultOpen,
+        prop: openProp,
+        onChange: (o)=>{
+            onOpenChange == null ? void 0 : onOpenChange(o);
+            if (!o && !nested) {
+                restorePositionSetting();
+            }
+            setTimeout(()=>{
+                onAnimationEnd == null ? void 0 : onAnimationEnd(o);
+            }, TRANSITIONS.DURATION * 1000);
+            if (o && !modal) {
+                if (typeof window !== 'undefined') {
+                    window.requestAnimationFrame(()=>{
+                        document.body.style.pointerEvents = 'auto';
+                    });
+                }
+            }
+            if (!o) {
+                // This will be removed when the exit animation ends (`500ms`)
+                document.body.style.pointerEvents = 'auto';
+            }
+        }
+    });
+    const [hasBeenOpened, setHasBeenOpened] = React__default.useState(false);
+    const [isDragging, setIsDragging] = React__default.useState(false);
+    const [justReleased, setJustReleased] = React__default.useState(false);
+    const overlayRef = React__default.useRef(null);
+    const openTime = React__default.useRef(null);
+    const dragStartTime = React__default.useRef(null);
+    const dragEndTime = React__default.useRef(null);
+    const lastTimeDragPrevented = React__default.useRef(null);
+    const isAllowedToDrag = React__default.useRef(false);
+    const nestedOpenChangeTimer = React__default.useRef(null);
+    const pointerStart = React__default.useRef(0);
+    const keyboardIsOpen = React__default.useRef(false);
+    const shouldAnimate = React__default.useRef(!defaultOpen);
+    const previousDiffFromInitial = React__default.useRef(0);
+    const drawerRef = React__default.useRef(null);
+    const drawerHeightRef = React__default.useRef(((_drawerRef_current = drawerRef.current) == null ? void 0 : _drawerRef_current.getBoundingClientRect().height) || 0);
+    const drawerWidthRef = React__default.useRef(((_drawerRef_current1 = drawerRef.current) == null ? void 0 : _drawerRef_current1.getBoundingClientRect().width) || 0);
+    const initialDrawerHeight = React__default.useRef(0);
+    const onSnapPointChange = React__default.useCallback((activeSnapPointIndex)=>{
+        // Change openTime ref when we reach the last snap point to prevent dragging for 500ms incase it's scrollable.
+        if (snapPoints && activeSnapPointIndex === snapPointsOffset.length - 1) openTime.current = new Date();
+    }, []);
+    const { activeSnapPoint, activeSnapPointIndex, setActiveSnapPoint, onRelease: onReleaseSnapPoints, snapPointsOffset, onDrag: onDragSnapPoints, shouldFade, getPercentageDragged: getSnapPointsPercentageDragged } = useSnapPoints({
+        snapPoints,
+        activeSnapPointProp,
+        setActiveSnapPointProp,
+        drawerRef,
+        fadeFromIndex,
+        overlayRef,
+        onSnapPointChange,
+        direction,
+        container,
+        snapToSequentialPoint
+    });
+    usePreventScroll({
+        isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || !repositionInputs || !disablePreventScroll
+    });
+    const { restorePositionSetting } = usePositionFixed({
+        isOpen,
+        modal,
+        nested: nested != null ? nested : false,
+        hasBeenOpened,
+        preventScrollRestoration,
+        noBodyStyles
+    });
+    function getScale() {
+        return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
+    }
+    function onPress(event) {
+        var _drawerRef_current, _drawerRef_current1;
+        if (!dismissible && !snapPoints) return;
+        if (drawerRef.current && !drawerRef.current.contains(event.target)) return;
+        drawerHeightRef.current = ((_drawerRef_current = drawerRef.current) == null ? void 0 : _drawerRef_current.getBoundingClientRect().height) || 0;
+        drawerWidthRef.current = ((_drawerRef_current1 = drawerRef.current) == null ? void 0 : _drawerRef_current1.getBoundingClientRect().width) || 0;
+        setIsDragging(true);
+        dragStartTime.current = new Date();
+        // iOS doesn't trigger mouseUp after scrolling so we need to listen to touched in order to disallow dragging
+        if (isIOS()) {
+            window.addEventListener('touchend', ()=>isAllowedToDrag.current = false, {
+                once: true
+            });
+        }
+        // Ensure we maintain correct pointer capture even when going outside of the drawer
+        event.target.setPointerCapture(event.pointerId);
+        pointerStart.current = isVertical(direction) ? event.pageY : event.pageX;
+    }
+    function shouldDrag(el, isDraggingInDirection) {
+        var _window_getSelection;
+        let element = el;
+        const highlightedText = (_window_getSelection = window.getSelection()) == null ? void 0 : _window_getSelection.toString();
+        const swipeAmount = drawerRef.current ? getTranslate(drawerRef.current, direction) : null;
+        const date = new Date();
+        // Fixes https://github.com/emilkowalski/vaul/issues/483
+        if (element.tagName === 'SELECT') {
+            return false;
+        }
+        if (element.hasAttribute('data-vaul-no-drag') || element.closest('[data-vaul-no-drag]')) {
+            return false;
+        }
+        if (direction === 'right' || direction === 'left') {
+            return true;
+        }
+        // Allow scrolling when animating
+        if (openTime.current && date.getTime() - openTime.current.getTime() < 500) {
+            return false;
+        }
+        if (swipeAmount !== null) {
+            if (direction === 'bottom' ? swipeAmount > 0 : swipeAmount < 0) {
+                return true;
+            }
+        }
+        // Don't drag if there's highlighted text
+        if (highlightedText && highlightedText.length > 0) {
+            return false;
+        }
+        // Disallow dragging if drawer was scrolled within `scrollLockTimeout`
+        if (lastTimeDragPrevented.current && date.getTime() - lastTimeDragPrevented.current.getTime() < scrollLockTimeout && swipeAmount === 0) {
+            lastTimeDragPrevented.current = date;
+            return false;
+        }
+        if (isDraggingInDirection) {
+            lastTimeDragPrevented.current = date;
+            // We are dragging down so we should allow scrolling
+            return false;
+        }
+        // Keep climbing up the DOM tree as long as there's a parent
+        while(element){
+            // Check if the element is scrollable
+            if (element.scrollHeight > element.clientHeight) {
+                if (element.scrollTop !== 0) {
+                    lastTimeDragPrevented.current = new Date();
+                    // The element is scrollable and not scrolled to the top, so don't drag
+                    return false;
+                }
+                if (element.getAttribute('role') === 'dialog') {
+                    return true;
+                }
+            }
+            // Move up to the parent element
+            element = element.parentNode;
+        }
+        // No scrollable parents not scrolled to the top found, so drag
+        return true;
+    }
+    function onDrag(event) {
+        if (!drawerRef.current) {
+            return;
+        }
+        // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
+        if (isDragging) {
+            const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
+            const draggedDistance = (pointerStart.current - (isVertical(direction) ? event.pageY : event.pageX)) * directionMultiplier;
+            const isDraggingInDirection = draggedDistance > 0;
+            // Pre condition for disallowing dragging in the close direction.
+            const noCloseSnapPointsPreCondition = snapPoints && !dismissible && !isDraggingInDirection;
+            // Disallow dragging down to close when first snap point is the active one and dismissible prop is set to false.
+            if (noCloseSnapPointsPreCondition && activeSnapPointIndex === 0) return;
+            // We need to capture last time when drag with scroll was triggered and have a timeout between
+            const absDraggedDistance = Math.abs(draggedDistance);
+            const wrapper = document.querySelector('[data-vaul-drawer-wrapper]');
+            const drawerDimension = direction === 'bottom' || direction === 'top' ? drawerHeightRef.current : drawerWidthRef.current;
+            // Calculate the percentage dragged, where 1 is the closed position
+            let percentageDragged = absDraggedDistance / drawerDimension;
+            const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingInDirection);
+            if (snapPointPercentageDragged !== null) {
+                percentageDragged = snapPointPercentageDragged;
+            }
+            // Disallow close dragging beyond the smallest snap point.
+            if (noCloseSnapPointsPreCondition && percentageDragged >= 1) {
+                return;
+            }
+            if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection)) return;
+            drawerRef.current.classList.add(DRAG_CLASS);
+            // If shouldDrag gave true once after pressing down on the drawer, we set isAllowedToDrag to true and it will remain true until we let go, there's no reason to disable dragging mid way, ever, and that's the solution to it
+            isAllowedToDrag.current = true;
+            set(drawerRef.current, {
+                transition: 'none'
+            });
+            set(overlayRef.current, {
+                transition: 'none'
+            });
+            if (snapPoints) {
+                onDragSnapPoints({
+                    draggedDistance
+                });
+            }
+            // Run this only if snapPoints are not defined or if we are at the last snap point (highest one)
+            if (isDraggingInDirection && !snapPoints) {
+                const dampenedDraggedDistance = dampenValue(draggedDistance);
+                const translateValue = Math.min(dampenedDraggedDistance * -1, 0) * directionMultiplier;
+                set(drawerRef.current, {
+                    transform: isVertical(direction) ? `translate3d(0, ${translateValue}px, 0)` : `translate3d(${translateValue}px, 0, 0)`
+                });
+                return;
+            }
+            const opacityValue = 1 - percentageDragged;
+            if (shouldFade || fadeFromIndex && activeSnapPointIndex === fadeFromIndex - 1) {
+                onDragProp == null ? void 0 : onDragProp(event, percentageDragged);
+                set(overlayRef.current, {
+                    opacity: `${opacityValue}`,
+                    transition: 'none'
+                }, true);
+            }
+            if (wrapper && overlayRef.current && shouldScaleBackground) {
+                // Calculate percentageDragged as a fraction (0 to 1)
+                const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
+                const borderRadiusValue = 8 - percentageDragged * 8;
+                const translateValue = Math.max(0, 14 - percentageDragged * 14);
+                set(wrapper, {
+                    borderRadius: `${borderRadiusValue}px`,
+                    transform: isVertical(direction) ? `scale(${scaleValue}) translate3d(0, ${translateValue}px, 0)` : `scale(${scaleValue}) translate3d(${translateValue}px, 0, 0)`,
+                    transition: 'none'
+                }, true);
+            }
+            if (!snapPoints) {
+                const translateValue = absDraggedDistance * directionMultiplier;
+                set(drawerRef.current, {
+                    transform: isVertical(direction) ? `translate3d(0, ${translateValue}px, 0)` : `translate3d(${translateValue}px, 0, 0)`
+                });
+            }
+        }
+    }
+    React__default.useEffect(()=>{
+        window.requestAnimationFrame(()=>{
+            shouldAnimate.current = true;
+        });
+    }, []);
+    React__default.useEffect(()=>{
+        var _window_visualViewport;
+        function onVisualViewportChange() {
+            if (!drawerRef.current || !repositionInputs) return;
+            const focusedElement = document.activeElement;
+            if (isInput(focusedElement) || keyboardIsOpen.current) {
+                var _window_visualViewport;
+                const visualViewportHeight = ((_window_visualViewport = window.visualViewport) == null ? void 0 : _window_visualViewport.height) || 0;
+                const totalHeight = window.innerHeight;
+                // This is the height of the keyboard
+                let diffFromInitial = totalHeight - visualViewportHeight;
+                const drawerHeight = drawerRef.current.getBoundingClientRect().height || 0;
+                // Adjust drawer height only if it's tall enough
+                const isTallEnough = drawerHeight > totalHeight * 0.8;
+                if (!initialDrawerHeight.current) {
+                    initialDrawerHeight.current = drawerHeight;
+                }
+                const offsetFromTop = drawerRef.current.getBoundingClientRect().top;
+                // visualViewport height may change due to somq e subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard really changed its open state.
+                if (Math.abs(previousDiffFromInitial.current - diffFromInitial) > 60) {
+                    keyboardIsOpen.current = !keyboardIsOpen.current;
+                }
+                if (snapPoints && snapPoints.length > 0 && snapPointsOffset && activeSnapPointIndex) {
+                    const activeSnapPointHeight = snapPointsOffset[activeSnapPointIndex] || 0;
+                    diffFromInitial += activeSnapPointHeight;
+                }
+                previousDiffFromInitial.current = diffFromInitial;
+                // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can correctly check if the input is in view
+                if (drawerHeight > visualViewportHeight || keyboardIsOpen.current) {
+                    const height = drawerRef.current.getBoundingClientRect().height;
+                    let newDrawerHeight = height;
+                    if (height > visualViewportHeight) {
+                        newDrawerHeight = visualViewportHeight - (isTallEnough ? offsetFromTop : WINDOW_TOP_OFFSET);
+                    }
+                    // When fixed, don't move the drawer upwards if there's space, but rather only change it's height so it's fully scrollable when the keyboard is open
+                    if (fixed) {
+                        drawerRef.current.style.height = `${height - Math.max(diffFromInitial, 0)}px`;
+                    } else {
+                        drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
+                    }
+                } else if (!isMobileFirefox()) {
+                    drawerRef.current.style.height = `${initialDrawerHeight.current}px`;
+                }
+                if (snapPoints && snapPoints.length > 0 && !keyboardIsOpen.current) {
+                    drawerRef.current.style.bottom = `0px`;
+                } else {
+                    // Negative bottom value would never make sense
+                    drawerRef.current.style.bottom = `${Math.max(diffFromInitial, 0)}px`;
+                }
+            }
+        }
+        (_window_visualViewport = window.visualViewport) == null ? void 0 : _window_visualViewport.addEventListener('resize', onVisualViewportChange);
+        return ()=>{
+            var _window_visualViewport;
+            return (_window_visualViewport = window.visualViewport) == null ? void 0 : _window_visualViewport.removeEventListener('resize', onVisualViewportChange);
+        };
+    }, [
+        activeSnapPointIndex,
+        snapPoints,
+        snapPointsOffset
+    ]);
+    function closeDrawer(fromWithin) {
+        cancelDrag();
+        onClose == null ? void 0 : onClose();
+        if (!fromWithin) {
+            setIsOpen(false);
+        }
+        setTimeout(()=>{
+            if (snapPoints) {
+                setActiveSnapPoint(snapPoints[0]);
+            }
+        }, TRANSITIONS.DURATION * 1000); // seconds to ms
+    }
+    function resetDrawer() {
+        if (!drawerRef.current) return;
+        const wrapper = document.querySelector('[data-vaul-drawer-wrapper]');
+        const currentSwipeAmount = getTranslate(drawerRef.current, direction);
+        set(drawerRef.current, {
+            transform: 'translate3d(0, 0, 0)',
+            transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`
+        });
+        set(overlayRef.current, {
+            transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+            opacity: '1'
+        });
+        // Don't reset background if swiped upwards
+        if (shouldScaleBackground && currentSwipeAmount && currentSwipeAmount > 0 && isOpen) {
+            set(wrapper, {
+                borderRadius: `${BORDER_RADIUS}px`,
+                overflow: 'hidden',
+                ...isVertical(direction) ? {
+                    transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
+                    transformOrigin: 'top'
+                } : {
+                    transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
+                    transformOrigin: 'left'
+                },
+                transitionProperty: 'transform, border-radius',
+                transitionDuration: `${TRANSITIONS.DURATION}s`,
+                transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`
+            }, true);
+        }
+    }
+    function cancelDrag() {
+        if (!isDragging || !drawerRef.current) return;
+        drawerRef.current.classList.remove(DRAG_CLASS);
+        isAllowedToDrag.current = false;
+        setIsDragging(false);
+        dragEndTime.current = new Date();
+    }
+    function onRelease(event) {
+        if (!isDragging || !drawerRef.current) return;
+        drawerRef.current.classList.remove(DRAG_CLASS);
+        isAllowedToDrag.current = false;
+        setIsDragging(false);
+        dragEndTime.current = new Date();
+        const swipeAmount = getTranslate(drawerRef.current, direction);
+        if (!event || !shouldDrag(event.target, false) || !swipeAmount || Number.isNaN(swipeAmount)) return;
+        if (dragStartTime.current === null) return;
+        const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
+        const distMoved = pointerStart.current - (isVertical(direction) ? event.pageY : event.pageX);
+        const velocity = Math.abs(distMoved) / timeTaken;
+        if (velocity > 0.05) {
+            // `justReleased` is needed to prevent the drawer from focusing on an input when the drag ends, as it's not the intent most of the time.
+            setJustReleased(true);
+            setTimeout(()=>{
+                setJustReleased(false);
+            }, 200);
+        }
+        if (snapPoints) {
+            const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
+            onReleaseSnapPoints({
+                draggedDistance: distMoved * directionMultiplier,
+                closeDrawer,
+                velocity,
+                dismissible
+            });
+            onReleaseProp == null ? void 0 : onReleaseProp(event, true);
+            return;
+        }
+        // Moved upwards, don't do anything
+        if (direction === 'bottom' || direction === 'right' ? distMoved > 0 : distMoved < 0) {
+            resetDrawer();
+            onReleaseProp == null ? void 0 : onReleaseProp(event, true);
+            return;
+        }
+        if (velocity > VELOCITY_THRESHOLD) {
+            closeDrawer();
+            onReleaseProp == null ? void 0 : onReleaseProp(event, false);
+            return;
+        }
+        var _drawerRef_current_getBoundingClientRect_height;
+        const visibleDrawerHeight = Math.min((_drawerRef_current_getBoundingClientRect_height = drawerRef.current.getBoundingClientRect().height) != null ? _drawerRef_current_getBoundingClientRect_height : 0, window.innerHeight);
+        var _drawerRef_current_getBoundingClientRect_width;
+        const visibleDrawerWidth = Math.min((_drawerRef_current_getBoundingClientRect_width = drawerRef.current.getBoundingClientRect().width) != null ? _drawerRef_current_getBoundingClientRect_width : 0, window.innerWidth);
+        const isHorizontalSwipe = direction === 'left' || direction === 'right';
+        if (Math.abs(swipeAmount) >= (isHorizontalSwipe ? visibleDrawerWidth : visibleDrawerHeight) * closeThreshold) {
+            closeDrawer();
+            onReleaseProp == null ? void 0 : onReleaseProp(event, false);
+            return;
+        }
+        onReleaseProp == null ? void 0 : onReleaseProp(event, true);
+        resetDrawer();
+    }
+    React__default.useEffect(()=>{
+        // Trigger enter animation without using CSS animation
+        if (isOpen) {
+            set(document.documentElement, {
+                scrollBehavior: 'auto'
+            });
+            openTime.current = new Date();
+        }
+        return ()=>{
+            reset(document.documentElement, 'scrollBehavior');
+        };
+    }, [
+        isOpen
+    ]);
+    function onNestedOpenChange(o) {
+        const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
+        const initialTranslate = o ? -NESTED_DISPLACEMENT : 0;
+        if (nestedOpenChangeTimer.current) {
+            window.clearTimeout(nestedOpenChangeTimer.current);
+        }
+        set(drawerRef.current, {
+            transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+            transform: isVertical(direction) ? `scale(${scale}) translate3d(0, ${initialTranslate}px, 0)` : `scale(${scale}) translate3d(${initialTranslate}px, 0, 0)`
+        });
+        if (!o && drawerRef.current) {
+            nestedOpenChangeTimer.current = setTimeout(()=>{
+                const translateValue = getTranslate(drawerRef.current, direction);
+                set(drawerRef.current, {
+                    transition: 'none',
+                    transform: isVertical(direction) ? `translate3d(0, ${translateValue}px, 0)` : `translate3d(${translateValue}px, 0, 0)`
+                });
+            }, 500);
+        }
+    }
+    function onNestedDrag(_event, percentageDragged) {
+        if (percentageDragged < 0) return;
+        const initialScale = (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth;
+        const newScale = initialScale + percentageDragged * (1 - initialScale);
+        const newTranslate = -NESTED_DISPLACEMENT + percentageDragged * NESTED_DISPLACEMENT;
+        set(drawerRef.current, {
+            transform: isVertical(direction) ? `scale(${newScale}) translate3d(0, ${newTranslate}px, 0)` : `scale(${newScale}) translate3d(${newTranslate}px, 0, 0)`,
+            transition: 'none'
+        });
+    }
+    function onNestedRelease(_event, o) {
+        const dim = isVertical(direction) ? window.innerHeight : window.innerWidth;
+        const scale = o ? (dim - NESTED_DISPLACEMENT) / dim : 1;
+        const translate = o ? -NESTED_DISPLACEMENT : 0;
+        if (o) {
+            set(drawerRef.current, {
+                transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+                transform: isVertical(direction) ? `scale(${scale}) translate3d(0, ${translate}px, 0)` : `scale(${scale}) translate3d(${translate}px, 0, 0)`
+            });
+        }
+    }
+    React__default.useEffect(()=>{
+        if (!modal) {
+            // Need to do this manually unfortunately
+            window.requestAnimationFrame(()=>{
+                document.body.style.pointerEvents = 'auto';
+            });
+        }
+    }, [
+        modal
+    ]);
+    return /*#__PURE__*/ React__default.createElement(Root$7, {
+        defaultOpen: defaultOpen,
+        onOpenChange: (open)=>{
+            if (!dismissible && !open) return;
+            if (open) {
+                setHasBeenOpened(true);
+            } else {
+                closeDrawer(true);
+            }
+            setIsOpen(open);
+        },
+        open: isOpen
+    }, /*#__PURE__*/ React__default.createElement(DrawerContext.Provider, {
+        value: {
+            activeSnapPoint,
+            snapPoints,
+            setActiveSnapPoint,
+            drawerRef,
+            overlayRef,
+            onOpenChange,
+            onPress,
+            onRelease,
+            onDrag,
+            dismissible,
+            shouldAnimate,
+            handleOnly,
+            isOpen,
+            isDragging,
+            shouldFade,
+            closeDrawer,
+            onNestedDrag,
+            onNestedOpenChange,
+            onNestedRelease,
+            keyboardIsOpen,
+            modal,
+            snapPointsOffset,
+            activeSnapPointIndex,
+            direction,
+            shouldScaleBackground,
+            setBackgroundColorOnScale,
+            noBodyStyles,
+            container,
+            autoFocus
+        }
+    }, children));
+}
+const Overlay = /*#__PURE__*/ React__default.forwardRef(function({ ...rest }, ref) {
+    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, modal, shouldAnimate } = useDrawerContext();
+    const composedRef = useComposedRefs(ref, overlayRef);
+    const hasSnapPoints = snapPoints && snapPoints.length > 0;
+    // Overlay is the component that is locking scroll, removing it will unlock the scroll without having to dig into Radix's Dialog library
+    if (!modal) {
+        return null;
+    }
+    const onMouseUp = React__default.useCallback((event)=>onRelease(event), [
+        onRelease
+    ]);
+    return /*#__PURE__*/ React__default.createElement(Overlay$1, {
+        onMouseUp: onMouseUp,
+        ref: composedRef,
+        "data-vaul-overlay": "",
+        "data-vaul-snap-points": isOpen && hasSnapPoints ? 'true' : 'false',
+        "data-vaul-snap-points-overlay": isOpen && shouldFade ? 'true' : 'false',
+        "data-vaul-animate": (shouldAnimate == null ? void 0 : shouldAnimate.current) ? 'true' : 'false',
+        ...rest
+    });
+});
+Overlay.displayName = 'Drawer.Overlay';
+const Content$1 = /*#__PURE__*/ React__default.forwardRef(function({ onPointerDownOutside, style, onOpenAutoFocus, ...rest }, ref) {
+    const { drawerRef, onPress, onRelease, onDrag, keyboardIsOpen, snapPointsOffset, activeSnapPointIndex, modal, isOpen, direction, snapPoints, container, handleOnly, shouldAnimate, autoFocus } = useDrawerContext();
+    // Needed to use transition instead of animations
+    const [delayedSnapPoints, setDelayedSnapPoints] = React__default.useState(false);
+    const composedRef = useComposedRefs(ref, drawerRef);
+    const pointerStartRef = React__default.useRef(null);
+    const lastKnownPointerEventRef = React__default.useRef(null);
+    const wasBeyondThePointRef = React__default.useRef(false);
+    const hasSnapPoints = snapPoints && snapPoints.length > 0;
+    useScaleBackground();
+    const isDeltaInDirection = (delta, direction, threshold = 0)=>{
+        if (wasBeyondThePointRef.current) return true;
+        const deltaY = Math.abs(delta.y);
+        const deltaX = Math.abs(delta.x);
+        const isDeltaX = deltaX > deltaY;
+        const dFactor = [
+            'bottom',
+            'right'
+        ].includes(direction) ? 1 : -1;
+        if (direction === 'left' || direction === 'right') {
+            const isReverseDirection = delta.x * dFactor < 0;
+            if (!isReverseDirection && deltaX >= 0 && deltaX <= threshold) {
+                return isDeltaX;
+            }
+        } else {
+            const isReverseDirection = delta.y * dFactor < 0;
+            if (!isReverseDirection && deltaY >= 0 && deltaY <= threshold) {
+                return !isDeltaX;
+            }
+        }
+        wasBeyondThePointRef.current = true;
+        return true;
+    };
+    React__default.useEffect(()=>{
+        if (hasSnapPoints) {
+            window.requestAnimationFrame(()=>{
+                setDelayedSnapPoints(true);
+            });
+        }
+    }, []);
+    function handleOnPointerUp(event) {
+        pointerStartRef.current = null;
+        wasBeyondThePointRef.current = false;
+        onRelease(event);
+    }
+    return /*#__PURE__*/ React__default.createElement(Content$4, {
+        "data-vaul-drawer-direction": direction,
+        "data-vaul-drawer": "",
+        "data-vaul-delayed-snap-points": delayedSnapPoints ? 'true' : 'false',
+        "data-vaul-snap-points": isOpen && hasSnapPoints ? 'true' : 'false',
+        "data-vaul-custom-container": container ? 'true' : 'false',
+        "data-vaul-animate": (shouldAnimate == null ? void 0 : shouldAnimate.current) ? 'true' : 'false',
+        ...rest,
+        ref: composedRef,
+        style: snapPointsOffset && snapPointsOffset.length > 0 ? {
+            '--snap-point-height': `${snapPointsOffset[activeSnapPointIndex != null ? activeSnapPointIndex : 0]}px`,
+            ...style
+        } : style,
+        onPointerDown: (event)=>{
+            if (handleOnly) return;
+            rest.onPointerDown == null ? void 0 : rest.onPointerDown.call(rest, event);
+            pointerStartRef.current = {
+                x: event.pageX,
+                y: event.pageY
+            };
+            onPress(event);
+        },
+        onOpenAutoFocus: (e)=>{
+            onOpenAutoFocus == null ? void 0 : onOpenAutoFocus(e);
+            if (!autoFocus) {
+                e.preventDefault();
+            }
+        },
+        onPointerDownOutside: (e)=>{
+            onPointerDownOutside == null ? void 0 : onPointerDownOutside(e);
+            if (!modal || e.defaultPrevented) {
+                e.preventDefault();
+                return;
+            }
+            if (keyboardIsOpen.current) {
+                keyboardIsOpen.current = false;
+            }
+        },
+        onFocusOutside: (e)=>{
+            if (!modal) {
+                e.preventDefault();
+                return;
+            }
+        },
+        onPointerMove: (event)=>{
+            lastKnownPointerEventRef.current = event;
+            if (handleOnly) return;
+            rest.onPointerMove == null ? void 0 : rest.onPointerMove.call(rest, event);
+            if (!pointerStartRef.current) return;
+            const yPosition = event.pageY - pointerStartRef.current.y;
+            const xPosition = event.pageX - pointerStartRef.current.x;
+            const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
+            const delta = {
+                x: xPosition,
+                y: yPosition
+            };
+            const isAllowedToSwipe = isDeltaInDirection(delta, direction, swipeStartThreshold);
+            if (isAllowedToSwipe) onDrag(event);
+            else if (Math.abs(xPosition) > swipeStartThreshold || Math.abs(yPosition) > swipeStartThreshold) {
+                pointerStartRef.current = null;
+            }
+        },
+        onPointerUp: (event)=>{
+            rest.onPointerUp == null ? void 0 : rest.onPointerUp.call(rest, event);
+            pointerStartRef.current = null;
+            wasBeyondThePointRef.current = false;
+            onRelease(event);
+        },
+        onPointerOut: (event)=>{
+            rest.onPointerOut == null ? void 0 : rest.onPointerOut.call(rest, event);
+            handleOnPointerUp(lastKnownPointerEventRef.current);
+        },
+        onContextMenu: (event)=>{
+            rest.onContextMenu == null ? void 0 : rest.onContextMenu.call(rest, event);
+            if (lastKnownPointerEventRef.current) {
+                handleOnPointerUp(lastKnownPointerEventRef.current);
+            }
+        }
+    });
+});
+Content$1.displayName = 'Drawer.Content';
+const LONG_HANDLE_PRESS_TIMEOUT = 250;
+const DOUBLE_TAP_TIMEOUT = 120;
+const Handle = /*#__PURE__*/ React__default.forwardRef(function({ preventCycle = false, children, ...rest }, ref) {
+    const { closeDrawer, isDragging, snapPoints, activeSnapPoint, setActiveSnapPoint, dismissible, handleOnly, isOpen, onPress, onDrag } = useDrawerContext();
+    const closeTimeoutIdRef = React__default.useRef(null);
+    const shouldCancelInteractionRef = React__default.useRef(false);
+    function handleStartCycle() {
+        // Stop if this is the second click of a double click
+        if (shouldCancelInteractionRef.current) {
+            handleCancelInteraction();
+            return;
+        }
+        window.setTimeout(()=>{
+            handleCycleSnapPoints();
+        }, DOUBLE_TAP_TIMEOUT);
+    }
+    function handleCycleSnapPoints() {
+        // Prevent accidental taps while resizing drawer
+        if (isDragging || preventCycle || shouldCancelInteractionRef.current) {
+            handleCancelInteraction();
+            return;
+        }
+        // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
+        handleCancelInteraction();
+        if (!snapPoints || snapPoints.length === 0) {
+            if (!dismissible) {
+                closeDrawer();
+            }
+            return;
+        }
+        const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
+        if (isLastSnapPoint && dismissible) {
+            closeDrawer();
+            return;
+        }
+        const currentSnapIndex = snapPoints.findIndex((point)=>point === activeSnapPoint);
+        if (currentSnapIndex === -1) return; // activeSnapPoint not found in snapPoints
+        const nextSnapPoint = snapPoints[currentSnapIndex + 1];
+        setActiveSnapPoint(nextSnapPoint);
+    }
+    function handleStartInteraction() {
+        closeTimeoutIdRef.current = window.setTimeout(()=>{
+            // Cancel click interaction on a long press
+            shouldCancelInteractionRef.current = true;
+        }, LONG_HANDLE_PRESS_TIMEOUT);
+    }
+    function handleCancelInteraction() {
+        if (closeTimeoutIdRef.current) {
+            window.clearTimeout(closeTimeoutIdRef.current);
+        }
+        shouldCancelInteractionRef.current = false;
+    }
+    return /*#__PURE__*/ React__default.createElement("div", {
+        onClick: handleStartCycle,
+        onPointerCancel: handleCancelInteraction,
+        onPointerDown: (e)=>{
+            if (handleOnly) onPress(e);
+            handleStartInteraction();
+        },
+        onPointerMove: (e)=>{
+            if (handleOnly) onDrag(e);
+        },
+        // onPointerUp is already handled by the content component
+        ref: ref,
+        "data-vaul-drawer-visible": isOpen ? 'true' : 'false',
+        "data-vaul-handle": "",
+        "aria-hidden": "true",
+        ...rest
+    }, /*#__PURE__*/ React__default.createElement("span", {
+        "data-vaul-handle-hitarea": "",
+        "aria-hidden": "true"
+    }, children));
+});
+Handle.displayName = 'Drawer.Handle';
+function Portal$1(props) {
+    const context = useDrawerContext();
+    const { container = context.container, ...portalProps } = props;
+    return /*#__PURE__*/ React__default.createElement(Portal$5, {
+        container: container,
+        ...portalProps
+    });
+}
+const Drawer$1 = {
+    Root,
+    Content: Content$1,
+    Overlay,
+    Trigger: Trigger$6,
+    Portal: Portal$1,
+    Close: Close$1,
+    Title: Title$1,
+    Description: Description$1
+};
+
+const Drawer = ({
+  ...props
+}) => {
+  return /*#__PURE__*/jsx(Drawer$1.Root, {
+    "data-slot": "drawer",
+    ...props
+  });
+};
+const DrawerTrigger = ({
+  ...props
+}) => {
+  return /*#__PURE__*/jsx(Drawer$1.Trigger, {
+    "data-slot": "drawer-trigger",
+    ...props
+  });
+};
+const DrawerPortal = ({
+  ...props
+}) => {
+  return /*#__PURE__*/jsx(Drawer$1.Portal, {
+    "data-slot": "drawer-portal",
+    ...props
+  });
+};
+const DrawerClose = ({
+  ...props
+}) => {
+  return /*#__PURE__*/jsx(Drawer$1.Close, {
+    "data-slot": "drawer-close",
+    ...props
+  });
+};
+const DrawerOverlay = ({
+  className,
+  ...props
+}) => {
+  return /*#__PURE__*/jsx(Drawer$1.Overlay, {
+    "data-slot": "drawer-overlay",
+    className: cn('data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50', className),
+    ...props
+  });
+};
+const DrawerContent = ({
+  className,
+  children,
+  ...props
+}) => {
+  return /*#__PURE__*/jsxs(DrawerPortal, {
+    "data-slot": "drawer-portal",
+    children: [/*#__PURE__*/jsx(DrawerOverlay, {}), /*#__PURE__*/jsxs(Drawer$1.Content, {
+      "data-slot": "drawer-content",
+      className: cn('group/drawer-content bg-background fixed z-50 flex h-auto flex-col', 'data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:rounded-b-lg data-[vaul-drawer-direction=top]:border-b', 'data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:rounded-t-lg data-[vaul-drawer-direction=bottom]:border-t', 'data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:sm:max-w-sm', 'data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=left]:border-r data-[vaul-drawer-direction=left]:sm:max-w-sm', className),
+      ...props,
+      children: [/*#__PURE__*/jsx("div", {
+        className: "bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block"
+      }), children]
+    })]
+  });
+};
+const DrawerHeader = ({
+  className,
+  ...props
+}) => {
+  return /*#__PURE__*/jsx("div", {
+    "data-slot": "drawer-header",
+    className: cn('flex flex-col gap-0.5 p-4 group-data-[vaul-drawer-direction=bottom]/drawer-content:text-center group-data-[vaul-drawer-direction=top]/drawer-content:text-center md:gap-1.5 md:text-left', className),
+    ...props
+  });
+};
+const DrawerFooter = ({
+  className,
+  ...props
+}) => {
+  return /*#__PURE__*/jsx("div", {
+    "data-slot": "drawer-footer",
+    className: cn('mt-auto flex flex-col gap-2 p-4', className),
+    ...props
+  });
+};
+const DrawerTitle = ({
+  className,
+  ...props
+}) => {
+  return /*#__PURE__*/jsx(Drawer$1.Title, {
+    "data-slot": "drawer-title",
+    className: cn('text-foreground font-semibold', className),
+    ...props
+  });
+};
+const DrawerDescription = ({
+  className,
+  ...props
+}) => {
+  return /*#__PURE__*/jsx(Drawer$1.Description, {
+    "data-slot": "drawer-description",
+    className: cn('text-muted-foreground text-sm', className),
+    ...props
+  });
+};
+
 var RADIO_NAME = "Radio";
 var [createRadioContext, createRadioScope] = createContextScope(RADIO_NAME);
 var [RadioProvider, useRadioContext] = createRadioContext(RADIO_NAME);
@@ -32155,7 +33877,7 @@ var Radio = React.forwardRef(
       ...radioProps
     } = props;
     const [button, setButton] = React.useState(null);
-    const composedRefs = useComposedRefs(forwardedRef, (node) => setButton(node));
+    const composedRefs = useComposedRefs$1(forwardedRef, (node) => setButton(node));
     const hasConsumerStoppedPropagationRef = React.useRef(false);
     const isFormControl = button ? form || !!button.closest("form") : true;
     return /* @__PURE__ */ jsxs(RadioProvider, { scope: __scopeRadio, checked, disabled, children: [
@@ -32225,7 +33947,7 @@ var RadioBubbleInput = React.forwardRef(
     ...props
   }, forwardedRef) => {
     const ref = React.useRef(null);
-    const composedRefs = useComposedRefs(ref, forwardedRef);
+    const composedRefs = useComposedRefs$1(ref, forwardedRef);
     const prevChecked = usePrevious(checked);
     const controlSize = useSize(control);
     React.useEffect(() => {
@@ -32294,7 +34016,7 @@ var RadioGroup$1 = React.forwardRef(
     } = props;
     const rovingFocusGroupScope = useRovingFocusGroupScope$1(__scopeRadioGroup);
     const direction = useDirection(dir);
-    const [value, setValue] = useControllableState({
+    const [value, setValue] = useControllableState$1({
       prop: valueProp,
       defaultProp: defaultValue ?? null,
       onChange: onValueChange,
@@ -32310,7 +34032,7 @@ var RadioGroup$1 = React.forwardRef(
         value,
         onValueChange: setValue,
         children: /* @__PURE__ */ jsx(
-          Root$4,
+          Root$5,
           {
             asChild: true,
             ...rovingFocusGroupScope,
@@ -32345,7 +34067,7 @@ var RadioGroupItem$1 = React.forwardRef(
     const rovingFocusGroupScope = useRovingFocusGroupScope$1(__scopeRadioGroup);
     const radioScope = useRadioScope(__scopeRadioGroup);
     const ref = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, ref);
+    const composedRefs = useComposedRefs$1(forwardedRef, ref);
     const checked = context.value === itemProps.value;
     const isArrowKeyPressedRef = React.useRef(false);
     React.useEffect(() => {
@@ -32473,7 +34195,7 @@ var Tabs$1 = React.forwardRef(
       ...tabsProps
     } = props;
     const direction = useDirection(dir);
-    const [value, setValue] = useControllableState({
+    const [value, setValue] = useControllableState$1({
       prop: valueProp,
       onChange: onValueChange,
       defaultProp: defaultValue ?? "",
@@ -32510,7 +34232,7 @@ var TabsList$1 = React.forwardRef(
     const context = useTabsContext(TAB_LIST_NAME, __scopeTabs);
     const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeTabs);
     return /* @__PURE__ */ jsx(
-      Root$4,
+      Root$5,
       {
         asChild: true,
         ...rovingFocusGroupScope,
@@ -33015,7 +34737,7 @@ var ToastViewport$1 = React.forwardRef(
     const headFocusProxyRef = React.useRef(null);
     const tailFocusProxyRef = React.useRef(null);
     const ref = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, ref, context.onViewportChange);
+    const composedRefs = useComposedRefs$1(forwardedRef, ref, context.onViewportChange);
     const hotkeyLabel = hotkey.join("+").replace(/Key/g, "").replace(/Digit/g, "");
     const hasToasts = context.toastCount > 0;
     React.useEffect(() => {
@@ -33178,7 +34900,7 @@ var TOAST_SWIPE_END = "toast.swipeEnd";
 var Toast$1 = React.forwardRef(
   (props, forwardedRef) => {
     const { forceMount, open: openProp, defaultOpen, onOpenChange, ...toastProps } = props;
-    const [open, setOpen] = useControllableState({
+    const [open, setOpen] = useControllableState$1({
       prop: openProp,
       defaultProp: defaultOpen ?? true,
       onChange: onOpenChange,
@@ -33191,8 +34913,8 @@ var Toast$1 = React.forwardRef(
         ...toastProps,
         ref: forwardedRef,
         onClose: () => setOpen(false),
-        onPause: useCallbackRef$1(props.onPause),
-        onResume: useCallbackRef$1(props.onResume),
+        onPause: useCallbackRef$2(props.onPause),
+        onResume: useCallbackRef$2(props.onResume),
         onSwipeStart: composeEventHandlers(props.onSwipeStart, (event) => {
           event.currentTarget.setAttribute("data-swipe", "start");
         }),
@@ -33246,7 +34968,7 @@ var ToastImpl = React.forwardRef(
     } = props;
     const context = useToastProviderContext(TOAST_NAME, __scopeToast);
     const [node, setNode] = React.useState(null);
-    const composedRefs = useComposedRefs(forwardedRef, (node2) => setNode(node2));
+    const composedRefs = useComposedRefs$1(forwardedRef, (node2) => setNode(node2));
     const pointerStartRef = React.useRef(null);
     const swipeDeltaRef = React.useRef(null);
     const duration = durationProp || context.duration;
@@ -33254,7 +34976,7 @@ var ToastImpl = React.forwardRef(
     const closeTimerRemainingTimeRef = React.useRef(duration);
     const closeTimerRef = React.useRef(0);
     const { onToastAdd, onToastRemove } = context;
-    const handleClose = useCallbackRef$1(() => {
+    const handleClose = useCallbackRef$2(() => {
       const isFocusInToast = node?.contains(document.activeElement);
       if (isFocusInToast) context.viewport?.focus();
       onClose();
@@ -33312,7 +35034,7 @@ var ToastImpl = React.forwardRef(
       ),
       /* @__PURE__ */ jsx(ToastInteractiveProvider, { scope: __scopeToast, onClose: handleClose, children: ReactDOM.createPortal(
         /* @__PURE__ */ jsx(Collection.ItemSlot, { scope: __scopeToast, children: /* @__PURE__ */ jsx(
-          Root$7,
+          Root$8,
           {
             asChild: true,
             onEscapeKeyDown: composeEventHandlers(onEscapeKeyDown, () => {
@@ -33416,7 +35138,7 @@ var ToastAnnounce = (props) => {
     const timer = window.setTimeout(() => setIsAnnounced(true), 1e3);
     return () => window.clearTimeout(timer);
   }, []);
-  return isAnnounced ? null : /* @__PURE__ */ jsx(Portal$5, { asChild: true, children: /* @__PURE__ */ jsx(VisuallyHidden, { ...announceProps, children: renderAnnounceText && /* @__PURE__ */ jsxs(Fragment, { children: [
+  return isAnnounced ? null : /* @__PURE__ */ jsx(Portal$6, { asChild: true, children: /* @__PURE__ */ jsx(VisuallyHidden, { ...announceProps, children: renderAnnounceText && /* @__PURE__ */ jsxs(Fragment, { children: [
     context.label,
     " ",
     children
@@ -33523,7 +35245,7 @@ var isDeltaInDirection = (delta, direction, threshold = 0) => {
 };
 function useNextFrame(callback = () => {
 }) {
-  const fn = useCallbackRef$1(callback);
+  const fn = useCallbackRef$2(callback);
   useLayoutEffect2(() => {
     let raf1 = 0;
     let raf2 = 0;
@@ -33893,7 +35615,7 @@ var Tooltip$1 = (props) => {
   const disableHoverableContent = disableHoverableContentProp ?? providerContext.disableHoverableContent;
   const delayDuration = delayDurationProp ?? providerContext.delayDuration;
   const wasOpenDelayedRef = React.useRef(false);
-  const [open, setOpen] = useControllableState({
+  const [open, setOpen] = useControllableState$1({
     prop: openProp,
     defaultProp: defaultOpen ?? false,
     onChange: (open2) => {
@@ -33974,7 +35696,7 @@ var TooltipTrigger$1 = React.forwardRef(
     const providerContext = useTooltipProviderContext(TRIGGER_NAME, __scopeTooltip);
     const popperScope = usePopperScope(__scopeTooltip);
     const ref = React.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, ref, context.onTriggerChange);
+    const composedRefs = useComposedRefs$1(forwardedRef, ref, context.onTriggerChange);
     const isPointerDownRef = React.useRef(false);
     const hasPointerMoveOpenedRef = React.useRef(false);
     const handlePointerUp = React.useCallback(() => isPointerDownRef.current = false, []);
@@ -34023,7 +35745,7 @@ var [PortalProvider, usePortalContext] = createTooltipContext(PORTAL_NAME, {
 var TooltipPortal = (props) => {
   const { __scopeTooltip, forceMount, children, container } = props;
   const context = useTooltipContext(PORTAL_NAME, __scopeTooltip);
-  return /* @__PURE__ */ jsx(PortalProvider, { scope: __scopeTooltip, forceMount, children: /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(Portal$5, { asChild: true, container, children }) }) });
+  return /* @__PURE__ */ jsx(PortalProvider, { scope: __scopeTooltip, forceMount, children: /* @__PURE__ */ jsx(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx(Portal$6, { asChild: true, container, children }) }) });
 };
 TooltipPortal.displayName = PORTAL_NAME;
 var CONTENT_NAME = "TooltipContent";
@@ -34039,7 +35761,7 @@ var TooltipContentHoverable = React.forwardRef((props, forwardedRef) => {
   const context = useTooltipContext(CONTENT_NAME, props.__scopeTooltip);
   const providerContext = useTooltipProviderContext(CONTENT_NAME, props.__scopeTooltip);
   const ref = React.useRef(null);
-  const composedRefs = useComposedRefs(forwardedRef, ref);
+  const composedRefs = useComposedRefs$1(forwardedRef, ref);
   const [pointerGraceArea, setPointerGraceArea] = React.useState(null);
   const { trigger, onClose } = context;
   const content = ref.current;
@@ -34135,7 +35857,7 @@ var TooltipContentImpl = React.forwardRef(
         onFocusOutside: (event) => event.preventDefault(),
         onDismiss: onClose,
         children: /* @__PURE__ */ jsxs(
-          Content$2,
+          Content$3,
           {
             "data-state": context.stateAttribute,
             ...popperScope,
@@ -34154,7 +35876,7 @@ var TooltipContentImpl = React.forwardRef(
             },
             children: [
               /* @__PURE__ */ jsx(Slottable, { children }),
-              /* @__PURE__ */ jsx(VisuallyHiddenContentContextProvider, { scope: __scopeTooltip, isInside: true, children: /* @__PURE__ */ jsx(Root$3, { id: context.contentId, role: "tooltip", children: ariaLabel || children }) })
+              /* @__PURE__ */ jsx(VisuallyHiddenContentContextProvider, { scope: __scopeTooltip, isInside: true, children: /* @__PURE__ */ jsx(Root$4, { id: context.contentId, role: "tooltip", children: ariaLabel || children }) })
             ]
           }
         )
@@ -34342,5 +36064,5 @@ const TooltipContent = ({
   });
 };
 
-export { Accordion, AccordionContent, AccordionItem, AccordionTrigger, AddCircleIcon, AddIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, ArtistIcon, AutoComplete, Badge, BillIcon, Button$1 as Button, Calendar, CalendarDayButton, CalendarIcon, Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CatalogIcon, ChartIcon, CheckIcon, Checkbox, CloseIcon, Collapsible, CollapsibleContent, CollapsibleTrigger, CollectionIcon, ContainerLoader, CopyIcon, CurrencyInput, DeckIcon, DeleteIcon, Divider, DotIcon, DownloadIcon, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuTrigger, EditIcon, ExclamationCircle, ExportIcon, ExternalLinkIcon, Fab, Fade, FadePageLoader, FlaskIcon, GroupsIcon, HomeIcon, ImageIcon, InformationIcon, Input, Label, LoadingIcon, LogoutIcon, MailIcon, Menu, MenuIcon, MinusIcon, Modal, ModalContent, ModalFooter, MoneyIcon, MoveIcon, NoteIcon, NotificationIcon, OptionsIcon, PageLoader, PasswordIcon, PendingIcon, Popover, PopoverAnchor, PopoverContent, PopoverTrigger, ProfileIcon, QRCodeIcon, RadioGroup, RadioGroupItem, RefreshIcon, SearchIcon, Select$1 as Select, SettingsIcon, ShareIcon, Sheet, ShoppingIcon, SideDrawer, Skeleton, SliderIcon, SpeedDial, SpinnerIcon, Tabs, TabsContent, TabsList, TabsTrigger, Textarea, Toast, ToastAction, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport, Toaster, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UnassignedIcon, UploadIcon, UserIcon, WebIcon, badgeVariants, buttonVariants, cn, reducer, toast, useToast };
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger, AddCircleIcon, AddIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, ArtistIcon, AutoComplete, Badge, BillIcon, Button$1 as Button, Calendar, CalendarDayButton, CalendarIcon, Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, CatalogIcon, ChartIcon, CheckIcon, Checkbox, CloseIcon, Collapsible, CollapsibleContent, CollapsibleTrigger, CollectionIcon, ContainerLoader, CopyIcon, CurrencyInput, DeckIcon, DeleteIcon, Divider, DotIcon, DownloadIcon, Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerPortal, DrawerTitle, DrawerTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuTrigger, EditIcon, ExclamationCircle, ExportIcon, ExternalLinkIcon, Fab, Fade, FadePageLoader, FlaskIcon, GroupsIcon, HomeIcon, ImageIcon, InformationIcon, Input, Label, LoadingIcon, LogoutIcon, MailIcon, Menu, MenuIcon, MinusIcon, Modal, ModalContent, ModalFooter, MoneyIcon, MoveIcon, NoteIcon, NotificationIcon, OptionsIcon, PageLoader, PasswordIcon, PendingIcon, Popover, PopoverAnchor, PopoverContent, PopoverTrigger, ProfileIcon, QRCodeIcon, RadioGroup, RadioGroupItem, RefreshIcon, SearchIcon, Select$1 as Select, SettingsIcon, ShareIcon, Sheet, ShoppingIcon, SideDrawer, Skeleton, SliderIcon, SpeedDial, SpinnerIcon, Tabs, TabsContent, TabsList, TabsTrigger, Textarea, Toast, ToastAction, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport, Toaster, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, UnassignedIcon, UploadIcon, UserIcon, WebIcon, badgeVariants, buttonVariants, cn, reducer, toast, useToast };
 //# sourceMappingURL=index.js.map
