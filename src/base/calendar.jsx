@@ -32,7 +32,7 @@ const Calendar = ({
         ...formatters
       }}
       classNames={{
-        root: cn('w-fit', defaultClassNames.root),
+        root: cn('w-full', defaultClassNames.root),
         months: cn('flex gap-4 flex-col md:flex-row relative', defaultClassNames.months),
         month: cn('flex flex-col w-full gap-4', defaultClassNames.month),
         nav: cn('flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between', defaultClassNames.nav),
@@ -72,7 +72,7 @@ const Calendar = ({
           'text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem] select-none',
           defaultClassNames.weekday
         ),
-        week: cn('flex w-full mt-2', defaultClassNames.week),
+        week: cn('flex w-full mt-2 gap-4', defaultClassNames.week),
         week_number_header: cn('select-none w-(--cell-size)', defaultClassNames.week_number_header),
         week_number: cn('text-[0.8rem] select-none text-muted-foreground', defaultClassNames.week_number),
         day: cn(
