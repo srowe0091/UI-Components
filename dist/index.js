@@ -4968,6 +4968,10 @@ class JSAnimation extends WithPromise {
     get duration() {
         return millisecondsToSeconds(this.calculatedDuration);
     }
+    get iterationDuration() {
+        const { delay = 0 } = this.options || {};
+        return this.duration + millisecondsToSeconds(delay);
+    }
     get time() {
         return millisecondsToSeconds(this.currentTime);
     }
@@ -5570,6 +5574,10 @@ class NativeAnimation extends WithPromise {
         const duration = this.animation.effect?.getComputedTiming?.().duration || 0;
         return millisecondsToSeconds(Number(duration));
     }
+    get iterationDuration() {
+        const { delay = 0 } = this.options || {};
+        return this.duration + millisecondsToSeconds(delay);
+    }
     get time() {
         return millisecondsToSeconds(Number(this.animation.currentTime) || 0);
     }
@@ -5758,7 +5766,7 @@ function canAnimate(keyframes, name, type, velocity) {
 
 function makeAnimationInstant(options) {
     options.duration = 0;
-    options.type === "keyframes";
+    options.type = "keyframes";
 }
 
 /**
@@ -5919,6 +5927,9 @@ class AsyncMotionValueAnimation extends WithPromise {
     }
     get duration() {
         return this.animation.duration;
+    }
+    get iterationDuration() {
+        return this.animation.iterationDuration;
     }
     get time() {
         return this.animation.time;
@@ -6953,6 +6964,63 @@ const MotionConfigContext = createContext({
 });
 
 /**
+ * Taken from https://github.com/radix-ui/primitives/blob/main/packages/react/compose-refs/src/compose-refs.tsx
+ */
+/**
+ * Set a given ref to a given value
+ * This utility takes care of different types of refs: callback refs and RefObject(s)
+ */
+function setRef$2(ref, value) {
+    if (typeof ref === "function") {
+        return ref(value);
+    }
+    else if (ref !== null && ref !== undefined) {
+        ref.current = value;
+    }
+}
+/**
+ * A utility to compose multiple refs together
+ * Accepts callback refs and RefObject(s)
+ */
+function composeRefs$2(...refs) {
+    return (node) => {
+        let hasCleanup = false;
+        const cleanups = refs.map((ref) => {
+            const cleanup = setRef$2(ref, node);
+            if (!hasCleanup && typeof cleanup === "function") {
+                hasCleanup = true;
+            }
+            return cleanup;
+        });
+        // React <19 will log an error to the console if a callback ref returns a
+        // value. We don't use ref cleanups internally so this will only happen if a
+        // user's ref callback returns a value, which we only expect if they are
+        // using the cleanup functionality added in React 19.
+        if (hasCleanup) {
+            return () => {
+                for (let i = 0; i < cleanups.length; i++) {
+                    const cleanup = cleanups[i];
+                    if (typeof cleanup === "function") {
+                        cleanup();
+                    }
+                    else {
+                        setRef$2(refs[i], null);
+                    }
+                }
+            };
+        }
+    };
+}
+/**
+ * A custom hook that composes multiple refs
+ * Accepts callback refs and RefObject(s)
+ */
+function useComposedRefs$2(...refs) {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return React.useCallback(composeRefs$2(...refs), refs);
+}
+
+/**
  * Measurement functionality has to be within a separate component
  * to leverage snapshot lifecycle.
  */
@@ -6992,6 +7060,7 @@ function PopChild({ children, isPresent, anchorX, root }) {
         right: 0,
     });
     const { nonce } = useContext(MotionConfigContext);
+    const composedRef = useComposedRefs$2(ref, children?.ref);
     /**
      * We create and inject a style block so we can apply this explicit
      * sizing in a non-destructive manner by just deleting the style block.
@@ -7029,7 +7098,7 @@ function PopChild({ children, isPresent, anchorX, root }) {
             }
         };
     }, [isPresent]);
-    return (jsx(PopChildMeasure, { isPresent: isPresent, childRef: ref, sizeRef: size, children: React.cloneElement(children, { ref }) }));
+    return (jsx(PopChildMeasure, { isPresent: isPresent, childRef: ref, sizeRef: size, children: React.cloneElement(children, { ref: composedRef }) }));
 }
 
 const PresenceChild = ({ children, initial, isPresent, onExitComplete, custom, presenceAffectsLayout, mode, anchorX, root }) => {
@@ -8059,9 +8128,8 @@ function useMotionRef(visualState, visualElement, externalRef) {
         }
     }, 
     /**
-     * Only pass a new ref callback to React if we've received a visual element
-     * factory. Otherwise we'll be mounting/remounting every time externalRef
-     * or other dependencies change.
+     * Include externalRef in dependencies to ensure the callback updates
+     * when the ref changes, allowing proper ref forwarding.
      */
     [visualElement]);
 }
@@ -15315,7 +15383,7 @@ var hideOthers = function (originalTarget, parentNode, markerName) {
 };
 
 var DIALOG_NAME = "Dialog";
-var [createDialogContext, createDialogScope] = createContextScope(DIALOG_NAME);
+var [createDialogContext] = createContextScope(DIALOG_NAME);
 var [DialogProvider, useDialogContext] = createDialogContext(DIALOG_NAME);
 var Dialog$1 = (props) => {
   const {
@@ -19517,7 +19585,7 @@ var SubTrigger = MenuSubTrigger;
 var SubContent = MenuSubContent;
 
 var DROPDOWN_MENU_NAME = "DropdownMenu";
-var [createDropdownMenuContext, createDropdownMenuScope] = createContextScope(
+var [createDropdownMenuContext] = createContextScope(
   DROPDOWN_MENU_NAME,
   [createMenuScope]
 );
@@ -20055,7 +20123,7 @@ var OPEN_KEYS = [" ", "Enter", "ArrowUp", "ArrowDown"];
 var SELECTION_KEYS = [" ", "Enter"];
 var SELECT_NAME = "Select";
 var [Collection$2, useCollection$2, createCollectionScope$2] = createCollection(SELECT_NAME);
-var [createSelectContext, createSelectScope] = createContextScope(SELECT_NAME, [
+var [createSelectContext] = createContextScope(SELECT_NAME, [
   createCollectionScope$2,
   createPopperScope
 ]);
@@ -21623,7 +21691,7 @@ var Content$2 = CollapsibleContent$1;
 var ACCORDION_NAME = "Accordion";
 var ACCORDION_KEYS = ["Home", "End", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
 var [Collection$1, useCollection$1, createCollectionScope$1] = createCollection(ACCORDION_NAME);
-var [createAccordionContext, createAccordionScope] = createContextScope(ACCORDION_NAME, [
+var [createAccordionContext] = createContextScope(ACCORDION_NAME, [
   createCollectionScope$1,
   createCollapsibleScope
 ]);
@@ -21964,7 +22032,7 @@ function AccordionContent({
 }
 
 var POPOVER_NAME = "Popover";
-var [createPopoverContext, createPopoverScope] = createContextScope(POPOVER_NAME, [
+var [createPopoverContext] = createContextScope(POPOVER_NAME, [
   createPopperScope
 ]);
 var usePopperScope$1 = createPopperScope();
@@ -22460,6 +22528,44 @@ const Badge = ({
   });
 };
 
+/**
+ * Time zone name format.
+ */
+
+/**
+ * The function returns the time zone name for the given date in the specified
+ * time zone.
+ *
+ * It uses the `Intl.DateTimeFormat` API and by default outputs the time zone
+ * name in a long format, e.g. "Pacific Standard Time" or
+ * "Singapore Standard Time".
+ *
+ * It is possible to specify the format as the third argument using one of the following options
+ *
+ * - "short": e.g. "EDT" or "GMT+8".
+ * - "long": e.g. "Eastern Daylight Time".
+ * - "shortGeneric": e.g. "ET" or "Singapore Time".
+ * - "longGeneric": e.g. "Eastern Time" or "Singapore Standard Time".
+ *
+ * These options correspond to TR35 tokens `z..zzz`, `zzzz`, `v`, and `vvvv` respectively: https://www.unicode.org/reports/tr35/tr35-dates.html#dfst-zone
+ *
+ * @param timeZone - Time zone name (IANA or UTC offset)
+ * @param date - Date object to get the time zone name for
+ * @param format - Optional format of the time zone name. Defaults to "long". Can be "short", "long", "shortGeneric", or "longGeneric".
+ *
+ * @returns Time zone name (e.g. "Singapore Standard Time")
+ */
+function tzName(timeZone, date, format = "long") {
+  return new Intl.DateTimeFormat("en-US", {
+    // Enforces engine to render the time. Without the option JavaScriptCore omits it.
+    hour: "numeric",
+    timeZone: timeZone,
+    timeZoneName: format
+  }).format(date).split(/\s/g) // Format.JS uses non-breaking spaces
+  .slice(2) // Skip the hour and AM/PM parts
+  .join(" ");
+}
+
 const offsetFormatCache = {};
 const offsetCache = {};
 
@@ -22478,12 +22584,11 @@ const offsetCache = {};
  */
 function tzOffset(timeZone, date) {
   try {
-    const format = offsetFormatCache[timeZone] ||= new Intl.DateTimeFormat("en-GB", {
+    const format = offsetFormatCache[timeZone] ||= new Intl.DateTimeFormat("en-US", {
       timeZone,
-      hour: "numeric",
       timeZoneName: "longOffset"
     }).format;
-    const offsetStr = format(date).split('GMT')[1] || '';
+    const offsetStr = format(date).split("GMT")[1];
     if (offsetStr in offsetCache) return offsetCache[offsetStr];
     return calcOffset(offsetStr, offsetStr.split(":"));
   } catch {
@@ -22497,9 +22602,11 @@ function tzOffset(timeZone, date) {
 }
 const offsetRe = /([+-]\d\d):?(\d\d)?/;
 function calcOffset(cacheStr, values) {
-  const hours = +values[0];
+  const hours = +(values[0] || 0);
   const minutes = +(values[1] || 0);
-  return offsetCache[cacheStr] = hours > 0 ? hours * 60 + minutes : hours * 60 - minutes;
+  // Convert seconds to minutes by dividing by 60 to keep the function return in minutes.
+  const seconds = +(values[2] || 0) / 60;
+  return offsetCache[cacheStr] = hours * 60 + minutes > 0 ? hours * 60 + minutes + seconds : hours * 60 - minutes - seconds;
 }
 
 class TZDateMini extends Date {
@@ -22541,7 +22648,10 @@ class TZDateMini extends Date {
     return new TZDateMini(+this, timeZone);
   }
   getTimezoneOffset() {
-    return -tzOffset(this.timeZone, this);
+    const offset = -tzOffset(this.timeZone, this);
+    // Remove the seconds offset
+    // use Math.floor for negative GMT timezones and Math.ceil for positive GMT timezones.
+    return offset > 0 ? Math.floor(offset) : Math.ceil(offset);
   }
 
   //#endregion
@@ -22601,7 +22711,7 @@ Object.getOwnPropertyNames(Date.prototype).forEach(method => {
  */
 function syncToInternal(date) {
   date.internal.setTime(+date);
-  date.internal.setUTCMinutes(date.internal.getUTCMinutes() - date.getTimezoneOffset());
+  date.internal.setUTCSeconds(date.internal.getUTCSeconds() - Math.round(-tzOffset(date.timeZone, date) * 60));
 }
 
 /**
@@ -22627,8 +22737,10 @@ function syncFromInternal(date) {
  */
 function adjustToSystemTZ(date) {
   // Save the time zone offset before all the adjustments
-  const offset = tzOffset(date.timeZone, date);
-
+  const baseOffset = tzOffset(date.timeZone, date);
+  // Remove the seconds offset
+  // use Math.floor for negative GMT timezones and Math.ceil for positive GMT timezones.
+  const offset = baseOffset > 0 ? Math.floor(baseOffset) : Math.ceil(baseOffset);
   //#region System DST adjustment
 
   // The biggest problem with using the system time zone is that when we create
@@ -22682,9 +22794,29 @@ function adjustToSystemTZ(date) {
 
   //#endregion
 
+  //#region Seconds System diff adjustment
+
+  const systemDate = new Date(+date);
+  // Set the UTC seconds to 0 to isolate the timezone offset in seconds.
+  systemDate.setUTCSeconds(0);
+  // For negative systemOffset, invert the seconds.
+  const systemSecondsOffset = systemOffset > 0 ? systemDate.getSeconds() : (systemDate.getSeconds() - 60) % 60;
+
+  // Calculate the seconds offset based on the timezone offset.
+  const secondsOffset = Math.round(-(tzOffset(date.timeZone, date) * 60)) % 60;
+  if (secondsOffset || systemSecondsOffset) {
+    date.internal.setUTCSeconds(date.internal.getUTCSeconds() + secondsOffset);
+    Date.prototype.setUTCSeconds.call(date, Date.prototype.getUTCSeconds.call(date) + secondsOffset + systemSecondsOffset);
+  }
+
+  //#endregion
+
   //#region Post-adjustment DST fix
 
-  const postOffset = tzOffset(date.timeZone, date);
+  const postBaseOffset = tzOffset(date.timeZone, date);
+  // Remove the seconds offset
+  // use Math.floor for negative GMT timezones and Math.ceil for positive GMT timezones.
+  const postOffset = postBaseOffset > 0 ? Math.floor(postBaseOffset) : Math.ceil(postBaseOffset);
   const postSystemOffset = -new Date(+date).getTimezoneOffset();
   const postOffsetDiff = postSystemOffset - postOffset;
   const offsetChanged = postOffset !== offset;
@@ -22695,7 +22827,10 @@ function adjustToSystemTZ(date) {
     // Now we need to check if got offset change during the post-adjustment.
     // If so, we also need both dates to reflect that.
 
-    const newOffset = tzOffset(date.timeZone, date);
+    const newBaseOffset = tzOffset(date.timeZone, date);
+    // Remove the seconds offset
+    // use Math.floor for negative GMT timezones and Math.ceil for positive GMT timezones.
+    const newOffset = newBaseOffset > 0 ? Math.floor(newBaseOffset) : Math.ceil(newBaseOffset);
     const offsetChange = postOffset - newOffset;
     if (offsetChange) {
       date.internal.setUTCMinutes(date.internal.getUTCMinutes() + offsetChange);
@@ -22706,19 +22841,6 @@ function adjustToSystemTZ(date) {
   //#endregion
 }
 
-/**
- * UTC date class. It maps getters and setters to corresponding UTC methods,
- * forcing all calculations in the UTC time zone.
- *
- * Combined with date-fns, it allows using the class the same way as
- * the original date class.
- *
- * This complete version provides not only getters, setters,
- * and `getTimezoneOffset`, but also the formatter functions, mirroring
- * all original `Date` functionality. Use this version when you need to format
- * a string or in an environment you don't fully control (a library).
- * For a minimal version, see `UTCDateMini`.
- */
 class TZDate extends TZDateMini {
   //#region static
 
@@ -22797,133 +22919,6 @@ class TZDate extends TZDateMini {
 
   //#endregion
 }
-function tzName(tz, date) {
-  return new Intl.DateTimeFormat("en-GB", {
-    timeZone: tz,
-    timeZoneName: "long"
-  }).format(date).slice(12);
-}
-
-/**
- * Enum representing the UI elements composing DayPicker. These elements are
- * mapped to {@link CustomComponents}, {@link ClassNames}, and {@link Styles}.
- *
- * Some elements are extended by flags and modifiers.
- */
-var UI;
-(function (UI) {
-    /** The root component displaying the months and the navigation bar. */
-    UI["Root"] = "root";
-    /** The Chevron SVG element used by navigation buttons and dropdowns. */
-    UI["Chevron"] = "chevron";
-    /**
-     * The grid cell with the day's date. Extended by {@link DayFlag} and
-     * {@link SelectionState}.
-     */
-    UI["Day"] = "day";
-    /** The button containing the formatted day's date, inside the grid cell. */
-    UI["DayButton"] = "day_button";
-    /** The caption label of the month (when not showing the dropdown navigation). */
-    UI["CaptionLabel"] = "caption_label";
-    /** The container of the dropdown navigation (when enabled). */
-    UI["Dropdowns"] = "dropdowns";
-    /** The dropdown element to select for years and months. */
-    UI["Dropdown"] = "dropdown";
-    /** The container element of the dropdown. */
-    UI["DropdownRoot"] = "dropdown_root";
-    /** The root element of the footer. */
-    UI["Footer"] = "footer";
-    /** The month grid. */
-    UI["MonthGrid"] = "month_grid";
-    /** Contains the dropdown navigation or the caption label. */
-    UI["MonthCaption"] = "month_caption";
-    /** The dropdown with the months. */
-    UI["MonthsDropdown"] = "months_dropdown";
-    /** Wrapper of the month grid. */
-    UI["Month"] = "month";
-    /** The container of the displayed months. */
-    UI["Months"] = "months";
-    /** The navigation bar with the previous and next buttons. */
-    UI["Nav"] = "nav";
-    /**
-     * The next month button in the navigation. *
-     *
-     * @since 9.1.0
-     */
-    UI["NextMonthButton"] = "button_next";
-    /**
-     * The previous month button in the navigation.
-     *
-     * @since 9.1.0
-     */
-    UI["PreviousMonthButton"] = "button_previous";
-    /** The row containing the week. */
-    UI["Week"] = "week";
-    /** The group of row weeks in a month (`tbody`). */
-    UI["Weeks"] = "weeks";
-    /** The column header with the weekday. */
-    UI["Weekday"] = "weekday";
-    /** The row grouping the weekdays in the column headers. */
-    UI["Weekdays"] = "weekdays";
-    /** The cell containing the week number. */
-    UI["WeekNumber"] = "week_number";
-    /** The cell header of the week numbers column. */
-    UI["WeekNumberHeader"] = "week_number_header";
-    /** The dropdown with the years. */
-    UI["YearsDropdown"] = "years_dropdown";
-})(UI || (UI = {}));
-/** Enum representing flags for the {@link UI.Day} element. */
-var DayFlag;
-(function (DayFlag) {
-    /** The day is disabled. */
-    DayFlag["disabled"] = "disabled";
-    /** The day is hidden. */
-    DayFlag["hidden"] = "hidden";
-    /** The day is outside the current month. */
-    DayFlag["outside"] = "outside";
-    /** The day is focused. */
-    DayFlag["focused"] = "focused";
-    /** The day is today. */
-    DayFlag["today"] = "today";
-})(DayFlag || (DayFlag = {}));
-/**
- * Enum representing selection states that can be applied to the {@link UI.Day}
- * element in selection mode.
- */
-var SelectionState;
-(function (SelectionState) {
-    /** The day is at the end of a selected range. */
-    SelectionState["range_end"] = "range_end";
-    /** The day is at the middle of a selected range. */
-    SelectionState["range_middle"] = "range_middle";
-    /** The day is at the start of a selected range. */
-    SelectionState["range_start"] = "range_start";
-    /** The day is selected. */
-    SelectionState["selected"] = "selected";
-})(SelectionState || (SelectionState = {}));
-/**
- * Enum representing different animation states for transitioning between
- * months.
- */
-var Animation;
-(function (Animation) {
-    /** The entering weeks when they appear before the exiting month. */
-    Animation["weeks_before_enter"] = "weeks_before_enter";
-    /** The exiting weeks when they disappear before the entering month. */
-    Animation["weeks_before_exit"] = "weeks_before_exit";
-    /** The entering weeks when they appear after the exiting month. */
-    Animation["weeks_after_enter"] = "weeks_after_enter";
-    /** The exiting weeks when they disappear after the entering month. */
-    Animation["weeks_after_exit"] = "weeks_after_exit";
-    /** The entering caption when it appears after the exiting month. */
-    Animation["caption_after_enter"] = "caption_after_enter";
-    /** The exiting caption when it disappears after the entering month. */
-    Animation["caption_after_exit"] = "caption_after_exit";
-    /** The entering caption when it appears before the exiting month. */
-    Animation["caption_before_enter"] = "caption_before_enter";
-    /** The exiting caption when it disappears before the entering month. */
-    Animation["caption_before_exit"] = "caption_before_exit";
-})(Animation || (Animation = {}));
 
 /**
  * @module constants
@@ -26842,7 +26837,7 @@ class DateLib {
          * @param formatStr The format string.
          * @returns The formatted date string.
          */
-        this.format = (date, formatStr, options) => {
+        this.format = (date, formatStr, _options) => {
             const formatted = this.overrides?.format
                 ? this.overrides.format(date, formatStr, this.options)
                 : format(date, formatStr, this.options);
@@ -26868,7 +26863,7 @@ class DateLib {
          * @param date The date to get the month for.
          * @returns The month.
          */
-        this.getMonth = (date, options) => {
+        this.getMonth = (date, _options) => {
             return this.overrides?.getMonth
                 ? this.overrides.getMonth(date, this.options)
                 : getMonth(date, this.options);
@@ -26879,7 +26874,7 @@ class DateLib {
          * @param date The date to get the year for.
          * @returns The year.
          */
-        this.getYear = (date, options) => {
+        this.getYear = (date, _options) => {
             return this.overrides?.getYear
                 ? this.overrides.getYear(date, this.options)
                 : getYear(date, this.options);
@@ -26890,7 +26885,7 @@ class DateLib {
          * @param date The date to get the week number for.
          * @returns The week number.
          */
-        this.getWeek = (date, options) => {
+        this.getWeek = (date, _options) => {
             return this.overrides?.getWeek
                 ? this.overrides.getWeek(date, this.options)
                 : getWeek(date, this.options);
@@ -27014,7 +27009,7 @@ class DateLib {
          * @param date The original date.
          * @returns The start of the broadcast week.
          */
-        this.startOfBroadcastWeek = (date, dateLib) => {
+        this.startOfBroadcastWeek = (date, _dateLib) => {
             return this.overrides?.startOfBroadcastWeek
                 ? this.overrides.startOfBroadcastWeek(date, this)
                 : startOfBroadcastWeek(date, this);
@@ -27058,7 +27053,7 @@ class DateLib {
          * @param date The original date.
          * @returns The start of the week.
          */
-        this.startOfWeek = (date, options) => {
+        this.startOfWeek = (date, _options) => {
             return this.overrides?.startOfWeek
                 ? this.overrides.startOfWeek(date, this.options)
                 : startOfWeek(date, this.options);
@@ -27088,7 +27083,7 @@ class DateLib {
         const { numerals = "latn" } = this.options;
         // Use Intl.NumberFormat to create a formatter with the specified numbering system
         const formatter = new Intl.NumberFormat("en-US", {
-            numberingSystem: numerals
+            numberingSystem: numerals,
         });
         // Map Arabic digits (0-9) to the target numerals
         const digitMap = {};
@@ -27118,7 +27113,63 @@ class DateLib {
     formatNumber(value) {
         return this.replaceDigits(value.toString());
     }
+    /**
+     * Returns the preferred ordering for month and year labels for the current
+     * locale.
+     */
+    getMonthYearOrder() {
+        const code = this.options.locale?.code;
+        if (!code) {
+            return "month-first";
+        }
+        return DateLib.yearFirstLocales.has(code) ? "year-first" : "month-first";
+    }
+    /**
+     * Formats the month/year pair respecting locale conventions.
+     *
+     * @since 9.11.0
+     */
+    formatMonthYear(date) {
+        const { locale, timeZone, numerals } = this.options;
+        const localeCode = locale?.code;
+        if (localeCode && DateLib.yearFirstLocales.has(localeCode)) {
+            try {
+                const intl = new Intl.DateTimeFormat(localeCode, {
+                    month: "long",
+                    year: "numeric",
+                    timeZone,
+                    numberingSystem: numerals,
+                });
+                const formatted = intl.format(date);
+                return formatted;
+            }
+            catch {
+                // Fallback to date-fns formatting below.
+            }
+        }
+        const pattern = this.getMonthYearOrder() === "year-first" ? "y LLLL" : "LLLL y";
+        return this.format(date, pattern);
+    }
 }
+DateLib.yearFirstLocales = new Set([
+    "eu",
+    "hu",
+    "ja",
+    "ja-Hira",
+    "ja-JP",
+    "ko",
+    "ko-KR",
+    "lt",
+    "lt-LT",
+    "lv",
+    "lv-LV",
+    "mn",
+    "mn-MN",
+    "zh",
+    "zh-CN",
+    "zh-HK",
+    "zh-TW",
+]);
 /**
  * The default date library with English locale.
  *
@@ -27179,281 +27230,6 @@ class CalendarWeek {
 }
 
 /**
- * Checks if a given date is within a specified date range.
- *
- * @since 9.0.0
- * @param range - The date range to check against.
- * @param date - The date to check.
- * @param excludeEnds - If `true`, the range's start and end dates are excluded.
- * @param dateLib - The date utility library instance.
- * @returns `true` if the date is within the range, otherwise `false`.
- * @group Utilities
- */
-function rangeIncludesDate(range, date, excludeEnds = false, dateLib = defaultDateLib) {
-    let { from, to } = range;
-    const { differenceInCalendarDays, isSameDay } = dateLib;
-    if (from && to) {
-        const isRangeInverted = differenceInCalendarDays(to, from) < 0;
-        if (isRangeInverted) {
-            [from, to] = [to, from];
-        }
-        const isInRange = differenceInCalendarDays(date, from) >= (excludeEnds ? 1 : 0) &&
-            differenceInCalendarDays(to, date) >= (excludeEnds ? 1 : 0);
-        return isInRange;
-    }
-    if (!excludeEnds && to) {
-        return isSameDay(to, date);
-    }
-    if (!excludeEnds && from) {
-        return isSameDay(from, date);
-    }
-    return false;
-}
-
-/**
- * Checks if the given value is of type {@link DateInterval}.
- *
- * @param matcher - The value to check.
- * @returns `true` if the value is a {@link DateInterval}, otherwise `false`.
- * @group Utilities
- */
-function isDateInterval(matcher) {
-    return Boolean(matcher &&
-        typeof matcher === "object" &&
-        "before" in matcher &&
-        "after" in matcher);
-}
-/**
- * Checks if the given value is of type {@link DateRange}.
- *
- * @param value - The value to check.
- * @returns `true` if the value is a {@link DateRange}, otherwise `false`.
- * @group Utilities
- */
-function isDateRange(value) {
-    return Boolean(value && typeof value === "object" && "from" in value);
-}
-/**
- * Checks if the given value is of type {@link DateAfter}.
- *
- * @param value - The value to check.
- * @returns `true` if the value is a {@link DateAfter}, otherwise `false`.
- * @group Utilities
- */
-function isDateAfterType(value) {
-    return Boolean(value && typeof value === "object" && "after" in value);
-}
-/**
- * Checks if the given value is of type {@link DateBefore}.
- *
- * @param value - The value to check.
- * @returns `true` if the value is a {@link DateBefore}, otherwise `false`.
- * @group Utilities
- */
-function isDateBeforeType(value) {
-    return Boolean(value && typeof value === "object" && "before" in value);
-}
-/**
- * Checks if the given value is of type {@link DayOfWeek}.
- *
- * @param value - The value to check.
- * @returns `true` if the value is a {@link DayOfWeek}, otherwise `false`.
- * @group Utilities
- */
-function isDayOfWeekType(value) {
-    return Boolean(value && typeof value === "object" && "dayOfWeek" in value);
-}
-/**
- * Checks if the given value is an array of valid dates.
- *
- * @private
- * @param value - The value to check.
- * @param dateLib - The date utility library instance.
- * @returns `true` if the value is an array of valid dates, otherwise `false`.
- */
-function isDatesArray(value, dateLib) {
-    return Array.isArray(value) && value.every(dateLib.isDate);
-}
-
-/**
- * Checks if a given date matches at least one of the specified {@link Matcher}.
- *
- * @param date - The date to check.
- * @param matchers - The matchers to check against.
- * @param dateLib - The date utility library instance.
- * @returns `true` if the date matches any of the matchers, otherwise `false`.
- * @group Utilities
- */
-function dateMatchModifiers(date, matchers, dateLib = defaultDateLib) {
-    const matchersArr = !Array.isArray(matchers) ? [matchers] : matchers;
-    const { isSameDay, differenceInCalendarDays, isAfter } = dateLib;
-    return matchersArr.some((matcher) => {
-        if (typeof matcher === "boolean") {
-            return matcher;
-        }
-        if (dateLib.isDate(matcher)) {
-            return isSameDay(date, matcher);
-        }
-        if (isDatesArray(matcher, dateLib)) {
-            return matcher.includes(date);
-        }
-        if (isDateRange(matcher)) {
-            return rangeIncludesDate(matcher, date, false, dateLib);
-        }
-        if (isDayOfWeekType(matcher)) {
-            if (!Array.isArray(matcher.dayOfWeek)) {
-                return matcher.dayOfWeek === date.getDay();
-            }
-            return matcher.dayOfWeek.includes(date.getDay());
-        }
-        if (isDateInterval(matcher)) {
-            const diffBefore = differenceInCalendarDays(matcher.before, date);
-            const diffAfter = differenceInCalendarDays(matcher.after, date);
-            const isDayBefore = diffBefore > 0;
-            const isDayAfter = diffAfter < 0;
-            const isClosedInterval = isAfter(matcher.before, matcher.after);
-            if (isClosedInterval) {
-                return isDayAfter && isDayBefore;
-            }
-            else {
-                return isDayBefore || isDayAfter;
-            }
-        }
-        if (isDateAfterType(matcher)) {
-            return differenceInCalendarDays(date, matcher.after) > 0;
-        }
-        if (isDateBeforeType(matcher)) {
-            return differenceInCalendarDays(matcher.before, date) > 0;
-        }
-        if (typeof matcher === "function") {
-            return matcher(date);
-        }
-        return false;
-    });
-}
-
-/**
- * Creates a function to retrieve the modifiers for a given day.
- *
- * This function calculates both internal and custom modifiers for each day
- * based on the provided calendar days and DayPicker props.
- *
- * @private
- * @param days The array of `CalendarDay` objects to process.
- * @param props The DayPicker props, including modifiers and configuration
- *   options.
- * @param dateLib The date library to use for date manipulation.
- * @returns A function that retrieves the modifiers for a given `CalendarDay`.
- */
-function createGetModifiers(days, props, navStart, navEnd, dateLib) {
-    const { disabled, hidden, modifiers, showOutsideDays, broadcastCalendar, today } = props;
-    const { isSameDay, isSameMonth, startOfMonth, isBefore, endOfMonth, isAfter } = dateLib;
-    const computedNavStart = navStart && startOfMonth(navStart);
-    const computedNavEnd = navEnd && endOfMonth(navEnd);
-    const internalModifiersMap = {
-        [DayFlag.focused]: [],
-        [DayFlag.outside]: [],
-        [DayFlag.disabled]: [],
-        [DayFlag.hidden]: [],
-        [DayFlag.today]: []
-    };
-    const customModifiersMap = {};
-    for (const day of days) {
-        const { date, displayMonth } = day;
-        const isOutside = Boolean(displayMonth && !isSameMonth(date, displayMonth));
-        const isBeforeNavStart = Boolean(computedNavStart && isBefore(date, computedNavStart));
-        const isAfterNavEnd = Boolean(computedNavEnd && isAfter(date, computedNavEnd));
-        const isDisabled = Boolean(disabled && dateMatchModifiers(date, disabled, dateLib));
-        const isHidden = Boolean(hidden && dateMatchModifiers(date, hidden, dateLib)) ||
-            isBeforeNavStart ||
-            isAfterNavEnd ||
-            // Broadcast calendar will show outside days as default
-            (!broadcastCalendar && !showOutsideDays && isOutside) ||
-            (broadcastCalendar && showOutsideDays === false && isOutside);
-        const isToday = isSameDay(date, today ?? dateLib.today());
-        if (isOutside)
-            internalModifiersMap.outside.push(day);
-        if (isDisabled)
-            internalModifiersMap.disabled.push(day);
-        if (isHidden)
-            internalModifiersMap.hidden.push(day);
-        if (isToday)
-            internalModifiersMap.today.push(day);
-        // Add custom modifiers
-        if (modifiers) {
-            Object.keys(modifiers).forEach((name) => {
-                const modifierValue = modifiers?.[name];
-                const isMatch = modifierValue
-                    ? dateMatchModifiers(date, modifierValue, dateLib)
-                    : false;
-                if (!isMatch)
-                    return;
-                if (customModifiersMap[name]) {
-                    customModifiersMap[name].push(day);
-                }
-                else {
-                    customModifiersMap[name] = [day];
-                }
-            });
-        }
-    }
-    return (day) => {
-        // Initialize all the modifiers to false
-        const dayFlags = {
-            [DayFlag.focused]: false,
-            [DayFlag.disabled]: false,
-            [DayFlag.hidden]: false,
-            [DayFlag.outside]: false,
-            [DayFlag.today]: false
-        };
-        const customModifiers = {};
-        // Find the modifiers for the given day
-        for (const name in internalModifiersMap) {
-            const days = internalModifiersMap[name];
-            dayFlags[name] = days.some((d) => d === day);
-        }
-        for (const name in customModifiersMap) {
-            customModifiers[name] = customModifiersMap[name].some((d) => d === day);
-        }
-        return {
-            ...dayFlags,
-            // custom modifiers should override all the previous ones
-            ...customModifiers
-        };
-    };
-}
-
-/**
- * Returns the class names for a day based on its modifiers.
- *
- * This function combines the base class name for the day with any class names
- * associated with active modifiers.
- *
- * @param modifiers The modifiers applied to the day.
- * @param classNames The base class names for the calendar elements.
- * @param modifiersClassNames The class names associated with specific
- *   modifiers.
- * @returns An array of class names for the day.
- */
-function getClassNamesForModifiers(modifiers, classNames, modifiersClassNames = {}) {
-    const modifierClassNames = Object.entries(modifiers)
-        .filter(([, active]) => active === true)
-        .reduce((previousValue, [key]) => {
-        if (modifiersClassNames[key]) {
-            previousValue.push(modifiersClassNames[key]);
-        }
-        else if (classNames[DayFlag[key]]) {
-            previousValue.push(classNames[DayFlag[key]]);
-        }
-        else if (classNames[SelectionState[key]]) {
-            previousValue.push(classNames[SelectionState[key]]);
-        }
-        return previousValue;
-    }, [classNames[UI.Day]]);
-    return modifierClassNames;
-}
-
-/**
  * Render the button elements in the calendar.
  *
  * @private
@@ -27481,7 +27257,9 @@ function CaptionLabel(props) {
  */
 function Chevron(props) {
     const { size = 24, orientation = "left", className } = props;
-    return (React__default.createElement("svg", { className: className, width: size, height: size, viewBox: "0 0 24 24" },
+    return (
+    // biome-ignore lint/a11y/noSvgWithoutTitle: handled by the parent component
+    React__default.createElement("svg", { className: className, width: size, height: size, viewBox: "0 0 24 24" },
         orientation === "up" && (React__default.createElement("polygon", { points: "6.77 17 12.5 11.43 18.24 17 20 15.28 12.5 8 5 15.28" })),
         orientation === "down" && (React__default.createElement("polygon", { points: "6.77 8 12.5 13.57 18.24 8 20 9.72 12.5 17 5 9.72" })),
         orientation === "left" && (React__default.createElement("polygon", { points: "16 18.112 9.81111111 12 16 5.87733333 14.0888889 4 6 12 14.0888889 20" })),
@@ -27518,6 +27296,127 @@ function DayButton(props) {
     }, [modifiers.focused]);
     return React__default.createElement("button", { ref: ref, ...buttonProps });
 }
+
+/**
+ * Enum representing the UI elements composing DayPicker. These elements are
+ * mapped to {@link CustomComponents}, {@link ClassNames}, and {@link Styles}.
+ *
+ * Some elements are extended by flags and modifiers.
+ */
+var UI;
+(function (UI) {
+    /** The root component displaying the months and the navigation bar. */
+    UI["Root"] = "root";
+    /** The Chevron SVG element used by navigation buttons and dropdowns. */
+    UI["Chevron"] = "chevron";
+    /**
+     * The grid cell with the day's date. Extended by {@link DayFlag} and
+     * {@link SelectionState}.
+     */
+    UI["Day"] = "day";
+    /** The button containing the formatted day's date, inside the grid cell. */
+    UI["DayButton"] = "day_button";
+    /** The caption label of the month (when not showing the dropdown navigation). */
+    UI["CaptionLabel"] = "caption_label";
+    /** The container of the dropdown navigation (when enabled). */
+    UI["Dropdowns"] = "dropdowns";
+    /** The dropdown element to select for years and months. */
+    UI["Dropdown"] = "dropdown";
+    /** The container element of the dropdown. */
+    UI["DropdownRoot"] = "dropdown_root";
+    /** The root element of the footer. */
+    UI["Footer"] = "footer";
+    /** The month grid. */
+    UI["MonthGrid"] = "month_grid";
+    /** Contains the dropdown navigation or the caption label. */
+    UI["MonthCaption"] = "month_caption";
+    /** The dropdown with the months. */
+    UI["MonthsDropdown"] = "months_dropdown";
+    /** Wrapper of the month grid. */
+    UI["Month"] = "month";
+    /** The container of the displayed months. */
+    UI["Months"] = "months";
+    /** The navigation bar with the previous and next buttons. */
+    UI["Nav"] = "nav";
+    /**
+     * The next month button in the navigation. *
+     *
+     * @since 9.1.0
+     */
+    UI["NextMonthButton"] = "button_next";
+    /**
+     * The previous month button in the navigation.
+     *
+     * @since 9.1.0
+     */
+    UI["PreviousMonthButton"] = "button_previous";
+    /** The row containing the week. */
+    UI["Week"] = "week";
+    /** The group of row weeks in a month (`tbody`). */
+    UI["Weeks"] = "weeks";
+    /** The column header with the weekday. */
+    UI["Weekday"] = "weekday";
+    /** The row grouping the weekdays in the column headers. */
+    UI["Weekdays"] = "weekdays";
+    /** The cell containing the week number. */
+    UI["WeekNumber"] = "week_number";
+    /** The cell header of the week numbers column. */
+    UI["WeekNumberHeader"] = "week_number_header";
+    /** The dropdown with the years. */
+    UI["YearsDropdown"] = "years_dropdown";
+})(UI || (UI = {}));
+/** Enum representing flags for the {@link UI.Day} element. */
+var DayFlag;
+(function (DayFlag) {
+    /** The day is disabled. */
+    DayFlag["disabled"] = "disabled";
+    /** The day is hidden. */
+    DayFlag["hidden"] = "hidden";
+    /** The day is outside the current month. */
+    DayFlag["outside"] = "outside";
+    /** The day is focused. */
+    DayFlag["focused"] = "focused";
+    /** The day is today. */
+    DayFlag["today"] = "today";
+})(DayFlag || (DayFlag = {}));
+/**
+ * Enum representing selection states that can be applied to the {@link UI.Day}
+ * element in selection mode.
+ */
+var SelectionState;
+(function (SelectionState) {
+    /** The day is at the end of a selected range. */
+    SelectionState["range_end"] = "range_end";
+    /** The day is at the middle of a selected range. */
+    SelectionState["range_middle"] = "range_middle";
+    /** The day is at the start of a selected range. */
+    SelectionState["range_start"] = "range_start";
+    /** The day is selected. */
+    SelectionState["selected"] = "selected";
+})(SelectionState || (SelectionState = {}));
+/**
+ * Enum representing different animation states for transitioning between
+ * months.
+ */
+var Animation;
+(function (Animation) {
+    /** The entering weeks when they appear before the exiting month. */
+    Animation["weeks_before_enter"] = "weeks_before_enter";
+    /** The exiting weeks when they disappear before the entering month. */
+    Animation["weeks_before_exit"] = "weeks_before_exit";
+    /** The entering weeks when they appear after the exiting month. */
+    Animation["weeks_after_enter"] = "weeks_after_enter";
+    /** The exiting weeks when they disappear after the entering month. */
+    Animation["weeks_after_exit"] = "weeks_after_exit";
+    /** The entering caption when it appears after the exiting month. */
+    Animation["caption_after_enter"] = "caption_after_enter";
+    /** The exiting caption when it disappears after the entering month. */
+    Animation["caption_after_exit"] = "caption_after_exit";
+    /** The entering caption when it appears before the exiting month. */
+    Animation["caption_before_enter"] = "caption_before_enter";
+    /** The exiting caption when it disappears before the entering month. */
+    Animation["caption_before_exit"] = "caption_before_exit";
+})(Animation || (Animation = {}));
 
 /**
  * Render a dropdown component for navigation in the calendar.
@@ -27640,7 +27539,7 @@ function MonthsDropdown(props) {
  */
 function Nav(props) {
     const { onPreviousClick, onNextClick, previousMonth, nextMonth, ...navProps } = props;
-    const { components, classNames, labels: { labelPrevious, labelNext } } = useDayPicker();
+    const { components, classNames, labels: { labelPrevious, labelNext }, } = useDayPicker();
     const handleNextClick = useCallback((e) => {
         if (nextMonth) {
             onNextClick?.(e);
@@ -27816,6 +27715,281 @@ var components = /*#__PURE__*/Object.freeze({
 });
 
 /**
+ * Checks if a given date is within a specified date range.
+ *
+ * @since 9.0.0
+ * @param range - The date range to check against.
+ * @param date - The date to check.
+ * @param excludeEnds - If `true`, the range's start and end dates are excluded.
+ * @param dateLib - The date utility library instance.
+ * @returns `true` if the date is within the range, otherwise `false`.
+ * @group Utilities
+ */
+function rangeIncludesDate(range, date, excludeEnds = false, dateLib = defaultDateLib) {
+    let { from, to } = range;
+    const { differenceInCalendarDays, isSameDay } = dateLib;
+    if (from && to) {
+        const isRangeInverted = differenceInCalendarDays(to, from) < 0;
+        if (isRangeInverted) {
+            [from, to] = [to, from];
+        }
+        const isInRange = differenceInCalendarDays(date, from) >= (excludeEnds ? 1 : 0) &&
+            differenceInCalendarDays(to, date) >= (excludeEnds ? 1 : 0);
+        return isInRange;
+    }
+    if (!excludeEnds && to) {
+        return isSameDay(to, date);
+    }
+    if (!excludeEnds && from) {
+        return isSameDay(from, date);
+    }
+    return false;
+}
+
+/**
+ * Checks if the given value is of type {@link DateInterval}.
+ *
+ * @param matcher - The value to check.
+ * @returns `true` if the value is a {@link DateInterval}, otherwise `false`.
+ * @group Utilities
+ */
+function isDateInterval(matcher) {
+    return Boolean(matcher &&
+        typeof matcher === "object" &&
+        "before" in matcher &&
+        "after" in matcher);
+}
+/**
+ * Checks if the given value is of type {@link DateRange}.
+ *
+ * @param value - The value to check.
+ * @returns `true` if the value is a {@link DateRange}, otherwise `false`.
+ * @group Utilities
+ */
+function isDateRange(value) {
+    return Boolean(value && typeof value === "object" && "from" in value);
+}
+/**
+ * Checks if the given value is of type {@link DateAfter}.
+ *
+ * @param value - The value to check.
+ * @returns `true` if the value is a {@link DateAfter}, otherwise `false`.
+ * @group Utilities
+ */
+function isDateAfterType(value) {
+    return Boolean(value && typeof value === "object" && "after" in value);
+}
+/**
+ * Checks if the given value is of type {@link DateBefore}.
+ *
+ * @param value - The value to check.
+ * @returns `true` if the value is a {@link DateBefore}, otherwise `false`.
+ * @group Utilities
+ */
+function isDateBeforeType(value) {
+    return Boolean(value && typeof value === "object" && "before" in value);
+}
+/**
+ * Checks if the given value is of type {@link DayOfWeek}.
+ *
+ * @param value - The value to check.
+ * @returns `true` if the value is a {@link DayOfWeek}, otherwise `false`.
+ * @group Utilities
+ */
+function isDayOfWeekType(value) {
+    return Boolean(value && typeof value === "object" && "dayOfWeek" in value);
+}
+/**
+ * Checks if the given value is an array of valid dates.
+ *
+ * @private
+ * @param value - The value to check.
+ * @param dateLib - The date utility library instance.
+ * @returns `true` if the value is an array of valid dates, otherwise `false`.
+ */
+function isDatesArray(value, dateLib) {
+    return Array.isArray(value) && value.every(dateLib.isDate);
+}
+
+/**
+ * Checks if a given date matches at least one of the specified {@link Matcher}.
+ *
+ * @param date - The date to check.
+ * @param matchers - The matchers to check against.
+ * @param dateLib - The date utility library instance.
+ * @returns `true` if the date matches any of the matchers, otherwise `false`.
+ * @group Utilities
+ */
+function dateMatchModifiers(date, matchers, dateLib = defaultDateLib) {
+    const matchersArr = !Array.isArray(matchers) ? [matchers] : matchers;
+    const { isSameDay, differenceInCalendarDays, isAfter } = dateLib;
+    return matchersArr.some((matcher) => {
+        if (typeof matcher === "boolean") {
+            return matcher;
+        }
+        if (dateLib.isDate(matcher)) {
+            return isSameDay(date, matcher);
+        }
+        if (isDatesArray(matcher, dateLib)) {
+            return matcher.includes(date);
+        }
+        if (isDateRange(matcher)) {
+            return rangeIncludesDate(matcher, date, false, dateLib);
+        }
+        if (isDayOfWeekType(matcher)) {
+            if (!Array.isArray(matcher.dayOfWeek)) {
+                return matcher.dayOfWeek === date.getDay();
+            }
+            return matcher.dayOfWeek.includes(date.getDay());
+        }
+        if (isDateInterval(matcher)) {
+            const diffBefore = differenceInCalendarDays(matcher.before, date);
+            const diffAfter = differenceInCalendarDays(matcher.after, date);
+            const isDayBefore = diffBefore > 0;
+            const isDayAfter = diffAfter < 0;
+            const isClosedInterval = isAfter(matcher.before, matcher.after);
+            if (isClosedInterval) {
+                return isDayAfter && isDayBefore;
+            }
+            else {
+                return isDayBefore || isDayAfter;
+            }
+        }
+        if (isDateAfterType(matcher)) {
+            return differenceInCalendarDays(date, matcher.after) > 0;
+        }
+        if (isDateBeforeType(matcher)) {
+            return differenceInCalendarDays(matcher.before, date) > 0;
+        }
+        if (typeof matcher === "function") {
+            return matcher(date);
+        }
+        return false;
+    });
+}
+
+/**
+ * Creates a function to retrieve the modifiers for a given day.
+ *
+ * This function calculates both internal and custom modifiers for each day
+ * based on the provided calendar days and DayPicker props.
+ *
+ * @private
+ * @param days The array of `CalendarDay` objects to process.
+ * @param props The DayPicker props, including modifiers and configuration
+ *   options.
+ * @param dateLib The date library to use for date manipulation.
+ * @returns A function that retrieves the modifiers for a given `CalendarDay`.
+ */
+function createGetModifiers(days, props, navStart, navEnd, dateLib) {
+    const { disabled, hidden, modifiers, showOutsideDays, broadcastCalendar, today, } = props;
+    const { isSameDay, isSameMonth, startOfMonth, isBefore, endOfMonth, isAfter, } = dateLib;
+    const computedNavStart = navStart && startOfMonth(navStart);
+    const computedNavEnd = navEnd && endOfMonth(navEnd);
+    const internalModifiersMap = {
+        [DayFlag.focused]: [],
+        [DayFlag.outside]: [],
+        [DayFlag.disabled]: [],
+        [DayFlag.hidden]: [],
+        [DayFlag.today]: [],
+    };
+    const customModifiersMap = {};
+    for (const day of days) {
+        const { date, displayMonth } = day;
+        const isOutside = Boolean(displayMonth && !isSameMonth(date, displayMonth));
+        const isBeforeNavStart = Boolean(computedNavStart && isBefore(date, computedNavStart));
+        const isAfterNavEnd = Boolean(computedNavEnd && isAfter(date, computedNavEnd));
+        const isDisabled = Boolean(disabled && dateMatchModifiers(date, disabled, dateLib));
+        const isHidden = Boolean(hidden && dateMatchModifiers(date, hidden, dateLib)) ||
+            isBeforeNavStart ||
+            isAfterNavEnd ||
+            // Broadcast calendar will show outside days as default
+            (!broadcastCalendar && !showOutsideDays && isOutside) ||
+            (broadcastCalendar && showOutsideDays === false && isOutside);
+        const isToday = isSameDay(date, today ?? dateLib.today());
+        if (isOutside)
+            internalModifiersMap.outside.push(day);
+        if (isDisabled)
+            internalModifiersMap.disabled.push(day);
+        if (isHidden)
+            internalModifiersMap.hidden.push(day);
+        if (isToday)
+            internalModifiersMap.today.push(day);
+        // Add custom modifiers
+        if (modifiers) {
+            Object.keys(modifiers).forEach((name) => {
+                const modifierValue = modifiers?.[name];
+                const isMatch = modifierValue
+                    ? dateMatchModifiers(date, modifierValue, dateLib)
+                    : false;
+                if (!isMatch)
+                    return;
+                if (customModifiersMap[name]) {
+                    customModifiersMap[name].push(day);
+                }
+                else {
+                    customModifiersMap[name] = [day];
+                }
+            });
+        }
+    }
+    return (day) => {
+        // Initialize all the modifiers to false
+        const dayFlags = {
+            [DayFlag.focused]: false,
+            [DayFlag.disabled]: false,
+            [DayFlag.hidden]: false,
+            [DayFlag.outside]: false,
+            [DayFlag.today]: false,
+        };
+        const customModifiers = {};
+        // Find the modifiers for the given day
+        for (const name in internalModifiersMap) {
+            const days = internalModifiersMap[name];
+            dayFlags[name] = days.some((d) => d === day);
+        }
+        for (const name in customModifiersMap) {
+            customModifiers[name] = customModifiersMap[name].some((d) => d === day);
+        }
+        return {
+            ...dayFlags,
+            // custom modifiers should override all the previous ones
+            ...customModifiers,
+        };
+    };
+}
+
+/**
+ * Returns the class names for a day based on its modifiers.
+ *
+ * This function combines the base class name for the day with any class names
+ * associated with active modifiers.
+ *
+ * @param modifiers The modifiers applied to the day.
+ * @param classNames The base class names for the calendar elements.
+ * @param modifiersClassNames The class names associated with specific
+ *   modifiers.
+ * @returns An array of class names for the day.
+ */
+function getClassNamesForModifiers(modifiers, classNames, modifiersClassNames = {}) {
+    const modifierClassNames = Object.entries(modifiers)
+        .filter(([, active]) => active === true)
+        .reduce((previousValue, [key]) => {
+        if (modifiersClassNames[key]) {
+            previousValue.push(modifiersClassNames[key]);
+        }
+        else if (classNames[DayFlag[key]]) {
+            previousValue.push(classNames[DayFlag[key]]);
+        }
+        else if (classNames[SelectionState[key]]) {
+            previousValue.push(classNames[SelectionState[key]]);
+        }
+        return previousValue;
+    }, [classNames[UI.Day]]);
+    return modifierClassNames;
+}
+
+/**
  * Merges custom components from the props with the default components.
  *
  * This function ensures that any custom components provided in the props
@@ -27828,7 +28002,7 @@ var components = /*#__PURE__*/Object.freeze({
 function getComponents(customComponents) {
     return {
         ...components,
-        ...customComponents
+        ...customComponents,
     };
 }
 
@@ -27848,7 +28022,7 @@ function getDataAttributes(props) {
         "data-multiple-months": (props.numberOfMonths && props.numberOfMonths > 1) || undefined,
         "data-week-numbers": props.showWeekNumber || undefined,
         "data-broadcast-calendar": props.broadcastCalendar || undefined,
-        "data-nav-layout": props.navLayout || undefined
+        "data-nav-layout": props.navLayout || undefined,
     };
     Object.entries(props).forEach(([key, val]) => {
         if (key.startsWith("data-")) {
@@ -27891,7 +28065,7 @@ function getDefaultClassNames() {
 /**
  * Formats the caption of the month.
  *
- * @defaultValue `LLLL y` (e.g., "November 2022").
+ * @defaultValue Locale-specific month/year order (e.g., "November 2022").
  * @param month The date representing the month.
  * @param options Configuration options for the date library.
  * @param dateLib The date library to use for formatting. If not provided, a new
@@ -27901,7 +28075,8 @@ function getDefaultClassNames() {
  * @see https://daypicker.dev/docs/translation#custom-formatters
  */
 function formatCaption(month, options, dateLib) {
-    return (dateLib ?? new DateLib(options)).format(month, "LLLL y");
+    const lib = dateLib ?? new DateLib(options);
+    return lib.formatMonthYear(month);
 }
 /**
  * @private
@@ -27942,6 +28117,22 @@ function formatMonthDropdown(month, dateLib = defaultDateLib) {
 }
 
 /**
+ * Formats the name of a weekday to be displayed in the weekdays header.
+ *
+ * @defaultValue `cccccc` (e.g., "Mo" for Monday).
+ * @param weekday The date representing the weekday.
+ * @param options Configuration options for the date library.
+ * @param dateLib The date library to use for formatting. If not provided, a new
+ *   instance is created.
+ * @returns The formatted weekday name as a string.
+ * @group Formatters
+ * @see https://daypicker.dev/docs/translation#custom-formatters
+ */
+function formatWeekdayName(weekday, options, dateLib) {
+    return (dateLib ?? new DateLib(options)).format(weekday, "cccccc");
+}
+
+/**
  * Formats the week number.
  *
  * @defaultValue The week number as a string, with a leading zero for single-digit numbers.
@@ -27969,22 +28160,6 @@ function formatWeekNumber(weekNumber, dateLib = defaultDateLib) {
  */
 function formatWeekNumberHeader() {
     return ``;
-}
-
-/**
- * Formats the name of a weekday to be displayed in the weekdays header.
- *
- * @defaultValue `cccccc` (e.g., "Mo" for Monday).
- * @param weekday The date representing the weekday.
- * @param options Configuration options for the date library.
- * @param dateLib The date library to use for formatting. If not provided, a new
- *   instance is created.
- * @returns The formatted weekday name as a string.
- * @group Formatters
- * @see https://daypicker.dev/docs/translation#custom-formatters
- */
-function formatWeekdayName(weekday, options, dateLib) {
-    return (dateLib ?? new DateLib(options)).format(weekday, "cccccc");
 }
 
 /**
@@ -28037,7 +28212,7 @@ function getFormatters(customFormatters) {
     }
     return {
         ...defaultFormatters,
-        ...customFormatters
+        ...customFormatters,
     };
 }
 
@@ -28057,10 +28232,10 @@ function getFormatters(customFormatters) {
  *   if no months are available.
  */
 function getMonthOptions(displayMonth, navStart, navEnd, formatters, dateLib) {
-    const { startOfMonth, startOfYear, endOfYear, eachMonthOfInterval, getMonth } = dateLib;
+    const { startOfMonth, startOfYear, endOfYear, eachMonthOfInterval, getMonth, } = dateLib;
     const months = eachMonthOfInterval({
         start: startOfYear(displayMonth),
-        end: endOfYear(displayMonth)
+        end: endOfYear(displayMonth),
     });
     const options = months.map((month) => {
         const label = formatters.formatMonthDropdown(month, dateLib);
@@ -28091,7 +28266,7 @@ function getStyleForModifiers(dayModifiers, styles = {}, modifiersStyles = {}) {
         .forEach(([modifier]) => {
         style = {
             ...style,
-            ...modifiersStyles?.[modifier]
+            ...modifiersStyles?.[modifier],
         };
     });
     return style;
@@ -28130,10 +28305,11 @@ function getWeekdays(dateLib, ISOWeek, broadcastCalendar) {
  * @param navEnd The end date for navigation.
  * @param formatters The formatters to use for formatting the year labels.
  * @param dateLib The date library to use for date manipulation.
+ * @param reverse If true, reverses the order of the years (descending).
  * @returns An array of dropdown options representing the years, or `undefined`
  *   if `navStart` or `navEnd` is not provided.
  */
-function getYearOptions(navStart, navEnd, formatters, dateLib) {
+function getYearOptions(navStart, navEnd, formatters, dateLib, reverse = false) {
     if (!navStart)
         return undefined;
     if (!navEnd)
@@ -28147,54 +28323,16 @@ function getYearOptions(navStart, navEnd, formatters, dateLib) {
         years.push(year);
         year = addYears(year, 1);
     }
+    if (reverse)
+        years.reverse();
     return years.map((year) => {
         const label = formatters.formatYearDropdown(year, dateLib);
         return {
             value: getYear(year),
             label,
-            disabled: false
+            disabled: false,
         };
     });
-}
-
-/**
- * Generates the ARIA label for the month grid, which is announced when entering
- * the grid.
- *
- * @defaultValue `LLLL y` (e.g., "November 2022").
- * @param date - The date representing the month.
- * @param options - Optional configuration for the date formatting library.
- * @param dateLib - An optional instance of the date formatting library.
- * @returns The ARIA label for the month grid.
- * @group Labels
- * @see https://daypicker.dev/docs/translation#aria-labels
- */
-function labelGrid(date, options, dateLib) {
-    return (dateLib ?? new DateLib(options)).format(date, "LLLL y");
-}
-/**
- * @ignore
- * @deprecated Use {@link labelGrid} instead.
- */
-const labelCaption = labelGrid;
-
-/**
- * Generates the label for a day grid cell when the calendar is not interactive.
- *
- * @param date - The date to format.
- * @param modifiers - Optional modifiers providing context for the day.
- * @param options - Optional configuration for the date formatting library.
- * @param dateLib - An optional instance of the date formatting library.
- * @returns The label for the day grid cell.
- * @group Labels
- * @see https://daypicker.dev/docs/translation#aria-labels
- */
-function labelGridcell(date, modifiers, options, dateLib) {
-    let label = (dateLib ?? new DateLib(options)).format(date, "PPPP");
-    if (modifiers?.today) {
-        label = `Today, ${label}`;
-    }
-    return label;
 }
 
 /**
@@ -28227,6 +28365,60 @@ function labelDayButton(date, modifiers, options, dateLib) {
 const labelDay = labelDayButton;
 
 /**
+ * Generates the ARIA label for the month grid, which is announced when entering
+ * the grid.
+ *
+ * @defaultValue Locale-specific month/year order (e.g., "November 2022").
+ * @param date - The date representing the month.
+ * @param options - Optional configuration for the date formatting library.
+ * @param dateLib - An optional instance of the date formatting library.
+ * @returns The ARIA label for the month grid.
+ * @group Labels
+ * @see https://daypicker.dev/docs/translation#aria-labels
+ */
+function labelGrid(date, options, dateLib) {
+    const lib = dateLib ?? new DateLib(options);
+    return lib.formatMonthYear(date);
+}
+/**
+ * @ignore
+ * @deprecated Use {@link labelGrid} instead.
+ */
+const labelCaption = labelGrid;
+
+/**
+ * Generates the label for a day grid cell when the calendar is not interactive.
+ *
+ * @param date - The date to format.
+ * @param modifiers - Optional modifiers providing context for the day.
+ * @param options - Optional configuration for the date formatting library.
+ * @param dateLib - An optional instance of the date formatting library.
+ * @returns The label for the day grid cell.
+ * @group Labels
+ * @see https://daypicker.dev/docs/translation#aria-labels
+ */
+function labelGridcell(date, modifiers, options, dateLib) {
+    let label = (dateLib ?? new DateLib(options)).format(date, "PPPP");
+    if (modifiers?.today) {
+        label = `Today, ${label}`;
+    }
+    return label;
+}
+
+/**
+ * Generates the ARIA label for the months dropdown.
+ *
+ * @defaultValue `"Choose the Month"`
+ * @param options - Optional configuration for the date formatting library.
+ * @returns The ARIA label for the months dropdown.
+ * @group Labels
+ * @see https://daypicker.dev/docs/translation#aria-labels
+ */
+function labelMonthDropdown(_options) {
+    return "Choose the Month";
+}
+
+/**
  * Generates the ARIA label for the navigation toolbar.
  *
  * @defaultValue `""`
@@ -28239,19 +28431,6 @@ function labelNav() {
 }
 
 /**
- * Generates the ARIA label for the months dropdown.
- *
- * @defaultValue `"Choose the Month"`
- * @param options - Optional configuration for the date formatting library.
- * @returns The ARIA label for the months dropdown.
- * @group Labels
- * @see https://daypicker.dev/docs/translation#aria-labels
- */
-function labelMonthDropdown(options) {
-    return "Choose the Month";
-}
-
-/**
  * Generates the ARIA label for the "next month" button.
  *
  * @defaultValue `"Go to the Next Month"`
@@ -28261,7 +28440,7 @@ function labelMonthDropdown(options) {
  * @group Labels
  * @see https://daypicker.dev/docs/translation#aria-labels
  */
-function labelNext(month) {
+function labelNext(_month) {
     return "Go to the Next Month";
 }
 
@@ -28275,7 +28454,7 @@ function labelNext(month) {
  * @group Labels
  * @see https://daypicker.dev/docs/translation#aria-labels
  */
-function labelPrevious(month) {
+function labelPrevious(_month) {
     return "Go to the Previous Month";
 }
 
@@ -28304,7 +28483,7 @@ function labelWeekday(date, options, dateLib) {
  * @group Labels
  * @see https://daypicker.dev/docs/translation#aria-labels
  */
-function labelWeekNumber(weekNumber, options) {
+function labelWeekNumber(weekNumber, _options) {
     return `Week ${weekNumber}`;
 }
 
@@ -28317,7 +28496,7 @@ function labelWeekNumber(weekNumber, options) {
  * @group Labels
  * @see https://daypicker.dev/docs/translation#aria-labels
  */
-function labelWeekNumberHeader(options) {
+function labelWeekNumberHeader(_options) {
     return "Week Number";
 }
 
@@ -28330,7 +28509,7 @@ function labelWeekNumberHeader(options) {
  * @group Labels
  * @see https://daypicker.dev/docs/translation#aria-labels
  */
-function labelYearDropdown(options) {
+function labelYearDropdown(_options) {
     return "Choose the Year";
 }
 
@@ -28357,7 +28536,7 @@ const asHtmlElement = (element) => {
     return null;
 };
 const queryMonthEls = (element) => [
-    ...(element.querySelectorAll("[data-animated-month]") ?? [])
+    ...(element.querySelectorAll("[data-animated-month]") ?? []),
 ];
 const queryMonthEl = (element) => asHtmlElement(element.querySelector("[data-animated-month]"));
 const queryCaptionEl = (element) => asHtmlElement(element.querySelector("[data-animated-caption]"));
@@ -28375,7 +28554,7 @@ const queryWeekdaysEl = (element) => asHtmlElement(element.querySelector("[data-
  * @param options - Configuration options for the animation, including class
  *   names, months, focused day, and the date utility library.
  */
-function useAnimation(rootElRef, enabled, { classNames, months, focused, dateLib }) {
+function useAnimation(rootElRef, enabled, { classNames, months, focused, dateLib, }) {
     const previousRootElSnapshotRef = useRef(null);
     const previousMonthsRef = useRef(months);
     const animatingRef = useRef(false);
@@ -28444,8 +28623,7 @@ function useAnimation(rootElRef, enabled, { classNames, months, focused, dateLib
             ? queryMonthEls(previousRootElSnapshot)
             : [];
         const currentMonthEls = queryMonthEls(rootElRef.current);
-        if (currentMonthEls &&
-            currentMonthEls.every((el) => el instanceof HTMLElement) &&
+        if (currentMonthEls?.every((el) => el instanceof HTMLElement) &&
             previousMonthEls &&
             previousMonthEls.every((el) => el instanceof HTMLElement)) {
             animatingRef.current = true;
@@ -28538,7 +28716,7 @@ function getDates(displayMonths, maxDate, props, dateLib) {
     const firstMonth = displayMonths[0];
     const lastMonth = displayMonths[displayMonths.length - 1];
     const { ISOWeek, fixedWeeks, broadcastCalendar } = props ?? {};
-    const { addDays, differenceInCalendarDays, differenceInCalendarMonths, endOfBroadcastWeek, endOfISOWeek, endOfMonth, endOfWeek, isAfter, startOfBroadcastWeek, startOfISOWeek, startOfWeek } = dateLib;
+    const { addDays, differenceInCalendarDays, differenceInCalendarMonths, endOfBroadcastWeek, endOfISOWeek, endOfMonth, endOfWeek, isAfter, startOfBroadcastWeek, startOfISOWeek, startOfWeek, } = dateLib;
     const startWeekFirstDate = broadcastCalendar
         ? startOfBroadcastWeek(firstMonth, dateLib)
         : ISOWeek
@@ -28584,10 +28762,10 @@ function getDays(calendarMonths) {
     const initialDays = [];
     return calendarMonths.reduce((days, month) => {
         const weekDays = month.weeks.reduce((weekDays, week) => {
-            return [...weekDays, ...week.days];
-        }, initialDays);
-        return [...days, ...weekDays];
-    }, initialDays);
+            return weekDays.concat(week.days.slice());
+        }, initialDays.slice());
+        return days.concat(weekDays.slice());
+    }, initialDays.slice());
 }
 
 /**
@@ -28625,7 +28803,7 @@ function getDisplayMonths(firstDisplayedMonth, calendarEndMonth, props, dateLib)
  * @returns The initial month to display.
  */
 function getInitialMonth(props, navStart, navEnd, dateLib) {
-    const { month, defaultMonth, today = dateLib.today(), numberOfMonths = 1 } = props;
+    const { month, defaultMonth, today = dateLib.today(), numberOfMonths = 1, } = props;
     let initialMonth = month || defaultMonth || today;
     const { differenceInCalendarMonths, addMonths, startOfMonth } = dateLib;
     if (navEnd &&
@@ -28654,7 +28832,7 @@ function getInitialMonth(props, navStart, navEnd, dateLib) {
  *   display.
  */
 function getMonths(displayMonths, dates, props, dateLib) {
-    const { addDays, endOfBroadcastWeek, endOfISOWeek, endOfMonth, endOfWeek, getISOWeek, getWeek, startOfBroadcastWeek, startOfISOWeek, startOfWeek } = dateLib;
+    const { addDays, endOfBroadcastWeek, endOfISOWeek, endOfMonth, endOfWeek, getISOWeek, getWeek, startOfBroadcastWeek, startOfISOWeek, startOfWeek, } = dateLib;
     const dayPickerMonths = displayMonths.reduce((months, month) => {
         const firstDateOfFirstWeek = props.broadcastCalendar
             ? startOfBroadcastWeek(month, dateLib)
@@ -28712,7 +28890,7 @@ function getMonths(displayMonths, dates, props, dateLib) {
  */
 function getNavMonths(props, dateLib) {
     let { startMonth, endMonth } = props;
-    const { startOfYear, startOfDay, startOfMonth, endOfMonth, addYears, endOfYear, newDate, today } = dateLib;
+    const { startOfYear, startOfDay, startOfMonth, endOfMonth, addYears, endOfYear, newDate, today, } = dateLib;
     // Handle deprecated code
     const { fromYear, toYear, fromMonth, toMonth } = props;
     if (!startMonth && fromMonth) {
@@ -28749,7 +28927,7 @@ function getNavMonths(props, dateLib) {
     }
     return [
         startMonth ? startOfDay(startMonth) : startMonth,
-        endMonth ? startOfDay(endMonth) : endMonth
+        endMonth ? startOfDay(endMonth) : endMonth,
     ];
 }
 
@@ -28833,8 +29011,8 @@ function getPreviousMonth(firstDisplayedMonth, calendarStartMonth, options, date
 function getWeeks(months) {
     const initialWeeks = [];
     return months.reduce((weeks, month) => {
-        return [...weeks, ...month.weeks];
-    }, initialWeeks);
+        return weeks.concat(month.weeks.slice());
+    }, initialWeeks.slice());
 }
 
 /**
@@ -28881,10 +29059,10 @@ function useCalendar(props, dateLib) {
     const [firstMonth, setFirstMonth] = useControlledValue(initialMonth, 
     // initialMonth is always computed from props.month if provided
     props.month ? initialMonth : undefined);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: change the initial month when the time zone changes.
     useEffect(() => {
         const newInitialMonth = getInitialMonth(props, navStart, navEnd, dateLib);
         setFirstMonth(newInitialMonth);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.timeZone]);
     /** The months displayed in the calendar. */
     const displayMonths = getDisplayMonths(firstMonth, navEnd, props, dateLib);
@@ -28932,7 +29110,7 @@ function useCalendar(props, dateLib) {
         previousMonth,
         nextMonth,
         goToMonth,
-        goToDay
+        goToDay,
     };
     return calendar;
 }
@@ -29025,7 +29203,7 @@ function calculateFocusTarget(days, getModifiers, isSelected, lastFocused) {
  */
 function getFocusableDate(moveBy, moveDir, refDate, navStart, navEnd, props, dateLib) {
     const { ISOWeek, broadcastCalendar } = props;
-    const { addDays, addMonths, addWeeks, addYears, endOfBroadcastWeek, endOfISOWeek, endOfWeek, max, min, startOfBroadcastWeek, startOfISOWeek, startOfWeek } = dateLib;
+    const { addDays, addMonths, addWeeks, addYears, endOfBroadcastWeek, endOfISOWeek, endOfWeek, max, min, startOfBroadcastWeek, startOfISOWeek, startOfWeek, } = dateLib;
     const moveFns = {
         day: addDays,
         week: addWeeks,
@@ -29040,7 +29218,7 @@ function getFocusableDate(moveBy, moveDir, refDate, navStart, navEnd, props, dat
             ? endOfBroadcastWeek(date)
             : ISOWeek
                 ? endOfISOWeek(date)
-                : endOfWeek(date)
+                : endOfWeek(date),
     };
     let focusableDate = moveFns[moveBy](refDate, moveDir === "after" ? 1 : -1);
     if (moveDir === "before" && navStart) {
@@ -29075,7 +29253,8 @@ function getNextFocus(moveBy, moveDir, refDay, calendarStartMonth, calendarEndMo
         return undefined;
     }
     const focusableDate = getFocusableDate(moveBy, moveDir, refDay.date, calendarStartMonth, calendarEndMonth, props, dateLib);
-    const isDisabled = Boolean(props.disabled && dateMatchModifiers(focusableDate, props.disabled, dateLib));
+    const isDisabled = Boolean(props.disabled &&
+        dateMatchModifiers(focusableDate, props.disabled, dateLib));
     const isHidden = Boolean(props.hidden && dateMatchModifiers(focusableDate, props.hidden, dateLib));
     const targetMonth = focusableDate;
     const focusDay = new CalendarDay(focusableDate, targetMonth, dateLib);
@@ -29126,7 +29305,7 @@ function useFocus(props, calendar, getModifiers, isSelected, dateLib) {
         setFocused,
         focused: focusedDay,
         blur,
-        moveFocus
+        moveFocus,
     };
     return useFocus;
 }
@@ -29141,7 +29320,7 @@ function useFocus(props, calendar, getModifiers, isSelected, dateLib) {
  *   and a function to check if a date is selected.
  */
 function useMulti(props, dateLib) {
-    const { selected: initiallySelected, required, onSelect } = props;
+    const { selected: initiallySelected, required, onSelect, } = props;
     const [internallySelected, setSelected] = useControlledValue(initiallySelected, onSelect ? initiallySelected : undefined);
     const selected = !onSelect ? internallySelected : initiallySelected;
     const { isSameDay } = dateLib;
@@ -29181,7 +29360,7 @@ function useMulti(props, dateLib) {
     return {
         selected,
         select,
-        isSelected
+        isSelected,
     };
 }
 
@@ -29210,7 +29389,10 @@ function addToRange(date, initialRange, min = 0, max = 0, required = false, date
         // adding date to an incomplete range
         if (isSameDay(from, date)) {
             // adding a date equal to the start of the range
-            if (required) {
+            if (min === 0) {
+                range = { from, to: date };
+            }
+            else if (required) {
                 range = { from, to: undefined };
             }
             else {
@@ -29355,7 +29537,7 @@ function rangeContainsModifiers(range, modifiers, dateLib = defaultDateLib) {
             if (isClosedInterval) {
                 return rangeOverlaps(range, {
                     from: dateLib.addDays(matcher.after, 1),
-                    to: dateLib.addDays(matcher.before, -1)
+                    to: dateLib.addDays(matcher.before, -1),
                 }, dateLib);
             }
             return (dateMatchModifiers(range.from, matcher, dateLib) ||
@@ -29394,7 +29576,7 @@ function rangeContainsModifiers(range, modifiers, dateLib = defaultDateLib) {
  *   range, and a function to check if a date is within the range.
  */
 function useRange(props, dateLib) {
-    const { disabled, excludeDisabled, selected: initiallySelected, required, onSelect } = props;
+    const { disabled, excludeDisabled, selected: initiallySelected, required, onSelect, } = props;
     const [internallySelected, setSelected] = useControlledValue(initiallySelected, onSelect ? initiallySelected : undefined);
     const selected = !onSelect ? internallySelected : initiallySelected;
     const isSelected = (date) => selected && rangeIncludesDate(selected, date, false, dateLib);
@@ -29419,7 +29601,7 @@ function useRange(props, dateLib) {
     return {
         selected,
         select,
-        isSelected
+        isSelected,
     };
 }
 
@@ -29433,7 +29615,7 @@ function useRange(props, dateLib) {
  *   and a function to check if a date is selected.
  */
 function useSingle(props, dateLib) {
-    const { selected: initiallySelected, required, onSelect } = props;
+    const { selected: initiallySelected, required, onSelect, } = props;
     const [internallySelected, setSelected] = useControlledValue(initiallySelected, onSelect ? initiallySelected : undefined);
     const selected = !onSelect ? internallySelected : initiallySelected;
     const { isSameDay } = dateLib;
@@ -29460,7 +29642,7 @@ function useSingle(props, dateLib) {
     return {
         selected,
         select,
-        isSelected
+        isSelected,
     };
 }
 
@@ -29502,7 +29684,7 @@ function DayPicker(initialProps) {
     let props = initialProps;
     if (props.timeZone) {
         props = {
-            ...initialProps
+            ...initialProps,
         };
         if (props.today) {
             props.today = new TZDate(props.today, props.timeZone);
@@ -29532,7 +29714,7 @@ function DayPicker(initialProps) {
                     : undefined,
                 to: props.selected.to
                     ? new TZDate(props.selected.to, props.timeZone)
-                    : undefined
+                    : undefined,
             };
         }
     }
@@ -29545,7 +29727,7 @@ function DayPicker(initialProps) {
             useAdditionalWeekYearTokens: props.useAdditionalWeekYearTokens,
             useAdditionalDayOfYearTokens: props.useAdditionalDayOfYearTokens,
             timeZone: props.timeZone,
-            numerals: props.numerals
+            numerals: props.numerals,
         }, props.dateLib);
         return {
             dateLib,
@@ -29553,7 +29735,7 @@ function DayPicker(initialProps) {
             formatters: getFormatters(props.formatters),
             labels: { ...defaultLabels, ...props.labels },
             locale,
-            classNames: { ...getDefaultClassNames(), ...props.classNames }
+            classNames: { ...getDefaultClassNames(), ...props.classNames },
         };
     }, [
         props.locale,
@@ -29568,16 +29750,16 @@ function DayPicker(initialProps) {
         props.components,
         props.formatters,
         props.labels,
-        props.classNames
+        props.classNames,
     ]);
-    const { captionLayout, mode, navLayout, numberOfMonths = 1, onDayBlur, onDayClick, onDayFocus, onDayKeyDown, onDayMouseEnter, onDayMouseLeave, onNextClick, onPrevClick, showWeekNumber, styles } = props;
-    const { formatCaption, formatDay, formatMonthDropdown, formatWeekNumber, formatWeekNumberHeader, formatWeekdayName, formatYearDropdown } = formatters;
+    const { captionLayout, mode, navLayout, numberOfMonths = 1, onDayBlur, onDayClick, onDayFocus, onDayKeyDown, onDayMouseEnter, onDayMouseLeave, onNextClick, onPrevClick, showWeekNumber, styles, } = props;
+    const { formatCaption, formatDay, formatMonthDropdown, formatWeekNumber, formatWeekNumberHeader, formatWeekdayName, formatYearDropdown, } = formatters;
     const calendar = useCalendar(props, dateLib);
-    const { days, months, navStart, navEnd, previousMonth, nextMonth, goToMonth } = calendar;
+    const { days, months, navStart, navEnd, previousMonth, nextMonth, goToMonth, } = calendar;
     const getModifiers = createGetModifiers(days, props, navStart, navEnd, dateLib);
-    const { isSelected, select, selected: selectedValue } = useSelection(props, dateLib) ?? {};
+    const { isSelected, select, selected: selectedValue, } = useSelection(props, dateLib) ?? {};
     const { blur, focused, isFocusTarget, moveFocus, setFocused } = useFocus(props, calendar, getModifiers, isSelected ?? (() => false), dateLib);
-    const { labelDayButton, labelGridcell, labelGrid, labelMonthDropdown, labelNav, labelPrevious, labelNext, labelWeekday, labelWeekNumber, labelWeekNumberHeader, labelYearDropdown } = labels;
+    const { labelDayButton, labelGridcell, labelGrid, labelMonthDropdown, labelNav, labelPrevious, labelNext, labelWeekday, labelWeekNumber, labelWeekNumberHeader, labelYearDropdown, } = labels;
     const weekdays = useMemo(() => getWeekdays(dateLib, props.ISOWeek), [dateLib, props.ISOWeek]);
     const isInteractive = mode !== undefined || onDayClick !== undefined;
     const handlePreviousClick = useCallback(() => {
@@ -29611,18 +29793,18 @@ function DayPicker(initialProps) {
         const keyMap = {
             ArrowLeft: [
                 e.shiftKey ? "month" : "day",
-                props.dir === "rtl" ? "after" : "before"
+                props.dir === "rtl" ? "after" : "before",
             ],
             ArrowRight: [
                 e.shiftKey ? "month" : "day",
-                props.dir === "rtl" ? "before" : "after"
+                props.dir === "rtl" ? "before" : "after",
             ],
             ArrowDown: [e.shiftKey ? "year" : "week", "after"],
             ArrowUp: [e.shiftKey ? "year" : "week", "before"],
             PageUp: [e.shiftKey ? "year" : "month", "before"],
             PageDown: [e.shiftKey ? "year" : "month", "after"],
             Home: ["startOfWeek", "before"],
-            End: ["endOfWeek", "after"]
+            End: ["endOfWeek", "after"],
         };
         if (keyMap[e.key]) {
             e.preventDefault();
@@ -29652,7 +29834,7 @@ function DayPicker(initialProps) {
         className: [classNames[UI.Root], props.className]
             .filter(Boolean)
             .join(" "),
-        style: { ...styles?.[UI.Root], ...props.style }
+        style: { ...styles?.[UI.Root], ...props.style },
     }), [classNames, props.className, props.style, styles]);
     const dataAttributes = getDataAttributes(props);
     const rootElRef = useRef(null);
@@ -29660,7 +29842,7 @@ function DayPicker(initialProps) {
         classNames,
         months,
         focused,
-        dateLib
+        dateLib,
     });
     const contextValue = {
         dayPickerProps: props,
@@ -29676,25 +29858,31 @@ function DayPicker(initialProps) {
         classNames,
         styles,
         labels,
-        formatters
+        formatters,
     };
     return (React__default.createElement(dayPickerContext.Provider, { value: contextValue },
-        React__default.createElement(components.Root, { rootRef: props.animate ? rootElRef : undefined, className: className, style: style, dir: props.dir, id: props.id, lang: props.lang, nonce: props.nonce, title: props.title, role: props.role, "aria-label": props["aria-label"], ...dataAttributes },
+        React__default.createElement(components.Root, { rootRef: props.animate ? rootElRef : undefined, className: className, style: style, dir: props.dir, id: props.id, lang: props.lang, nonce: props.nonce, title: props.title, role: props.role, "aria-label": props["aria-label"], "aria-labelledby": props["aria-labelledby"], ...dataAttributes },
             React__default.createElement(components.Months, { className: classNames[UI.Months], style: styles?.[UI.Months] },
                 !props.hideNavigation && !navLayout && (React__default.createElement(components.Nav, { "data-animated-nav": props.animate ? "true" : undefined, className: classNames[UI.Nav], style: styles?.[UI.Nav], "aria-label": labelNav(), onPreviousClick: handlePreviousClick, onNextClick: handleNextClick, previousMonth: previousMonth, nextMonth: nextMonth })),
                 months.map((calendarMonth, displayIndex) => {
-                    const dropdownMonths = getMonthOptions(calendarMonth.date, navStart, navEnd, formatters, dateLib);
-                    const dropdownYears = getYearOptions(navStart, navEnd, formatters, dateLib);
-                    return (React__default.createElement(components.Month, { "data-animated-month": props.animate ? "true" : undefined, className: classNames[UI.Month], style: styles?.[UI.Month], key: displayIndex, displayIndex: displayIndex, calendarMonth: calendarMonth },
+                    return (React__default.createElement(components.Month, { "data-animated-month": props.animate ? "true" : undefined, className: classNames[UI.Month], style: styles?.[UI.Month], 
+                        // biome-ignore lint/suspicious/noArrayIndexKey: breaks animation
+                        key: displayIndex, displayIndex: displayIndex, calendarMonth: calendarMonth },
                         navLayout === "around" &&
                             !props.hideNavigation &&
                             displayIndex === 0 && (React__default.createElement(components.PreviousMonthButton, { type: "button", className: classNames[UI.PreviousMonthButton], tabIndex: previousMonth ? undefined : -1, "aria-disabled": previousMonth ? undefined : true, "aria-label": labelPrevious(previousMonth), onClick: handlePreviousClick, "data-animated-button": props.animate ? "true" : undefined },
                             React__default.createElement(components.Chevron, { disabled: previousMonth ? undefined : true, className: classNames[UI.Chevron], orientation: props.dir === "rtl" ? "right" : "left" }))),
                         React__default.createElement(components.MonthCaption, { "data-animated-caption": props.animate ? "true" : undefined, className: classNames[UI.MonthCaption], style: styles?.[UI.MonthCaption], calendarMonth: calendarMonth, displayIndex: displayIndex }, captionLayout?.startsWith("dropdown") ? (React__default.createElement(components.DropdownNav, { className: classNames[UI.Dropdowns], style: styles?.[UI.Dropdowns] },
-                            captionLayout === "dropdown" ||
-                                captionLayout === "dropdown-months" ? (React__default.createElement(components.MonthsDropdown, { className: classNames[UI.MonthsDropdown], "aria-label": labelMonthDropdown(), classNames: classNames, components: components, disabled: Boolean(props.disableNavigation), onChange: handleMonthChange(calendarMonth.date), options: dropdownMonths, style: styles?.[UI.Dropdown], value: dateLib.getMonth(calendarMonth.date) })) : (React__default.createElement("span", null, formatMonthDropdown(calendarMonth.date, dateLib))),
-                            captionLayout === "dropdown" ||
-                                captionLayout === "dropdown-years" ? (React__default.createElement(components.YearsDropdown, { className: classNames[UI.YearsDropdown], "aria-label": labelYearDropdown(dateLib.options), classNames: classNames, components: components, disabled: Boolean(props.disableNavigation), onChange: handleYearChange(calendarMonth.date), options: dropdownYears, style: styles?.[UI.Dropdown], value: dateLib.getYear(calendarMonth.date) })) : (React__default.createElement("span", null, formatYearDropdown(calendarMonth.date, dateLib))),
+                            (() => {
+                                const monthControl = captionLayout === "dropdown" ||
+                                    captionLayout === "dropdown-months" ? (React__default.createElement(components.MonthsDropdown, { key: "month", className: classNames[UI.MonthsDropdown], "aria-label": labelMonthDropdown(), classNames: classNames, components: components, disabled: Boolean(props.disableNavigation), onChange: handleMonthChange(calendarMonth.date), options: getMonthOptions(calendarMonth.date, navStart, navEnd, formatters, dateLib), style: styles?.[UI.Dropdown], value: dateLib.getMonth(calendarMonth.date) })) : (React__default.createElement("span", { key: "month" }, formatMonthDropdown(calendarMonth.date, dateLib)));
+                                const yearControl = captionLayout === "dropdown" ||
+                                    captionLayout === "dropdown-years" ? (React__default.createElement(components.YearsDropdown, { key: "year", className: classNames[UI.YearsDropdown], "aria-label": labelYearDropdown(dateLib.options), classNames: classNames, components: components, disabled: Boolean(props.disableNavigation), onChange: handleYearChange(calendarMonth.date), options: getYearOptions(navStart, navEnd, formatters, dateLib, Boolean(props.reverseYears)), style: styles?.[UI.Dropdown], value: dateLib.getYear(calendarMonth.date) })) : (React__default.createElement("span", { key: "year" }, formatYearDropdown(calendarMonth.date, dateLib)));
+                                const controls = dateLib.getMonthYearOrder() === "year-first"
+                                    ? [yearControl, monthControl]
+                                    : [monthControl, yearControl];
+                                return controls;
+                            })(),
                             React__default.createElement("span", { role: "status", "aria-live": "polite", style: {
                                     border: 0,
                                     clip: "rect(0 0 0 0)",
@@ -29705,8 +29893,10 @@ function DayPicker(initialProps) {
                                     position: "absolute",
                                     width: "1px",
                                     whiteSpace: "nowrap",
-                                    wordWrap: "normal"
-                                } }, formatCaption(calendarMonth.date, dateLib.options, dateLib)))) : (React__default.createElement(components.CaptionLabel, { className: classNames[UI.CaptionLabel], role: "status", "aria-live": "polite" }, formatCaption(calendarMonth.date, dateLib.options, dateLib)))),
+                                    wordWrap: "normal",
+                                } }, formatCaption(calendarMonth.date, dateLib.options, dateLib)))) : (
+                        // biome-ignore lint/a11y/useSemanticElements: breaking change
+                        React__default.createElement(components.CaptionLabel, { className: classNames[UI.CaptionLabel], role: "status", "aria-live": "polite" }, formatCaption(calendarMonth.date, dateLib.options, dateLib)))),
                         navLayout === "around" &&
                             !props.hideNavigation &&
                             displayIndex === numberOfMonths - 1 && (React__default.createElement(components.NextMonthButton, { type: "button", className: classNames[UI.NextMonthButton], tabIndex: nextMonth ? undefined : -1, "aria-disabled": nextMonth ? undefined : true, "aria-label": labelNext(nextMonth), onClick: handleNextClick, "data-animated-button": props.animate ? "true" : undefined },
@@ -29718,11 +29908,13 @@ function DayPicker(initialProps) {
                                 undefined, className: classNames[UI.MonthGrid], style: styles?.[UI.MonthGrid] },
                             !props.hideWeekdays && (React__default.createElement(components.Weekdays, { "data-animated-weekdays": props.animate ? "true" : undefined, className: classNames[UI.Weekdays], style: styles?.[UI.Weekdays] },
                                 showWeekNumber && (React__default.createElement(components.WeekNumberHeader, { "aria-label": labelWeekNumberHeader(dateLib.options), className: classNames[UI.WeekNumberHeader], style: styles?.[UI.WeekNumberHeader], scope: "col" }, formatWeekNumberHeader())),
-                                weekdays.map((weekday, i) => (React__default.createElement(components.Weekday, { "aria-label": labelWeekday(weekday, dateLib.options, dateLib), className: classNames[UI.Weekday], key: i, style: styles?.[UI.Weekday], scope: "col" }, formatWeekdayName(weekday, dateLib.options, dateLib)))))),
-                            React__default.createElement(components.Weeks, { "data-animated-weeks": props.animate ? "true" : undefined, className: classNames[UI.Weeks], style: styles?.[UI.Weeks] }, calendarMonth.weeks.map((week, weekIndex) => {
+                                weekdays.map((weekday) => (React__default.createElement(components.Weekday, { "aria-label": labelWeekday(weekday, dateLib.options, dateLib), className: classNames[UI.Weekday], key: String(weekday), style: styles?.[UI.Weekday], scope: "col" }, formatWeekdayName(weekday, dateLib.options, dateLib)))))),
+                            React__default.createElement(components.Weeks, { "data-animated-weeks": props.animate ? "true" : undefined, className: classNames[UI.Weeks], style: styles?.[UI.Weeks] }, calendarMonth.weeks.map((week) => {
                                 return (React__default.createElement(components.Week, { className: classNames[UI.Week], key: week.weekNumber, style: styles?.[UI.Week], week: week },
-                                    showWeekNumber && (React__default.createElement(components.WeekNumber, { week: week, style: styles?.[UI.WeekNumber], "aria-label": labelWeekNumber(week.weekNumber, {
-                                            locale
+                                    showWeekNumber && (
+                                    // biome-ignore lint/a11y/useSemanticElements: react component
+                                    React__default.createElement(components.WeekNumber, { week: week, style: styles?.[UI.WeekNumber], "aria-label": labelWeekNumber(week.weekNumber, {
+                                            locale,
                                         }), className: classNames[UI.WeekNumber], scope: "row", role: "rowheader" }, formatWeekNumber(week.weekNumber, dateLib))),
                                     week.days.map((day) => {
                                         const { date } = day;
@@ -29745,14 +29937,18 @@ function DayPicker(initialProps) {
                                         const ariaLabel = !isInteractive && !modifiers.hidden
                                             ? labelGridcell(date, modifiers, dateLib.options, dateLib)
                                             : undefined;
-                                        return (React__default.createElement(components.Day, { key: `${dateLib.format(date, "yyyy-MM-dd")}_${dateLib.format(day.displayMonth, "yyyy-MM")}`, day: day, modifiers: modifiers, className: className.join(" "), style: style, role: "gridcell", "aria-selected": modifiers.selected || undefined, "aria-label": ariaLabel, "data-day": dateLib.format(date, "yyyy-MM-dd"), "data-month": day.outside
+                                        return (
+                                        // biome-ignore lint/a11y/useSemanticElements: react component
+                                        React__default.createElement(components.Day, { key: `${dateLib.format(date, "yyyy-MM-dd")}_${dateLib.format(day.displayMonth, "yyyy-MM")}`, day: day, modifiers: modifiers, className: className.join(" "), style: style, role: "gridcell", "aria-selected": modifiers.selected || undefined, "aria-label": ariaLabel, "data-day": dateLib.format(date, "yyyy-MM-dd"), "data-month": day.outside
                                                 ? dateLib.format(date, "yyyy-MM")
                                                 : undefined, "data-selected": modifiers.selected || undefined, "data-disabled": modifiers.disabled || undefined, "data-hidden": modifiers.hidden || undefined, "data-outside": day.outside || undefined, "data-focused": modifiers.focused || undefined, "data-today": modifiers.today || undefined }, !modifiers.hidden && isInteractive ? (React__default.createElement(components.DayButton, { className: classNames[UI.DayButton], style: styles?.[UI.DayButton], type: "button", day: day, modifiers: modifiers, disabled: modifiers.disabled || undefined, tabIndex: isFocusTarget(day) ? 0 : -1, "aria-label": labelDayButton(date, modifiers, dateLib.options, dateLib), onClick: handleDayClick(day, modifiers), onBlur: handleDayBlur(day, modifiers), onFocus: handleDayFocus(day, modifiers), onKeyDown: handleDayKeyDown(day, modifiers), onMouseEnter: handleDayMouseEnter(day, modifiers), onMouseLeave: handleDayMouseLeave(day, modifiers) }, formatDay(date, dateLib.options, dateLib))) : (!modifiers.hidden &&
                                             formatDay(day.date, dateLib.options, dateLib))));
                                     })));
                             })))));
                 })),
-            props.footer && (React__default.createElement(components.Footer, { className: classNames[UI.Footer], style: styles?.[UI.Footer], role: "status", "aria-live": "polite" }, props.footer)))));
+            props.footer && (
+            // biome-ignore lint/a11y/useSemanticElements: react component
+            React__default.createElement(components.Footer, { className: classNames[UI.Footer], style: styles?.[UI.Footer], role: "status", "aria-live": "polite" }, props.footer)))));
 }
 
 const Calendar = ({
@@ -31813,7 +32009,7 @@ const CollapsibleContent = ({
 };
 
 var CHECKBOX_NAME = "Checkbox";
-var [createCheckboxContext, createCheckboxScope] = createContextScope(CHECKBOX_NAME);
+var [createCheckboxContext] = createContextScope(CHECKBOX_NAME);
 var [CheckboxProviderImpl, useCheckboxContext] = createCheckboxContext(CHECKBOX_NAME);
 function CheckboxProvider(props) {
   const {
@@ -33992,7 +34188,7 @@ function getState(checked) {
 }
 var ARROW_KEYS = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
 var RADIO_GROUP_NAME = "RadioGroup";
-var [createRadioGroupContext, createRadioGroupScope] = createContextScope(RADIO_GROUP_NAME, [
+var [createRadioGroupContext] = createContextScope(RADIO_GROUP_NAME, [
   createRovingFocusGroupScope,
   createRadioScope
 ]);
@@ -34177,7 +34373,7 @@ const Skeleton = ({
 };
 
 var TABS_NAME = "Tabs";
-var [createTabsContext, createTabsScope] = createContextScope(TABS_NAME, [
+var [createTabsContext] = createContextScope(TABS_NAME, [
   createRovingFocusGroupScope
 ]);
 var useRovingFocusGroupScope = createRovingFocusGroupScope();
@@ -34679,7 +34875,7 @@ const Textarea = ({
 
 var PROVIDER_NAME$1 = "ToastProvider";
 var [Collection, useCollection, createCollectionScope] = createCollection("Toast");
-var [createToastContext, createToastScope] = createContextScope("Toast", [createCollectionScope]);
+var [createToastContext] = createContextScope("Toast", [createCollectionScope]);
 var [ToastProviderProvider, useToastProviderContext] = createToastContext(PROVIDER_NAME$1);
 var ToastProvider$1 = (props) => {
   const {
@@ -35545,7 +35741,7 @@ function Toaster() {
   });
 }
 
-var [createTooltipContext, createTooltipScope] = createContextScope("Tooltip", [
+var [createTooltipContext] = createContextScope("Tooltip", [
   createPopperScope
 ]);
 var usePopperScope = createPopperScope();
