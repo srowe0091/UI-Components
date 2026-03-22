@@ -1,11 +1,11 @@
-const path = require('path')
-const resolve = require('@rollup/plugin-node-resolve')
-const alias = require('@rollup/plugin-alias')
-const babel = require('@rollup/plugin-babel').default
-const peerDepsExternal = require('rollup-plugin-peer-deps-external')
-const copy = require('rollup-plugin-copy')
+import path from 'node:path'
+import resolve from '@rollup/plugin-node-resolve'
+import alias from '@rollup/plugin-alias'
+import babel from '@rollup/plugin-babel'
+import peerDepsExternal from 'rollup-plugin-peer-deps-external'
+import copy from 'rollup-plugin-copy'
 
-module.exports = {
+export default {
   input: 'src/index.js',
   output: {
     file: 'dist/index.js',
@@ -14,7 +14,7 @@ module.exports = {
   },
   plugins: [
     peerDepsExternal(),
-    alias({ entries: [{ find: '@', replacement: path.resolve(__dirname, 'src') }] }),
+    alias({ entries: [{ find: '@', replacement: path.resolve(import.meta.dirname, 'src') }] }),
     resolve({ extensions: ['.js', '.jsx'] }),
     copy({
       targets: [
